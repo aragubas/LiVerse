@@ -1,0 +1,33 @@
+using FontStashSharp;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+namespace LiVerse.AnaBanUI {
+  public class WindowRoot : IWindowRoot {
+    public ControlBase? RootElement { get; set; }
+ 
+    public WindowRoot() {
+      RootElement = null;      
+    }
+
+    public void Update(double deltaTime) {
+      if (RootElement != null) {
+        RootElement.Update(deltaTime);
+      }
+    }
+
+    public void Draw(SpriteBatch spriteBatch) {
+      if (RootElement != null) {
+        // Make Sure the RootElement fills the entire viewport
+        RootElement.Size = new Vector2(spriteBatch.GraphicsDevice.Viewport.Width, spriteBatch.GraphicsDevice.Viewport.Height); 
+        
+        spriteBatch.Begin();
+        
+        RootElement.Draw(spriteBatch);
+
+        spriteBatch.End();
+      }
+      
+    }
+  }
+}
