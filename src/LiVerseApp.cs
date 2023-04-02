@@ -19,9 +19,13 @@ namespace LiVerse {
       graphics.SynchronizeWithVerticalRetrace = true;
       graphics.ApplyChanges();
       
+      IsMouseVisible = true;
+      IsFixedTimeStep = false;
     }
 
     Label testLabel2;
+    Label testLabel3;
+    Label testLabel4;
     protected override void Initialize() {
       Window.Title = "LiVerse";
       Window.AllowUserResizing = true;
@@ -37,20 +41,41 @@ namespace LiVerse {
       windowUIRoot = new WindowRoot();
 
       DockFillContainer fillContainer = new DockFillContainer();
-      Label testLabel = new Label("DockElement Label", 24);
-      testLabel2 = new Label("FillElement Label", 24);
-       
+      DockFillContainer secondContainer = new DockFillContainer();
+      DockFillContainer thirdContainer = new DockFillContainer();
+      Label testLabel = new Label("1st Label", 32);
+      testLabel2 = new Label("2nd", 32);
+      testLabel3 = new Label("3rd label", 32);
+      testLabel4 = new Label("4th label", 32);
+
       fillContainer.DockElement = testLabel;
-      fillContainer.FillElement = testLabel2;
-        
+      fillContainer.FillElement = secondContainer;
+      
+      secondContainer.DockElement = testLabel2;
+      secondContainer.FillElement = thirdContainer;
+
+      thirdContainer.DockElement = testLabel3;
+      thirdContainer.FillElement = testLabel4;
+
       windowUIRoot.RootElement = fillContainer;
       
     }
 
+    int size = 18;
     protected override void Update(GameTime gameTime) {
       if (windowUIRoot == null) { return; }
       
       testLabel2.Text = Mouse.GetState().Position.ToString();
+      testLabel3.Text = gameTime.ElapsedGameTime.TotalSeconds.ToString();
+      testLabel4.FontSize = size;
+
+      if (Keyboard.GetState().IsKeyDown(Keys.A)) {
+        size--;
+        if (size < -1) { size = -1; }
+      }
+      if (Keyboard.GetState().IsKeyDown(Keys.D)) {
+        size++;
+      }
 
       windowUIRoot.Update(gameTime.ElapsedGameTime.TotalSeconds);
     }
