@@ -24,7 +24,8 @@ namespace LiVerse.AnaBanUI {
     }
 
     public Vector2 MinimumSize { get; set; }
- 
+
+    public Vector2? MaximumSize { get; set; } = null;
     /// Absolute Position on Screen, Used for collision detection.
     public Vector2 AbsolutePosition { get; set; }
     public Vector2 RelativePosition { get; set; }

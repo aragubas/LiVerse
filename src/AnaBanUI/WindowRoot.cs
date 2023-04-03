@@ -19,8 +19,10 @@ namespace LiVerse.AnaBanUI {
     public void Draw(SpriteBatch spriteBatch) {
       if (RootElement != null) {
         // Make Sure the RootElement fills the entire viewport
-        RootElement.Size = new Vector2(spriteBatch.GraphicsDevice.Viewport.Width, spriteBatch.GraphicsDevice.Viewport.Height); 
-        
+        Vector2 screenSize = new Vector2(spriteBatch.GraphicsDevice.Viewport.Width, spriteBatch.GraphicsDevice.Viewport.Height);
+        RootElement.Size = screenSize;
+        RootElement.MaximumSize = screenSize;
+
         spriteBatch.Begin();
         
         RootElement.Draw(spriteBatch);

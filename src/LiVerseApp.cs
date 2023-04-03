@@ -21,6 +21,8 @@ namespace LiVerse {
       
       IsMouseVisible = true;
       IsFixedTimeStep = false;
+
+      InactiveSleepTime = TimeSpan.Zero;
     }
 
     Label testLabel2;
@@ -48,11 +50,14 @@ namespace LiVerse {
       testLabel3 = new Label("3rd label", 32);
       testLabel4 = new Label("4th label", 32);
 
+      thirdContainer.DockType = DockFillContainerDockType.Bottom;
+      thirdContainer.Lines = true;
+
       fillContainer.DockElement = testLabel;
       fillContainer.FillElement = secondContainer;
       
-      secondContainer.DockElement = testLabel2;
-      secondContainer.FillElement = thirdContainer;
+      secondContainer.DockElement = thirdContainer;
+      secondContainer.FillElement = testLabel2;
 
       thirdContainer.DockElement = testLabel3;
       thirdContainer.FillElement = testLabel4;
@@ -66,7 +71,7 @@ namespace LiVerse {
       if (windowUIRoot == null) { return; }
       
       testLabel2.Text = Mouse.GetState().Position.ToString();
-      testLabel3.Text = gameTime.ElapsedGameTime.TotalSeconds.ToString();
+      testLabel3.Text = gameTime.ElapsedGameTime.TotalSeconds.ToString().PadRight(7, '0');
       testLabel4.FontSize = size;
 
       if (Keyboard.GetState().IsKeyDown(Keys.A)) {

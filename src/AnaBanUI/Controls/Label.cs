@@ -50,11 +50,10 @@ namespace LiVerse.AnaBanUI.Controls {
         reBakeFont = false;
         font = ResourceManager.GlobalFontSystem.GetFont(FontSize); 
 
-        // RecalculateUI();
+         RecalculateUI();
       }
 
       spriteBatch.DrawString(font, Text, textPosition, this.Color, Vector2.One);
-      spriteBatch.DrawRectangle(new RectangleF(0, 0, Size.X, Size.Y), Color.Red);
     }
 
     void RecalculateUI() {
