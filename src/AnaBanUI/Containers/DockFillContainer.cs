@@ -41,7 +41,10 @@ namespace LiVerse.AnaBanUI.Containers {
         FillElement.AbsolutePosition = new Vector2(AbsolutePosition.X, DockElement.Size.Y + AbsolutePosition.Y);
 
         // Calculate MinimiumSize
-        MinimumSize = new Vector2(DockElement.MinimumSize.X, DockElement.MinimumSize.Y + FillElement.MinimumSize.Y);
+        float minimumWidth = DockElement.MinimumSize.X;
+        if (FillElement.MinimumSize.X > minimumWidth) { minimumWidth = FillElement.MinimumSize.X; }
+
+        MinimumSize = new Vector2(minimumWidth, DockElement.MinimumSize.Y + FillElement.MinimumSize.Y);
       }
 
       if (DockType == DockFillContainerDockType.Bottom) {
@@ -55,7 +58,10 @@ namespace LiVerse.AnaBanUI.Containers {
         DockElement.RelativePosition = new Vector2(0, FillElement.Size.Y);
 
         // Calculate MinimiumSize
-        MinimumSize = new Vector2(DockElement.MinimumSize.X, DockElement.MinimumSize.Y + FillElement.MinimumSize.Y);
+        float minimumWidth = DockElement.MinimumSize.X;
+        if (FillElement.MinimumSize.X > minimumWidth) { minimumWidth = FillElement.MinimumSize.X; }
+
+        MinimumSize = new Vector2(minimumWidth, DockElement.MinimumSize.Y + FillElement.MinimumSize.Y);
       }
 
       if (DockType == DockFillContainerDockType.Left) {
