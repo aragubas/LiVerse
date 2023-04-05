@@ -27,7 +27,7 @@ namespace LiVerse.src.AnaBanUI.Controls {
     Color currentForegroundColor = normalForeground;
 
     // Border Colors
-    static readonly Color normalBorder = new Color() { R = 173, G = 173, B = 185, A = 255 };
+    static readonly Color normalBorder = new Color() { R = 10, G = 100, B = 200, A = 255 };
     static readonly Color hoverBorder = new Color() { R = 20, G = 135, B = 225, A = 255 };
     static readonly Color downBorder = new Color() { R = 30, G = 80, B = 160, A = 255 };
     Color currentBorderColor = normalBorder;
@@ -36,14 +36,14 @@ namespace LiVerse.src.AnaBanUI.Controls {
     float borderThickness = 2;
     float borderThicknessTarget = 2;
 
-    public Button(string DefaultText, int defaultFontSize = 24) {
+    public Button(string DefaultText, int defaultFontSize = 22) {
       Label = new Label(DefaultText, defaultFontSize);
     }
 
-    public override void Draw(SpriteBatch spriteBatch) {
+    public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
       spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, Size), currentBackgroundColor);
 
-      Label.Draw(spriteBatch);
+      Label.Draw(spriteBatch, deltaTime);
 
       spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), currentBorderColor, thickness: borderThickness);
     }
@@ -53,7 +53,7 @@ namespace LiVerse.src.AnaBanUI.Controls {
 
       Label.Color = currentForegroundColor;
       Label.Size = Size;
-      MinimumSize = Label.MinimumSize + new Vector2(10);
+      MinimumSize = Label.MinimumSize + new Vector2(10, 2);
 
 
       if (Enabled && Visible) {

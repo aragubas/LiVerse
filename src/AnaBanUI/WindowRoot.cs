@@ -15,7 +15,7 @@ namespace LiVerse.AnaBanUI {
       }
     }
 
-    public void Draw(SpriteBatch spriteBatch) {
+    public void Draw(SpriteBatch spriteBatch, double deltaTime) {
       if (RootElement != null) {
         // Make Sure the RootElement fills the entire viewport
         Vector2 screenSize = new Vector2(spriteBatch.GraphicsDevice.Viewport.Width, spriteBatch.GraphicsDevice.Viewport.Height);
@@ -24,7 +24,7 @@ namespace LiVerse.AnaBanUI {
 
         spriteBatch.Begin();
         
-        RootElement.Draw(spriteBatch);
+        RootElement.Draw(spriteBatch, deltaTime);
 
         spriteBatch.End();
       }

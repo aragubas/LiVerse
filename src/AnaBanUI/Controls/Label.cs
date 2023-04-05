@@ -43,7 +43,7 @@ namespace LiVerse.AnaBanUI.Controls {
       FontSize = fontSize;       
     }  
 
-    public override void Draw(SpriteBatch spriteBatch) {
+    public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
       if (font == null || reBakeFont) {
         reBakeFont = false;
         font = ResourceManager.GetFont("OpenSans", FontSize, spriteBatch.GraphicsDevice); 

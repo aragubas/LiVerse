@@ -37,6 +37,6 @@ namespace LiVerse.AnaBanUI {
     protected virtual void ElementSizeChanged() { }
 
     public virtual void Update(double deltaTime) { }
-    public virtual void Draw(SpriteBatch spriteBatch) { }
+    public virtual void Draw(SpriteBatch spriteBatch, double deltaTime) { }
   }
 }

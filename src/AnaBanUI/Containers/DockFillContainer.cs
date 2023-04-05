@@ -40,6 +40,7 @@ namespace LiVerse.AnaBanUI.Containers {
       MinimumSize = element.MinimumSize;
     }
 
+
     void RecalculateUI() {
       // Fill Dock Element if its the only one set
       if (FillElement == null && DockElement != null) { FillControl(DockElement); return; }
@@ -126,14 +127,14 @@ namespace LiVerse.AnaBanUI.Containers {
 
     }
 
-    void DrawElement(SpriteBatch spriteBatch, ControlBase element) {
+    void DrawElement(SpriteBatch spriteBatch, double deltaTime, ControlBase element) {
   
       spriteBatch.End();
       spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(element.RelativePosition.X, element.RelativePosition.Y, 0));
 
       //spriteBatch.GraphicsDevice.Viewport = elementViewport; 
 
-      element.Draw(spriteBatch);
+      element.Draw(spriteBatch, deltaTime);
       if (Lines) spriteBatch.DrawRectangle(new RectangleF(0, 0, element.Size.X, element.Size.Y), Color.Red);
 
       spriteBatch.End();
@@ -144,7 +145,7 @@ namespace LiVerse.AnaBanUI.Containers {
       spriteBatch.Begin();
     }
 
-    public override void Draw(SpriteBatch spriteBatch) {
+    public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
       RecalculateUI();
 
       Viewport elementViewport = new Viewport((int)AbsolutePosition.X, (int)AbsolutePosition.Y, (int)Size.X, (int)Size.Y);
@@ -157,8 +158,8 @@ namespace LiVerse.AnaBanUI.Containers {
 
       if (Lines) spriteBatch.DrawRectangle(new RectangleF(0, 0, MinimumSize.X, MinimumSize.Y), Color.Blue);
 
-      if (DockElement != null) DrawElement(spriteBatch, DockElement);
-      if (FillElement != null) DrawElement(spriteBatch, FillElement);
+      if (DockElement != null) DrawElement(spriteBatch, deltaTime, DockElement);
+      if (FillElement != null) DrawElement(spriteBatch, deltaTime, FillElement);
 
       if (Lines) spriteBatch.DrawRectangle(new RectangleF(0, 0, Size.X, Size.Y), Color.Magenta);
 

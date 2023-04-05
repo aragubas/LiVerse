@@ -46,19 +46,26 @@ namespace LiVerse {
       windowUIRoot = new WindowRoot();
 
       DockFillContainer HeaderBar = new DockFillContainer();
-      HeaderBar.DockType = DockFillContainerDockType.Left;
+      DockFillContainer centerSplit = new DockFillContainer();
 
-      Label testLabel = new Label("{character_name}", 32);
+
+      Label characterNameLabel = new Label("{character_name}", 22);
       Label placeholderLabel = new Label("Placeholder", 42);
       Button charactersButton = new Button("Characters");
+      VerticalLevelTrigger levelTrigger = new VerticalLevelTrigger();
 
       HeaderBar.DockType = DockFillContainerDockType.Left;
       HeaderBar.DockElement = charactersButton;
-      HeaderBar.FillElement = testLabel;
+      HeaderBar.FillElement = characterNameLabel;
+
+      centerSplit.DockType = DockFillContainerDockType.Left;
+      centerSplit.DockElement = levelTrigger;
+      centerSplit.FillElement = placeholderLabel;
+
 
       //HeaderBar.Lines = true;
       mainFillContainer.DockElement = HeaderBar;
-      mainFillContainer.FillElement = placeholderLabel;
+      mainFillContainer.FillElement = centerSplit;
 
       windowUIRoot.RootElement = mainFillContainer;      
     }
@@ -67,7 +74,7 @@ namespace LiVerse {
       if (windowUIRoot == null) { return; }
 
       // Update UIRoot
-      UIRoot.Update(gameTime.ElapsedGameTime.TotalSeconds);
+      UIRoot.Update(gameTime.GetElapsedSeconds());
 
       windowUIRoot.Update(gameTime.ElapsedGameTime.TotalSeconds);
     }
@@ -78,7 +85,7 @@ namespace LiVerse {
 
       GraphicsDevice.Clear(Color.CornflowerBlue);
  
-      windowUIRoot.Draw(spriteBatch);
+      windowUIRoot.Draw(spriteBatch, gameTime.ElapsedGameTime.TotalSeconds);
     }
     
   }
