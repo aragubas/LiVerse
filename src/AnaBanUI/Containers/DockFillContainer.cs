@@ -11,6 +11,10 @@ namespace LiVerse.AnaBanUI.Containers {
   {
     public ControlBase? DockElement { get; set; }
     public ControlBase? FillElement { get; set; }
+    
+    /// <summary>
+    /// The location that the dock element will be placed
+    /// </summary>
     public DockFillContainerDockType DockType { get; set; }
     public float Gap = 0;
     public bool Lines = false;
@@ -27,8 +31,23 @@ namespace LiVerse.AnaBanUI.Containers {
       if (control.Size.X < control.MinimumSize.X) { control.Size = new Vector2(control.MinimumSize.X, control.Size.Y); }
       if (control.Size.Y < control.MinimumSize.Y) { control.Size = new Vector2(control.Size.X, control.MinimumSize.Y); }
     }
+    
+    void FillControl(ControlBase element) {
+      element.Size = Size; // Set element height to minimum size
+      element.AbsolutePosition = AbsolutePosition;
+      element.RelativePosition = Vector2.Zero;
+
+      MinimumSize = element.MinimumSize;
+    }
 
     void RecalculateUI() {
+      // Fill Dock Element if its the only one set
+      if (FillElement == null && DockElement != null) { FillControl(DockElement); return; }
+
+      // Fill Fill Element if its the only one set
+      if (FillElement != null && DockElement == null) { FillControl(FillElement); return; }
+
+
       if (DockType == DockFillContainerDockType.Top) {
         DockElement.Size = new Vector2(Size.X, DockElement.MinimumSize.Y); // Set element height to minimum size
         DockElement.AbsolutePosition = AbsolutePosition;

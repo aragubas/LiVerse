@@ -1,6 +1,8 @@
-using LiVerse.AnaBanUI;
+﻿using LiVerse.AnaBanUI;
 using LiVerse.AnaBanUI.Containers;
 using LiVerse.AnaBanUI.Controls;
+using LiVerse.src.AnaBanUI;
+using LiVerse.src.AnaBanUI.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -11,6 +13,10 @@ namespace LiVerse {
     GraphicsDeviceManager graphics { get; }
     SpriteBatch? spriteBatch;
     IWindowRoot? windowUIRoot;
+
+    // MainUI Members
+    DockFillContainer mainFillContainer = new();
+
 
     public LiVerseApp() {
       graphics = new GraphicsDeviceManager(this);
@@ -25,9 +31,6 @@ namespace LiVerse {
       InactiveSleepTime = TimeSpan.Zero;
     }
 
-    Label testLabel2;
-    Label testLabel3;
-    Label testLabel4;
     protected override void Initialize() {
       Window.Title = "LiVerse";
       Window.AllowUserResizing = true;
@@ -42,45 +45,29 @@ namespace LiVerse {
       // Creates UIRoot
       windowUIRoot = new WindowRoot();
 
-      DockFillContainer fillContainer = new DockFillContainer();
-      DockFillContainer secondContainer = new DockFillContainer();
-      DockFillContainer thirdContainer = new DockFillContainer();
-      Label testLabel = new Label("1st Label", 32);
-      testLabel2 = new Label("2nd", 32);
-      testLabel3 = new Label("3rd label", 32);
-      testLabel4 = new Label("4th label", 32);
+      DockFillContainer HeaderBar = new DockFillContainer();
+      HeaderBar.DockType = DockFillContainerDockType.Left;
 
-      thirdContainer.DockType = DockFillContainerDockType.Bottom;
-      thirdContainer.Lines = true;
+      Label testLabel = new Label("{character_name}", 32);
+      Label placeholderLabel = new Label("Placeholder", 42);
+      Button charactersButton = new Button("Characters");
 
-      fillContainer.DockElement = testLabel;
-      fillContainer.FillElement = secondContainer;
-      
-      secondContainer.DockElement = thirdContainer;
-      secondContainer.FillElement = testLabel2;
+      HeaderBar.DockType = DockFillContainerDockType.Left;
+      HeaderBar.DockElement = charactersButton;
+      HeaderBar.FillElement = testLabel;
 
-      thirdContainer.DockElement = testLabel3;
-      thirdContainer.FillElement = testLabel4;
+      //HeaderBar.Lines = true;
+      mainFillContainer.DockElement = HeaderBar;
+      mainFillContainer.FillElement = placeholderLabel;
 
-      windowUIRoot.RootElement = fillContainer;
-      
+      windowUIRoot.RootElement = mainFillContainer;      
     }
 
-    int size = 18;
     protected override void Update(GameTime gameTime) {
       if (windowUIRoot == null) { return; }
-      
-      testLabel2.Text = Mouse.GetState().Position.ToString();
-      testLabel3.Text = gameTime.ElapsedGameTime.TotalSeconds.ToString().PadRight(7, '0');
-      testLabel4.FontSize = size;
 
-      if (Keyboard.GetState().IsKeyDown(Keys.A)) {
-        size--;
-        if (size < -1) { size = -1; }
-      }
-      if (Keyboard.GetState().IsKeyDown(Keys.D)) {
-        size++;
-      }
+      // Update UIRoot
+      UIRoot.Update(gameTime.ElapsedGameTime.TotalSeconds);
 
       windowUIRoot.Update(gameTime.ElapsedGameTime.TotalSeconds);
     }

@@ -1,4 +1,3 @@
-using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -23,7 +22,7 @@ namespace LiVerse.AnaBanUI.Controls {
         reMeasureText = true;
       }
     }
-    public string _text;
+    public string _text = "";
     public string Text { get => _text; set {
         if (value == _text) { return; }
         _text = value;
@@ -33,7 +32,7 @@ namespace LiVerse.AnaBanUI.Controls {
     public Color Color { get; set; } = Color.White;
     public LabelTextVerticalAlignment TextVerticalAlignment = LabelTextVerticalAlignment.Center;
     public LabelTextHorizontalAlignment TextHorizontalAlignment = LabelTextHorizontalAlignment.Center;
-    DynamicSpriteFont? font; 
+    SpriteFont? font; 
     bool reBakeFont = true;
     bool reMeasureText = true;
     Vector2 textPosition = Vector2.Zero;
@@ -41,19 +40,20 @@ namespace LiVerse.AnaBanUI.Controls {
 
     public Label(string text, int fontSize = 18) {
       Text = text;
-      FontSize = fontSize; 
-      
+      FontSize = fontSize;       
     }  
 
     public override void Draw(SpriteBatch spriteBatch) {
       if (font == null || reBakeFont) {
         reBakeFont = false;
-        font = ResourceManager.GlobalFontSystem.GetFont(FontSize); 
+        font = ResourceManager.GetFont("OpenSans", FontSize, spriteBatch.GraphicsDevice); 
 
          RecalculateUI();
       }
 
-      spriteBatch.DrawString(font, Text, textPosition, this.Color, Vector2.One);
+      //spriteBatch.FillRectangle(new RectangleF(textPosition, fontArea), Color.Blue);
+
+      spriteBatch.DrawString(font, Text, textPosition, Color);
     }
 
     void RecalculateUI() {
@@ -78,7 +78,7 @@ namespace LiVerse.AnaBanUI.Controls {
       // Calculates Y
       switch (TextVerticalAlignment) {
         case LabelTextVerticalAlignment.Center: {
-          textPosition.Y = Size.Y / 2 - fontArea.Y / 2;
+            textPosition.Y = Size.Y / 2 - fontArea.Y / 2;
           break;
         }
 
@@ -101,8 +101,7 @@ namespace LiVerse.AnaBanUI.Controls {
       }
     }
 
-    public override void Update(double deltaTime)
-    {
+    public override void Update(double deltaTime) {
       RecalculateUI();
     }
   }

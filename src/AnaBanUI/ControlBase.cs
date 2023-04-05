@@ -4,13 +4,16 @@ using Microsoft.Xna.Framework.Graphics;
 namespace LiVerse.AnaBanUI {
   public abstract class ControlBase {
     /// A disabled control doesn't accept user input, but its still rendered
-    public bool Enabled { get; set; }
+    public bool Enabled { get; set; } = true;
     /// A invisible control is invisible and doesn't process any events
-    public bool Visible { get; set; }
+    public bool Visible { get; set; } = true;
 
     /// Backing field for ElementSize
     protected Vector2 _elementSize { get; set; }
-    /// Total size, including padding
+    
+    /// <summary>
+    /// Total Size, including padding/margins.<br></br>Don't change this value manually, this value should be determined by the container
+    /// </summary>
     public Vector2 Size { 
       get => _elementSize; 
       set {
