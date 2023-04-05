@@ -1,18 +1,20 @@
 ﻿using LiVerse.AnaBanUI;
 using LiVerse.AnaBanUI.Controls;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 
 namespace LiVerse.src.AnaBanUI.Controls {
   public class VerticalLevelTrigger : ControlBase {
-    public float MaxValue = 100;
-    public float CurrentValue = 50;
-    public bool ShowPeaks = true;
-    Label debugLabel;
+    public float MaximumValue = 100;
+    public float CurrentValue = 0;
+    public bool ShowPeaks = false;
+    public event Action? LevelTriggered;
+    public float TriggerLevel = 0;
 
-    public float peakLevel { get; set; }
+    float peakLevel = 0;
     float peakLevelTarget = 0;
     float peakReset = 0;
 
@@ -20,20 +22,23 @@ namespace LiVerse.src.AnaBanUI.Controls {
     // Color.FromNonPremultiplied(66, 100, 234, 255);
     static readonly Color backgroundColor = Color.FromNonPremultiplied(66, 100, 234, 100);
     static readonly Color borderColor = Color.FromNonPremultiplied(50, 118, 234, 255);
-    static readonly Color levelMeterColor = Color.FromNonPremultiplied(50, 130, 238, 255);
+    static readonly Color levelMeterColor = Color.FromNonPremultiplied(50, 150, 248, 255);
     static readonly Color levelMeterDetailColor = Color.FromNonPremultiplied(50, 118, 234, 255);
-    static readonly Color peakMeterColor = Color.FromNonPremultiplied(100, 219, 255, 150);
+    static readonly Color peakMeterColor = Color.FromNonPremultiplied(100, 219, 255, 75);
+    static readonly Color triggerMeterColor = Color.FromNonPremultiplied(5, 96, 150, 255);
+    static readonly Color triggerActiveMeterColor = Color.FromNonPremultiplied(96, 15, 160, 255);
+    static readonly Color triggerGrabbedMeterColor = Color.FromNonPremultiplied(196, 115, 260, 255);
+
+    bool triggerGrabbed = false;
+    bool triggerActive = false;
 
     public VerticalLevelTrigger() {
-      debugLabel = new Label("e");
-      debugLabel.Color = Color.Blue;
-
     }
 
     public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
-      float ratio = CurrentValue / MaxValue;
+      float ratio = CurrentValue / MaximumValue;
 
-      if (ratio > peakLevelTarget) { peakReset = 0; peakLevelTarget = ratio; peakLevel = ratio; }
+      if (ratio > peakLevelTarget) { peakReset = 0; peakLevelTarget = ratio; peakLevel = ratio; }      
 
       spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, Size), backgroundColor);
 
@@ -45,10 +50,12 @@ namespace LiVerse.src.AnaBanUI.Controls {
       // Draw Peak
       spriteBatch.FillRectangle(new RectangleF(0, Size.Y - (Size.Y * peakLevel) - 1, Size.X, 2), peakMeterColor);
 
+      // Draw Trigger Level
+      spriteBatch.FillRectangle(new RectangleF(0, Size.Y - (Size.Y * TriggerLevel) - 1, Size.X, 2), 
+        triggerGrabbed ? triggerGrabbedMeterColor : (triggerActive ? triggerActiveMeterColor : triggerMeterColor));
+
       // Draw Border
       spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), borderColor);
-
-      debugLabel.Draw(spriteBatch, deltaTime);
     }
 
     public override void Update(double deltaTime) {
@@ -61,14 +68,27 @@ namespace LiVerse.src.AnaBanUI.Controls {
 
       if (peakReset >= 3) {
         peakReset = 0;
-        peakLevelTarget = CurrentValue / MaxValue;
+        peakLevelTarget = CurrentValue / MaximumValue;
       }
 
-      CurrentValue = Math.Clamp(CurrentValue, 0, MaxValue);
+      RectangleF rect = new RectangleF(AbsolutePosition, Size);
 
-      peakLevel = MathHelper.LerpPrecise(peakLevel, peakLevelTarget, (float)(1 - Math.Pow(0.000005, deltaTime)));
+      if (rect.Intersects(UIRoot.MouseDownRectangle)) {
+        triggerGrabbed = true;
+      }
+      else {
+        triggerGrabbed = false;
+      }
+
+      if (triggerGrabbed) {
+        float mouseRelativePos = (Size.Y + AbsolutePosition.Y) - UIRoot.MousePositionRectangle.Y;
+
+        TriggerLevel = Math.Clamp(mouseRelativePos / Size.Y, 0, 1);
+      }
+
+      peakLevel = MathHelper.Lerp(peakLevel, peakLevelTarget, (float)(1 - Math.Pow(0.00005, deltaTime)));
       
-      debugLabel.Update(deltaTime);
+      triggerActive = (CurrentValue / MaximumValue) >= TriggerLevel;
     }
 
   }

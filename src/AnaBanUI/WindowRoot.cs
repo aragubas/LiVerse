@@ -1,5 +1,7 @@
+using LiVerse.src.AnaBanUI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 
 namespace LiVerse.AnaBanUI {
   public class WindowRoot : IWindowRoot {
@@ -25,6 +27,8 @@ namespace LiVerse.AnaBanUI {
         spriteBatch.Begin();
         
         RootElement.Draw(spriteBatch, deltaTime);
+
+        spriteBatch.FillRectangle(UIRoot.MouseDownRectangle, Color.Red);
 
         spriteBatch.End();
       }

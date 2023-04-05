@@ -70,7 +70,7 @@ namespace LiVerse.src.AnaBanUI.Controls {
         currentBorderColor = normalBorder;
 
 
-        if (isMouseHovering) {
+        if (isMouseHovering && !UIRoot.MouseDown) {
           currentTargetBackgroundColor = hoverBackground;
           currentBorderColor = hoverBorder;
           borderThicknessTarget = 2;
@@ -80,8 +80,9 @@ namespace LiVerse.src.AnaBanUI.Controls {
           currentTargetBackgroundColor = downBackground;
           currentForegroundColor = downForeground;
           currentBorderColor = downBorder;
+          borderThicknessTarget = 2f;
         }
-        
+
         if (UIRoot.MouseUpRectangle.Intersects(absoluteRectangle)) {
           Clicked?.Invoke();
         }

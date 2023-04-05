@@ -6,12 +6,11 @@ namespace LiVerse.AnaBanUI.Containers {
   public enum DockFillContainerDockType {
     Top, Right, Bottom, Left
   }
-  
-  public class DockFillContainer : ControlBase
-  {
+
+  public class DockFillContainer : ControlBase {
     public ControlBase? DockElement { get; set; }
     public ControlBase? FillElement { get; set; }
-    
+
     /// <summary>
     /// The location that the dock element will be placed
     /// </summary>
@@ -21,17 +20,16 @@ namespace LiVerse.AnaBanUI.Containers {
 
     public DockFillContainer(ControlBase? dockElement = null, ControlBase? fillElement = null) {
       DockType = DockFillContainerDockType.Top;
-      
+
       DockElement = dockElement;
       FillElement = fillElement;
     }
-    
-    void FixMinimunSize(ControlBase control)
-    {
+
+    void FixMinimunSize(ControlBase control) {
       if (control.Size.X < control.MinimumSize.X) { control.Size = new Vector2(control.MinimumSize.X, control.Size.Y); }
       if (control.Size.Y < control.MinimumSize.Y) { control.Size = new Vector2(control.Size.X, control.MinimumSize.Y); }
     }
-    
+
     void FillControl(ControlBase element) {
       element.Size = Size; // Set element height to minimum size
       element.AbsolutePosition = AbsolutePosition;
@@ -48,6 +46,20 @@ namespace LiVerse.AnaBanUI.Containers {
       // Fill Fill Element if its the only one set
       if (FillElement != null && DockElement == null) { FillControl(FillElement); return; }
 
+      // Check if there's nothing to calculate
+      if (FillElement == null || DockElement == null) { return; }
+
+      // Fill Fill Element if the Dock Element is invisible
+      if (!DockElement.Visible) {
+        FillControl(FillElement);
+        return;
+      }
+
+      // Fill Dock Element if the Fill Element is invisible
+      if (!FillElement.Visible) {
+        FillControl(DockElement);
+        return;
+      }
 
       if (DockType == DockFillContainerDockType.Top) {
         DockElement.Size = new Vector2(Size.X, DockElement.MinimumSize.Y); // Set element height to minimum size
@@ -128,7 +140,8 @@ namespace LiVerse.AnaBanUI.Containers {
     }
 
     void DrawElement(SpriteBatch spriteBatch, double deltaTime, ControlBase element) {
-  
+
+      if (!element.Visible) { return; } 
       spriteBatch.End();
       spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(element.RelativePosition.X, element.RelativePosition.Y, 0));
 
@@ -176,8 +189,8 @@ namespace LiVerse.AnaBanUI.Containers {
     }
 
     public override void Update(double deltaTime) {
-      if (DockElement != null) DockElement.Update(deltaTime);
-      if (FillElement != null) FillElement.Update(deltaTime);
+      if (DockElement != null && DockElement.Visible) DockElement.Update(deltaTime);
+      if (FillElement != null && FillElement.Visible) FillElement.Update(deltaTime);
     }
   }
 }
