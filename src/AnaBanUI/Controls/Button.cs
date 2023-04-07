@@ -30,11 +30,11 @@ namespace LiVerse.src.AnaBanUI.Controls {
     static readonly Color normalBorder = new Color() { R = 10, G = 100, B = 200, A = 255 };
     static readonly Color hoverBorder = new Color() { R = 20, G = 135, B = 225, A = 255 };
     static readonly Color downBorder = new Color() { R = 30, G = 80, B = 160, A = 255 };
+    Color currentTargetBorderColor = normalBorder;
     Color currentBorderColor = normalBorder;
     
     bool isMouseHovering = false;
-    float borderThickness = 2;
-    float borderThicknessTarget = 2;
+    float borderThickness = 2f;
 
     public Button(string DefaultText, int defaultFontSize = 22) {
       Label = new Label(DefaultText, defaultFontSize);
@@ -58,29 +58,29 @@ namespace LiVerse.src.AnaBanUI.Controls {
 
       if (Enabled && Visible) {
         // Interpolate
-        float interpolationFactor = (float)(1 - Math.Pow(0.00025, deltaTime));
-        borderThickness = MathHelper.LerpPrecise(borderThickness, borderThicknessTarget, interpolationFactor);
         currentBackgroundColor = Color.Lerp(currentBackgroundColor, currentTargetBackgroundColor, (float)(1 - Math.Pow(0.003, deltaTime)));
+        currentBorderColor = Color.Lerp(currentBorderColor, currentTargetBorderColor, (float)(1 - Math.Pow(0.003, deltaTime)));
 
         Rectangle absoluteRectangle = new Rectangle(AbsolutePosition.ToPoint(), Size.ToPoint());
         isMouseHovering = UIRoot.MousePositionRectangle.Intersects(absoluteRectangle);
 
         currentForegroundColor = normalForeground;
         currentTargetBackgroundColor = normalBackground;
-        currentBorderColor = normalBorder;
+        currentTargetBorderColor = normalBorder;
 
 
         if (isMouseHovering && !UIRoot.MouseDown) {
           currentTargetBackgroundColor = hoverBackground;
-          currentBorderColor = hoverBorder;
-          borderThicknessTarget = 2;
-        } else { borderThicknessTarget = 1; }
+          currentTargetBorderColor = hoverBorder;
+          borderThickness = 2f;
+
+        } else { borderThickness = 1f; }
 
         if (UIRoot.MouseDownRectangle.Intersects(absoluteRectangle)) {
           currentTargetBackgroundColor = downBackground;
           currentForegroundColor = downForeground;
-          currentBorderColor = downBorder;
-          borderThicknessTarget = 2f;
+          currentTargetBorderColor = downBorder;
+          borderThickness = 2f;
         }
 
         if (UIRoot.MouseUpRectangle.Intersects(absoluteRectangle)) {

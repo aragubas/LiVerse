@@ -10,6 +10,9 @@ namespace LiVerse.AnaBanUI.Controls {
     Top, Center, Bottom
   }
   
+  /// <summary>
+  /// Draws Text into Screen
+  /// </summary>
   public class Label : ControlBase {
     int _fontSize = 18;
     public int FontSize { get => _fontSize; set {
@@ -50,13 +53,12 @@ namespace LiVerse.AnaBanUI.Controls {
 
          RecalculateUI();
       }
-
-      //spriteBatch.FillRectangle(new RectangleF(textPosition, fontArea), Color.Blue);
+      RecalculatePosition();
 
       spriteBatch.DrawString(font, Text, textPosition, Color);
     }
 
-    void RecalculateUI() {
+    void RecalculatePosition() {
       // Calculates X
       switch (TextHorizontalAlignment) {
         case LabelTextHorizontalAlignment.Center: {
@@ -92,7 +94,9 @@ namespace LiVerse.AnaBanUI.Controls {
           break;
         }          
       }
-      
+    }
+
+    void RecalculateUI() {      
       if (reMeasureText && font != null) {
         reMeasureText = false;
         fontArea = font.MeasureString(Text);

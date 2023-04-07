@@ -28,8 +28,6 @@ namespace LiVerse.AnaBanUI {
         
         RootElement.Draw(spriteBatch, deltaTime);
 
-        spriteBatch.FillRectangle(UIRoot.MouseDownRectangle, Color.Red);
-
         spriteBatch.End();
       }
       

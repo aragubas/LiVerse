@@ -17,6 +17,7 @@ namespace LiVerse.src.AnaBanUI.Controls {
     float peakLevel = 0;
     float peakLevelTarget = 0;
     float peakReset = 0;
+    float ratio = 0;
 
     // Colors
     // Color.FromNonPremultiplied(66, 100, 234, 255);
@@ -33,13 +34,10 @@ namespace LiVerse.src.AnaBanUI.Controls {
     bool triggerActive = false;
 
     public VerticalLevelTrigger() {
+      MinimumSize = new Vector2(24, 64);
     }
 
     public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
-      float ratio = CurrentValue / MaximumValue;
-
-      if (ratio > peakLevelTarget) { peakReset = 0; peakLevelTarget = ratio; peakLevel = ratio; }      
-
       spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, Size), backgroundColor);
 
       // Draw Level
@@ -48,7 +46,11 @@ namespace LiVerse.src.AnaBanUI.Controls {
       spriteBatch.FillRectangle(new RectangleF(0, Size.Y - (Size.Y * ratio), Size.X, 1), levelMeterDetailColor);
 
       // Draw Peak
-      spriteBatch.FillRectangle(new RectangleF(0, Size.Y - (Size.Y * peakLevel) - 1, Size.X, 2), peakMeterColor);
+      if (ShowPeaks) {
+        if (ratio > peakLevelTarget) { peakReset = 0; peakLevelTarget = ratio; peakLevel = ratio; }
+
+        spriteBatch.FillRectangle(new RectangleF(0, Size.Y - (Size.Y * peakLevel) - 1, Size.X, 2), peakMeterColor);
+      }
 
       // Draw Trigger Level
       spriteBatch.FillRectangle(new RectangleF(0, Size.Y - (Size.Y * TriggerLevel) - 1, Size.X, 2), 
@@ -59,26 +61,22 @@ namespace LiVerse.src.AnaBanUI.Controls {
     }
 
     public override void Update(double deltaTime) {
-      MinimumSize = new Vector2(32, 64);
+      #region Update Peak Meter
+      if (ShowPeaks) {
+        peakReset += (float)deltaTime * 1;
 
-      if (Keyboard.GetState().IsKeyDown(Keys.A)) CurrentValue++;
-      if (Keyboard.GetState().IsKeyDown(Keys.D)) CurrentValue--;
+        if (peakReset >= 3) {
+          peakReset = 0;
+          peakLevelTarget = CurrentValue / MaximumValue;
+        }
 
-      peakReset += (float)deltaTime * 1;
-
-      if (peakReset >= 3) {
-        peakReset = 0;
-        peakLevelTarget = CurrentValue / MaximumValue;
+        peakLevel = MathHelper.Lerp(peakLevel, peakLevelTarget, (float)(1 - Math.Pow(0.00005, deltaTime)));
       }
+      #endregion
 
+      // Updatr Trigger Grabber
       RectangleF rect = new RectangleF(AbsolutePosition, Size);
-
-      if (rect.Intersects(UIRoot.MouseDownRectangle)) {
-        triggerGrabbed = true;
-      }
-      else {
-        triggerGrabbed = false;
-      }
+      triggerGrabbed = rect.Intersects(UIRoot.MouseDownRectangle);
 
       if (triggerGrabbed) {
         float mouseRelativePos = (Size.Y + AbsolutePosition.Y) - UIRoot.MousePositionRectangle.Y;
@@ -86,8 +84,9 @@ namespace LiVerse.src.AnaBanUI.Controls {
         TriggerLevel = Math.Clamp(mouseRelativePos / Size.Y, 0, 1);
       }
 
-      peakLevel = MathHelper.Lerp(peakLevel, peakLevelTarget, (float)(1 - Math.Pow(0.00005, deltaTime)));
-      
+      // Calculate Level Ratio
+      ratio = CurrentValue / MaximumValue;
+
       triggerActive = (CurrentValue / MaximumValue) >= TriggerLevel;
     }
 

@@ -32,7 +32,7 @@ namespace LiVerse {
     }
 
     protected override void Initialize() {
-      Window.Title = "LiVerse";
+      Window.Title = "LiVerse Alpha";
       Window.AllowUserResizing = true;
 
       // Creates the sprite batch

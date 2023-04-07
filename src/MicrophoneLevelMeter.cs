@@ -10,13 +10,18 @@ namespace LiVerse.src {
     public static Microphone? CurrentMicrophone;
     public static event Action<double>? MicrophoneVolumeLevelUpdate;
     public static event Action? MicrophoneTriggerLevelTriggered;
+    public static event Action? CharacterStartSpeaking;
+    public static event Action? CharacterStopSpeaking;
     public static float TriggerLevel { get; set; } = 0.75f;
     public static float MaximumLevel { get; set; } = 80;
+    public static double ActivationDelay { get; set; }
+    public static float ActivationDelayTrigger { get; set; } = 0.65f;
     static byte[]? buffer;
+    static bool isCharacterSpeaking = false;
 
 
     public static void Initialize() {
-      SetUpDevice(Microphone.Default, 100);      
+      SetUpDevice(Microphone.Default, 100);
     }
 
     public static void SetUpDevice(Microphone device, double bufferSizeMS) {
@@ -26,6 +31,25 @@ namespace LiVerse.src {
       buffer = new byte[CurrentMicrophone.GetSampleSizeInBytes(CurrentMicrophone.BufferDuration)];
       CurrentMicrophone.BufferReady += CurrentMicrophone_BufferReady;
       CurrentMicrophone.Start();
+    }
+
+    public static void Update(double deltaTime) {
+      if (ActivationDelay > 0) {
+        ActivationDelay -= 1 * deltaTime;
+      }
+
+      if (ActivationDelay >= ActivationDelayTrigger) {
+        if (!isCharacterSpeaking) {
+          isCharacterSpeaking = true;
+
+          CharacterStartSpeaking?.Invoke();
+        }
+
+      }else if (isCharacterSpeaking) {
+        isCharacterSpeaking = false;
+
+        CharacterStopSpeaking?.Invoke();
+      }
     }
 
     private static void CurrentMicrophone_BufferReady(object? sender, EventArgs e) {
@@ -50,6 +74,7 @@ namespace LiVerse.src {
 
           if ((levelDB / MaximumLevel) >= TriggerLevel) {
             MicrophoneTriggerLevelTriggered?.Invoke();
+            ActivationDelay = 1;
           }
 
         }
