@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LiVerse.src.AnaBanUI.Containers {
+namespace LiVerse.AnaBanUI.Containers {
   public enum SideBySideCointainerLayoutFlow {
     Left
   }

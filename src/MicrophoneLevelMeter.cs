@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LiVerse.src {
+namespace LiVerse {
   public static class MicrophoneLevelMeter {
     public static Microphone? CurrentMicrophone;
     public static event Action<double>? MicrophoneVolumeLevelUpdate;

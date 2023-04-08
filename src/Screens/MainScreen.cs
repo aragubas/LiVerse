@@ -1,20 +1,12 @@
 ﻿using LiVerse.AnaBanUI;
 using LiVerse.AnaBanUI.Containers;
 using LiVerse.AnaBanUI.Controls;
-using LiVerse.src.AnaBanUI.Containers;
-using LiVerse.src.AnaBanUI.Controls;
+using LiVerse.CharacterRenderer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended.Timers;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace LiVerse.src.Screens
+namespace LiVerse.Screens
 {
     public class MainScreen : IScreen {
     public WindowRoot WindowRoot { get; }
@@ -28,10 +20,12 @@ namespace LiVerse.src.Screens
     DockFillContainer centerSplit;
     KeyboardState oldState;
     bool characterFullView = false;
+    CharacterRenderer.CharacterRenderer characterRenderer;
 
     DockFillContainer sideFillContainer;
     SolidColorRectangle speakingIndicatorSolidColorRect;
     Label speakingIndicatorLabel;
+    Label characterNameLabel;
     static readonly Color speakingIndicatorColor = Color.FromNonPremultiplied(8, 7, 5, 50);
     static readonly Color speakingIndicatorActiveColor = Color.FromNonPremultiplied(230, 50, 75, 255);
     static readonly Color speakingIndicatorLabelColor = Color.FromNonPremultiplied(255, 255, 255, 50);
@@ -45,9 +39,10 @@ namespace LiVerse.src.Screens
 
       HeaderBar = new DockFillContainer();
       centerSplit = new DockFillContainer();
+      // Create CharacterRenderer
+      characterRenderer = new CharacterRenderer.CharacterRenderer();
 
-      Label characterNameLabel = new Label("{character_name}", 22);
-      Label placeholderLabel = new Label("Placeholder", 42);
+      characterNameLabel = new Label("{character_name}", 26);
       Button charactersButton = new Button("Characters");
       micLevelTrigger = new VerticalLevelTrigger();
       levelDelayTrigger = new VerticalLevelTrigger();
@@ -57,7 +52,7 @@ namespace LiVerse.src.Screens
 
       SideBySideContainer sideBySide = new SideBySideContainer();
       sideFillContainer = new DockFillContainer();
-      sideFillContainer.Margin = 6f;
+      sideFillContainer.Margin = 4f;
 
       sideBySide.Elements.Add(micLevelTrigger);
       sideBySide.Elements.Add(levelDelayTrigger);
@@ -67,6 +62,7 @@ namespace LiVerse.src.Screens
       sideFillContainer.FillElement = sideBySide;
 
       speakingIndicatorLabel = new Label("Active", 22);
+      speakingIndicatorLabel.Color = speakingIndicatorLabelColor;
       speakingIndicatorSolidColorRect = new SolidColorRectangle(speakingIndicatorLabel);
       speakingIndicatorSolidColorRect.Margin = 4f;
       speakingIndicatorSolidColorRect.BackgroundColor = speakingIndicatorColor;
@@ -80,7 +76,7 @@ namespace LiVerse.src.Screens
 
       centerSplit.DockType = DockFillContainerDockType.Left;
       centerSplit.DockElement = sideFillContainer;
-      centerSplit.FillElement = placeholderLabel;
+      centerSplit.FillElement = characterRenderer;
 
       //HeaderBar.Lines = true;
       mainFillContainer.DockElement = HeaderBar;
@@ -113,6 +109,12 @@ namespace LiVerse.src.Screens
     }
 
     public void Draw(SpriteBatch spriteBatch, double deltaTime) {
+      if (!characterFullView) {
+        spriteBatch.GraphicsDevice.Clear(Color.CornflowerBlue);
+      }else {
+        spriteBatch.GraphicsDevice.Clear(Color.Transparent);
+      }
+      
       WindowRoot.Draw(spriteBatch, deltaTime);
     }
 
@@ -128,6 +130,12 @@ namespace LiVerse.src.Screens
       levelDelayTrigger.TriggerLevel = MicrophoneLevelMeter.ActivationDelayTrigger;
 
       WindowRoot.Update(deltaTime);
+
+      // Set CharacterName Label
+      if (characterRenderer.CurrentCharacter != null) {
+        characterNameLabel.Text = characterRenderer.CurrentCharacter.Name;
+      }else { characterNameLabel.Text = "No character selected"; }
+      
 
       // Sincronize Changes
       MicrophoneLevelMeter.TriggerLevel = micLevelTrigger.TriggerLevel;

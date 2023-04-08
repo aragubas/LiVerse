@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LiVerse.src.AnaBanUI.Controls {
+namespace LiVerse.AnaBanUI.Controls {
   public class Button : ControlBase {
     public event Action? Clicked = null;
     public Label Label;

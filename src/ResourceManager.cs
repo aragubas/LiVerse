@@ -50,5 +50,19 @@ namespace LiVerse {
       //GlobalFontSystem.AddFont(File.ReadAllBytes(openSansFontPath));      
     }
 
+    // Load Sprite From File
+    public static Texture2D LoadTexture2DFromFile(GraphicsDevice graphicsDevice, string FilePath) {
+      if (!File.Exists(FilePath)) {
+        throw new FileNotFoundException($"Could not find Sprite to load. Path: {FilePath}");
+      }
+
+
+      FileStream fileStream = new FileStream(FilePath, FileMode.Open);
+      Texture2D ValToReturn = Texture2D.FromStream(graphicsDevice, fileStream);
+      fileStream.Dispose();
+
+      return ValToReturn;
+    }
+
   }
 }

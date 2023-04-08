@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LiVerse.src.AnaBanUI.Controls {
+namespace LiVerse.AnaBanUI.Controls {
   public class SolidColorRectangle : ControlBase {
     public ControlBase Element { get; set; }
     public float Margin { get; set; } = 0f;

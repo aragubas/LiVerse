@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LiVerse.src.AnaBanUI
+namespace LiVerse.AnaBanUI
 {
   public static class UIRoot {
     public static Rectangle MousePositionRectangle;

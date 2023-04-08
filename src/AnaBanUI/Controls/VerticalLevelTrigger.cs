@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 
-namespace LiVerse.src.AnaBanUI.Controls {
+namespace LiVerse.AnaBanUI.Controls {
   public class VerticalLevelTrigger : ControlBase {
     public float MaximumValue = 100;
     public float CurrentValue = 0;

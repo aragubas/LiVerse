@@ -1,13 +1,7 @@
 ﻿using LiVerse.AnaBanUI;
-using LiVerse.AnaBanUI.Containers;
-using LiVerse.AnaBanUI.Controls;
-using LiVerse.src;
-using LiVerse.src.AnaBanUI;
-using LiVerse.src.AnaBanUI.Controls;
-using LiVerse.src.Screens;
+using LiVerse.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 
 namespace LiVerse {
@@ -56,8 +50,6 @@ namespace LiVerse {
 
 
     protected override void Draw(GameTime gameTime) {
-      GraphicsDevice.Clear(Color.CornflowerBlue);
-
       screenManager.Draw(spriteBatch, gameTime.GetElapsedSeconds());
     }
 

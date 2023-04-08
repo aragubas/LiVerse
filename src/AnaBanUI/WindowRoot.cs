@@ -1,4 +1,4 @@
-using LiVerse.src.AnaBanUI;
+using LiVerse.AnaBanUI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
