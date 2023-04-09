@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework.Graphics;
 
 namespace LiVerse.AnaBanUI {
-  public interface IWindowRoot {
+  public interface IUILayer {
     public ControlBase? RootElement { get; set; }
 
     public void Update(double deltaTime);

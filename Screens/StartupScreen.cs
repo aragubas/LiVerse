@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LiVerse.Screens {
   public class StartupScreen : ScreenBase {
-    public WindowRoot? WindowRoot => null;
+    public UILayer? WindowRoot => null;
     Texture2D? startupBannerTexture;
     double waitTimer = 0;
 
@@ -24,6 +24,8 @@ namespace LiVerse.Screens {
         startupBannerTexture.Dispose();
       }
     }
+
+    public override void Dispose() { }
 
     public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
       if (startupBannerTexture == null) {

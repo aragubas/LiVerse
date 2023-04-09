@@ -1,5 +1,5 @@
 ﻿namespace LiVerse.CaptureDeviceDriver {
-  public interface ICaptureDeviceDriver {
+  public interface ICaptureDeviceDriver : IDisposable {
     public event Action<double>? MicrophoneVolumeLevelUpdated;
     public event Action? MicrophoneTriggerLevelTriggered;
     public event Action? MicrophoneLevelTriggered;

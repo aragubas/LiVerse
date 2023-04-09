@@ -27,8 +27,17 @@ namespace LiVerse {
       InactiveSleepTime = TimeSpan.Zero;
     }
 
+    protected override void OnExiting(object sender, EventArgs args) {
+      Console.WriteLine("Exit!");
+      screenManager.DetachScreen();
+    }
+
     protected override void Initialize() {
       Window.Title = $"LiVerse Alpha";
+#if DEBUG
+      Window.Title += " (Debug)";
+#endif
+
       Window.AllowUserResizing = true;
 
       // Creates the sprite batch

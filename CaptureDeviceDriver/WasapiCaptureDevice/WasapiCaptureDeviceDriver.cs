@@ -45,7 +45,7 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
         CurrentWasapiCaptureDevice.StopRecording();
       }
 
-      CurrentWasapiCaptureDevice = new WasapiCapture(device, false, 100);
+      CurrentWasapiCaptureDevice = new WasapiCapture(device, true, 150);
 
       CurrentWasapiCaptureDevice.DataAvailable += CurrentWasapiCaptureDevice_DataAvailable; ;
       CurrentWasapiCaptureDevice.StartRecording();
@@ -91,6 +91,13 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
         isMicrophoneLevelTriggered = false;
 
         MicrophoneLevelUntriggered?.Invoke();
+      }
+    }
+
+    public void Dispose() {
+      if (CurrentWasapiCaptureDevice != null) {
+        CurrentWasapiCaptureDevice.StopRecording();
+        CurrentWasapiCaptureDevice.Dispose();
       }
     }
 

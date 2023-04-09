@@ -17,10 +17,17 @@ namespace LiVerse {
         return;
       }
 
-      CurrentScreen.Deattach();
+      DetachScreen();
       CurrentScreen = screen;
+    }
 
-      GC.Collect();
+    public void DetachScreen() {
+      if (CurrentScreen != null) {
+        CurrentScreen.Deattach();
+        CurrentScreen.Dispose();
+
+        GC.Collect();
+      }
     }
 
     public void Update(double deltaTime) {

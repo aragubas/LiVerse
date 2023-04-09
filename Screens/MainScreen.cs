@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 namespace LiVerse.Screens
 {
     public class MainScreen : ScreenBase {
-    public WindowRoot WindowRoot { get; }
+    public UILayer WindowRoot { get; }
        
     // MainUI Members
     DockFillContainer mainFillContainer = new();
@@ -36,7 +36,7 @@ namespace LiVerse.Screens
     static readonly Color speakingIndicatorActiveLabelColor = Color.FromNonPremultiplied(255, 255, 255, 255);
 
     public MainScreen(ScreenManager screenManager) : base(screenManager) {
-      WindowRoot = new WindowRoot();
+      WindowRoot = new UILayer();
 
       HeaderBar = new DockFillContainer();
       centerSplit = new DockFillContainer();
@@ -115,8 +115,10 @@ namespace LiVerse.Screens
     }
 
 
-    public override void Deattach() {
+    public override void Deattach() { }
 
+    public override void Dispose() {
+      captureDeviceDriver.Dispose();
     }
 
     public override void Draw(SpriteBatch spriteBatch, double deltaTime) {

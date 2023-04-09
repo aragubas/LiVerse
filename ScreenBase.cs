@@ -2,8 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 
 namespace LiVerse {
-  public abstract class ScreenBase {
-    protected WindowRoot? WindowRoot { get; }
+  public abstract class ScreenBase : IDisposable {
+    protected UILayer? WindowRoot { get; }
     protected ScreenManager ScreenManager { get; }
 
     public ScreenBase(ScreenManager screenManagerRef) {
@@ -13,5 +13,7 @@ namespace LiVerse {
     public abstract void Deattach();
     public abstract void Update(double deltaTime);
     public abstract void Draw(SpriteBatch spriteBatch, double deltaTime);
+    public abstract void Dispose();
+    
   }
 }

@@ -21,7 +21,6 @@ namespace LiVerse.CharacterRenderer.BuiltInAnimators {
       returnVectorTarget += Vector2.UnitY * -30;
 
       speakingReset = true;
-      Console.WriteLine(returnVectorTarget);
     }
 
     public Vector2 Update(CharacterState state, double deltaTime) {
@@ -36,7 +35,6 @@ namespace LiVerse.CharacterRenderer.BuiltInAnimators {
 
         if (oldState) {
           doSpeaking();
-          Console.WriteLine($"State changed: {oldState}");
         }
       }
 
@@ -46,8 +44,6 @@ namespace LiVerse.CharacterRenderer.BuiltInAnimators {
         if (speakingResetTimer > 0.15) {
           speakingReset = false;
           speakingResetTimer = 0;
-
-          Console.WriteLine("Speak Reset");
 
           returnVectorTarget = Vector2.Zero;
           

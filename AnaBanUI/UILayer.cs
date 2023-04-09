@@ -4,10 +4,10 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
 namespace LiVerse.AnaBanUI {
-  public class WindowRoot : IWindowRoot {
-    public ControlBase? RootElement { get; set; }
- 
-    public WindowRoot() {
+  public class UILayer : IUILayer {
+    public ControlBase? RootElement { get; set; }    
+
+    public UILayer() {
       RootElement = null;      
     }
 
