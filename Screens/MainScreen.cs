@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace LiVerse.Screens
 {
-    public class MainScreen : IScreen {
+    public class MainScreen : ScreenBase {
     public WindowRoot WindowRoot { get; }
        
     // MainUI Members
@@ -35,7 +35,7 @@ namespace LiVerse.Screens
     static readonly Color speakingIndicatorLabelColor = Color.FromNonPremultiplied(255, 255, 255, 50);
     static readonly Color speakingIndicatorActiveLabelColor = Color.FromNonPremultiplied(255, 255, 255, 255);
 
-    public MainScreen() {
+    public MainScreen(ScreenManager screenManager) : base(screenManager) {
       WindowRoot = new WindowRoot();
 
       HeaderBar = new DockFillContainer();
@@ -115,11 +115,11 @@ namespace LiVerse.Screens
     }
 
 
-    public void Deattach() {
+    public override void Deattach() {
 
     }
 
-    public void Draw(SpriteBatch spriteBatch, double deltaTime) {
+    public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
       if (!characterFullView) {
         spriteBatch.GraphicsDevice.Clear(Color.CornflowerBlue);
       }else {
@@ -129,7 +129,7 @@ namespace LiVerse.Screens
       WindowRoot.Draw(spriteBatch, deltaTime);
     }
 
-    public void Update(double deltaTime) {
+    public override void Update(double deltaTime) {
       // Set Values
       levelDelayTrigger.CurrentValue = (float)captureDeviceDriver.ActivationDelay;
 

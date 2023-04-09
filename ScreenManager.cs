@@ -2,7 +2,7 @@
 
 namespace LiVerse {
   public class ScreenManager {
-    IScreen? CurrentScreen;
+    ScreenBase? CurrentScreen;
 
     public ScreenManager() {
     }
@@ -11,7 +11,7 @@ namespace LiVerse {
     /// De-attaches the current screen (if one is attached) and attaches a new one<br></br>This method forcibly calls the Garbage Collector.
     /// </summary>
     /// <param name="screen"></param>
-    public void AttachScreen(IScreen screen) {
+    public void AttachScreen(ScreenBase screen) {
       if (CurrentScreen == null) {
         CurrentScreen = screen;
         return;

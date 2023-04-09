@@ -9,7 +9,7 @@ namespace LiVerse {
   public class LiVerseApp : Game {
     GraphicsDeviceManager graphics { get; }
     SpriteBatch? spriteBatch;
-    ScreenManager screenManager { get; }
+    readonly ScreenManager screenManager;
 
 
     public LiVerseApp() {
@@ -38,7 +38,12 @@ namespace LiVerse {
       ResourceManager.LoadBaseResources(GraphicsDevice);
 
       // Attach MainScreen to ScreenManager
-      screenManager.AttachScreen(new MainScreen());
+#if DEBUG
+      screenManager.AttachScreen(new MainScreen(screenManager));
+#else
+      screenManager.AttachScreen(new StartupScreen(screenManager));
+#endif
+
     }
 
     protected override void Update(GameTime gameTime) {

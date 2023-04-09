@@ -49,17 +49,20 @@ namespace LiVerse {
     }
 
     // Load Sprite From File
-    public static Texture2D LoadTexture2DFromFile(GraphicsDevice graphicsDevice, string FilePath) {
-      if (!File.Exists(FilePath)) {
-        throw new FileNotFoundException($"Could not find Sprite to load. Path: {FilePath}");
+    public static Texture2D LoadTexture2DFromFile(GraphicsDevice graphicsDevice, string filePath, Action<byte[]> colorProcessor) {
+      if (!File.Exists(filePath)) {
+        throw new FileNotFoundException($"Could not find Sprite to load. Path: {filePath}");
       }
 
-      using (FileStream fileStream = new FileStream(FilePath, FileMode.Open)) {
-        Texture2D ValToReturn = Texture2D.FromStream(graphicsDevice, fileStream);
-        fileStream.Dispose();
+      using (FileStream fileStream = new FileStream(filePath, FileMode.Open)) {
+        Texture2D ValToReturn = Texture2D.FromStream(graphicsDevice, fileStream, colorProcessor);
 
         return ValToReturn;
       }
+    }
+    
+    public static Texture2D LoadTexture2DFromFile(GraphicsDevice graphicsDevice, string filePath) {
+      return LoadTexture2DFromFile(graphicsDevice, filePath, DefaultColorProcessors.ZeroTransparentPixels);
     }
 
   }
