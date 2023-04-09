@@ -25,7 +25,7 @@ namespace LiVerse.AnaBanUI.Controls {
     static readonly Color borderColor = Color.FromNonPremultiplied(50, 118, 234, 255);
     static readonly Color levelMeterColor = Color.FromNonPremultiplied(50, 150, 248, 255);
     static readonly Color levelMeterDetailColor = Color.FromNonPremultiplied(50, 118, 234, 255);
-    static readonly Color peakMeterColor = Color.FromNonPremultiplied(100, 219, 255, 75);
+    static readonly Color peakMeterColor = Color.FromNonPremultiplied(255, 219, 230, 150);
     static readonly Color triggerMeterColor = Color.FromNonPremultiplied(5, 96, 150, 255);
     static readonly Color triggerActiveMeterColor = Color.FromNonPremultiplied(96, 15, 160, 255);
     static readonly Color triggerGrabbedMeterColor = Color.FromNonPremultiplied(196, 115, 260, 255);

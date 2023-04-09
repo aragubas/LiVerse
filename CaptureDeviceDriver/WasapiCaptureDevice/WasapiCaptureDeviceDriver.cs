@@ -4,7 +4,7 @@ using NAudio.Wave;
 namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
   public class WasapiCaptureDeviceDriver : ICaptureDeviceDriver {
     public float TriggerLevel { get; set; } = 0.45f;
-    public float MaximumLevel { get; set; }
+    public float MaximumLevel { get; set; } = 76.1f;
     public double ActivationDelay { get; set; }
     public float ActivationDelayTrigger { get; set; } = 0.65f;
 
@@ -45,24 +45,24 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
         CurrentWasapiCaptureDevice.StopRecording();
       }
 
-      CurrentWasapiCaptureDevice = new WasapiCapture(device, true, 150);
-
+      CurrentWasapiCaptureDevice = new WasapiCapture(device, false, 50);
+      
       CurrentWasapiCaptureDevice.DataAvailable += CurrentWasapiCaptureDevice_DataAvailable; ;
       CurrentWasapiCaptureDevice.StartRecording();
     }
 
     private void CurrentWasapiCaptureDevice_DataAvailable(object? sender, WaveInEventArgs e) {
-      double rmsSum = 0;
       var buffer = new WaveBuffer(e.Buffer);
+      
+      double sum = 0;
       for (int i = 0; i < e.BytesRecorded / 4; i++) {
-        float sample = buffer.FloatBuffer[i];
+        double sample = buffer.FloatBuffer[i];
 
-        rmsSum += sample * sample;
+        sum += sample * sample;
       }
+      double rms = Math.Sqrt(sum / buffer.FloatBuffer.Length);
 
-      double rms = Math.Sqrt(rmsSum);
-      double levelDB = 20.0 * Math.Log10(rmsSum) + 20; // 20 is the silence point, converting to semi-linear scale xP
-      MaximumLevel = 70;
+      double levelDB = 92.8 + 20 * Math.Log10(rms);
 
       MicrophoneVolumeLevelUpdated?.Invoke(levelDB);
 
@@ -70,6 +70,7 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
         MicrophoneTriggerLevelTriggered?.Invoke();
         ActivationDelay = 1;
       }
+
     }
 
     public void SetDefaultDevice() => SetDevice(new MMDeviceEnumerator().GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications));    

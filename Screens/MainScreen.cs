@@ -1,6 +1,7 @@
 ﻿using LiVerse.AnaBanUI;
 using LiVerse.AnaBanUI.Containers;
 using LiVerse.AnaBanUI.Controls;
+using LiVerse.AnaBanUI.Drawables;
 using LiVerse.CaptureDeviceDriver;
 using LiVerse.CaptureDeviceDriver.WasapiCaptureDevice;
 using LiVerse.CharacterRenderer;
@@ -12,7 +13,7 @@ namespace LiVerse.Screens
 {
     public class MainScreen : ScreenBase {
     public UILayer WindowRoot { get; }
-       
+
     // MainUI Members
     DockFillContainer mainFillContainer = new();
     VerticalLevelTrigger micLevelTrigger;
@@ -44,6 +45,7 @@ namespace LiVerse.Screens
       characterRenderer = new CharacterRenderer.CharacterRenderer();
 
       characterNameLabel = new Label("{character_name}", 26);
+      characterNameLabel.Color = Color.Black;
       Button charactersButton = new Button("Characters");
       micLevelTrigger = new VerticalLevelTrigger();
       levelDelayTrigger = new VerticalLevelTrigger();
@@ -60,6 +62,7 @@ namespace LiVerse.Screens
       sideBySide.Gap = 4f;
 
       sideFillContainer.DockType = DockFillContainerDockType.Bottom;
+      sideFillContainer.BackgroundRectDrawble = new RectangleDrawable() { Color = Color.FromNonPremultiplied(242, 242, 242, 255), IsFilled = true };
       sideFillContainer.FillElement = sideBySide;
 
       speakingIndicatorLabel = new Label("Active", 22);
@@ -71,6 +74,7 @@ namespace LiVerse.Screens
       sideFillContainer.DockElement = speakingIndicatorSolidColorRect;
 
       HeaderBar.DockType = DockFillContainerDockType.Left;
+      HeaderBar.BackgroundRectDrawble = new RectangleDrawable() { Color = Color.FromNonPremultiplied(242, 242, 242, 255), IsFilled = true };
       HeaderBar.DockElement = charactersButton;
       HeaderBar.FillElement = characterNameLabel;
       HeaderBar.Margin = 4f;

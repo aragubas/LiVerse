@@ -1,3 +1,4 @@
+using LiVerse.AnaBanUI.Drawables;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -14,6 +15,8 @@ namespace LiVerse.AnaBanUI.Containers {
   public class DockFillContainer : ControlBase {
     public ControlBase? DockElement { get; set; }
     public ControlBase? FillElement { get; set; }
+    public RectangleDrawable? BackgroundRectDrawble { get; set; }
+    public RectangleDrawable? ForegroundRectDrawble { get; set; }
 
     /// <summary>
     /// The location that the dock element will be placed
@@ -166,12 +169,14 @@ namespace LiVerse.AnaBanUI.Containers {
 
       spriteBatch.GraphicsDevice.Viewport = elementViewport;
 
+      BackgroundRectDrawble?.Draw(spriteBatch, deltaTime, Size, Vector2.Zero);
       if (Lines) spriteBatch.DrawRectangle(new RectangleF(0, 0, MinimumSize.X, MinimumSize.Y), Color.Blue);
 
       // TODO: Bug that may haunt in the future: Fill Element's line doesn't translate to its correct position.
       if (DockElement != null) DrawElement(spriteBatch, deltaTime, DockElement, Lines);
       if (FillElement != null) DrawElement(spriteBatch, deltaTime, FillElement);
 
+      ForegroundRectDrawble?.Draw(spriteBatch, deltaTime, Size, Vector2.Zero);
       if (Lines) spriteBatch.DrawRectangle(new RectangleF(0, 0, Size.X, Size.Y), Color.Magenta);
 
       spriteBatch.End();
