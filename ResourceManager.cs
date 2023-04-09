@@ -46,8 +46,6 @@ namespace LiVerse {
       if (!File.Exists(openSansFontPath)) {
         throw new FileNotFoundException("Could not find default font \"OpenSans.ttf\".");
       }
-
-      //GlobalFontSystem.AddFont(File.ReadAllBytes(openSansFontPath));      
     }
 
     // Load Sprite From File
@@ -56,12 +54,12 @@ namespace LiVerse {
         throw new FileNotFoundException($"Could not find Sprite to load. Path: {FilePath}");
       }
 
+      using (FileStream fileStream = new FileStream(FilePath, FileMode.Open)) {
+        Texture2D ValToReturn = Texture2D.FromStream(graphicsDevice, fileStream);
+        fileStream.Dispose();
 
-      FileStream fileStream = new FileStream(FilePath, FileMode.Open);
-      Texture2D ValToReturn = Texture2D.FromStream(graphicsDevice, fileStream);
-      fileStream.Dispose();
-
-      return ValToReturn;
+        return ValToReturn;
+      }
     }
 
   }

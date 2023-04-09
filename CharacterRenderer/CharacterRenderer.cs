@@ -1,41 +1,42 @@
 ﻿using LiVerse.AnaBanUI;
+using LiVerse.CharacterRenderer.BuiltInAnimators;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
-namespace LiVerse.CharacterRenderer {
-  public class CharacterRenderer : ControlBase {
+namespace LiVerse.CharacterRenderer
+{
+    public class CharacterRenderer : ControlBase {
     public Character? CurrentCharacter { get; set; }
     public CharacterSpriteState CurrentSpriteState = CharacterSpriteState.Idle;
-    public bool IsSpeaking = false;
-    public bool IsBlinking = false;
+    public CharacterState State = new();
+    public List<IAnimator> Animators { get; set; } = new();
+    double blinkingPeriod = 0;
     Rectangle spriteDestinationRect = Rectangle.Empty;
 
     public CharacterRenderer() {
-      MicrophoneLevelMeter.CharacterStartSpeaking += MicrophoneLevelMeter_CharacterStartSpeaking;
-      MicrophoneLevelMeter.CharacterStopSpeaking += MicrophoneLevelMeter_CharacterStopSpeaking;
+      Animators.Add(new MovingAroundAnimator());
+      Animators.Add(new SpeakingJumpAnimator());
     }
 
-    private void MicrophoneLevelMeter_CharacterStopSpeaking() {
-      IsSpeaking = false;
-    }
-
-    private void MicrophoneLevelMeter_CharacterStartSpeaking() {
-      IsSpeaking = true;
-    }
+    /// <summary>
+    /// Controls if the character is "speaking"
+    /// </summary>
+    /// <param name="value">new value</param>
+    public void SetSpeaking(bool value) => State.IsSpeaking = value;
 
     Texture2D? CurrentSprite {
       get {
         if (CurrentCharacter == null) { return null; }
-        if (!IsSpeaking && !IsBlinking) {
+        if (!State.IsSpeaking && !State.IsBlinking) {
           return CurrentCharacter.characterSprites.Idle;
         }
 
-        else if (!IsSpeaking && IsBlinking) {
+        else if (!State.IsSpeaking && State.IsBlinking) {
           return CurrentCharacter.characterSprites.IdleBlink;
         }
 
-        else if (IsSpeaking && !IsBlinking) {
+        else if (State.IsSpeaking && !State.IsBlinking) {
           return CurrentCharacter.characterSprites.Speaking;
         }
 
@@ -58,14 +59,13 @@ namespace LiVerse.CharacterRenderer {
         CurrentCharacter = new Character("Aragubas", spritesCollection);
       }
 
-      CalculatePosition();
+      CalculatePosition(deltaTime);
 
       // Render current state
-      //spriteBatch.Draw(GetStateSprite(), Rectangle.Empty, Color.White);
       spriteBatch.Draw(CurrentSprite, spriteDestinationRect, Color.White);
     }
 
-    void CalculatePosition() {
+    void CalculatePosition(double deltaTime) {
       if (CurrentSprite != null) {
         Point textureSize = new Point(CurrentSprite.Width, CurrentSprite.Height);
         Point texturePosition = Point.Zero;
@@ -88,18 +88,35 @@ namespace LiVerse.CharacterRenderer {
           texturePosition.X = (int)Size.X / 2 - textureSize.X / 2;
         }
 
-
+        Vector2 animatorsAccumulator = Vector2.Zero;
+        foreach(IAnimator animator in Animators) {
+          animatorsAccumulator += animator.Update(State, deltaTime);
+        }
 
         //if (textureSize.Y > Size.Y) {
         //  textureSize.Y = (int)Size.Y / CurrentSprite.Height;
         //}
 
 
-        spriteDestinationRect = new Rectangle(texturePosition, textureSize);
+        spriteDestinationRect = new Rectangle(texturePosition + animatorsAccumulator.ToPoint(), textureSize);
       }
     }
 
     public override void Update(double deltaTime) {
+      // Update Blinking
+      if (CurrentCharacter != null) {
+        blinkingPeriod += 1 * deltaTime;
+
+        if (blinkingPeriod > CurrentCharacter.BlinkingTriggerEnd) {
+          State.IsBlinking = false;
+          blinkingPeriod = 0;
+
+        }
+        else if (blinkingPeriod > CurrentCharacter.BlinkingTrigger) {
+          State.IsBlinking = true;
+        }
+
+      } else { blinkingPeriod = 0; }
 
     }
 

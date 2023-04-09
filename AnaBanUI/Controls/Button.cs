@@ -34,7 +34,6 @@ namespace LiVerse.AnaBanUI.Controls {
     Color currentBorderColor = normalBorder;
     
     bool isMouseHovering = false;
-    float borderThickness = 2f;
 
     public Button(string DefaultText, int defaultFontSize = 22) {
       Label = new Label(DefaultText, defaultFontSize);
@@ -45,7 +44,7 @@ namespace LiVerse.AnaBanUI.Controls {
 
       Label.Draw(spriteBatch, deltaTime);
 
-      spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), currentBorderColor, thickness: borderThickness);
+      spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), currentBorderColor);
     }
 
     public override void Update(double deltaTime) {
@@ -58,7 +57,7 @@ namespace LiVerse.AnaBanUI.Controls {
 
       if (Enabled && Visible) {
         // Interpolate
-        currentBackgroundColor = Color.Lerp(currentBackgroundColor, currentTargetBackgroundColor, (float)(1 - Math.Pow(0.003, deltaTime)));
+        currentBackgroundColor = Color.Lerp(currentBackgroundColor, currentTargetBackgroundColor, (float)(1 - Math.Pow(0.0025, deltaTime)));
         currentBorderColor = Color.Lerp(currentBorderColor, currentTargetBorderColor, (float)(1 - Math.Pow(0.003, deltaTime)));
 
         Rectangle absoluteRectangle = new Rectangle(AbsolutePosition.ToPoint(), Size.ToPoint());
@@ -72,15 +71,13 @@ namespace LiVerse.AnaBanUI.Controls {
         if (isMouseHovering && !UIRoot.MouseDown) {
           currentTargetBackgroundColor = hoverBackground;
           currentTargetBorderColor = hoverBorder;
-          borderThickness = 2f;
 
-        } else { borderThickness = 1f; }
+        }
 
         if (UIRoot.MouseDownRectangle.Intersects(absoluteRectangle)) {
           currentTargetBackgroundColor = downBackground;
           currentForegroundColor = downForeground;
           currentTargetBorderColor = downBorder;
-          borderThickness = 2f;
         }
 
         if (UIRoot.MouseUpRectangle.Intersects(absoluteRectangle)) {

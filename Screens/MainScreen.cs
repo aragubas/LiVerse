@@ -1,6 +1,8 @@
 ﻿using LiVerse.AnaBanUI;
 using LiVerse.AnaBanUI.Containers;
 using LiVerse.AnaBanUI.Controls;
+using LiVerse.CaptureDeviceDriver;
+using LiVerse.CaptureDeviceDriver.WasapiCaptureDevice;
 using LiVerse.CharacterRenderer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,30 +13,29 @@ namespace LiVerse.Screens
     public class MainScreen : IScreen {
     public WindowRoot WindowRoot { get; }
        
-
     // MainUI Members
     DockFillContainer mainFillContainer = new();
     VerticalLevelTrigger micLevelTrigger;
     VerticalLevelTrigger levelDelayTrigger;
     DockFillContainer HeaderBar;
     DockFillContainer centerSplit;
-    KeyboardState oldState;
-    bool characterFullView = false;
     CharacterRenderer.CharacterRenderer characterRenderer;
-
     DockFillContainer sideFillContainer;
     SolidColorRectangle speakingIndicatorSolidColorRect;
     Label speakingIndicatorLabel;
     Label characterNameLabel;
+
+    KeyboardState oldState;
+    bool characterFullView = false;
+    ICaptureDeviceDriver captureDeviceDriver;
+
+    // Static ReadOnly Fields
     static readonly Color speakingIndicatorColor = Color.FromNonPremultiplied(8, 7, 5, 50);
     static readonly Color speakingIndicatorActiveColor = Color.FromNonPremultiplied(230, 50, 75, 255);
     static readonly Color speakingIndicatorLabelColor = Color.FromNonPremultiplied(255, 255, 255, 50);
     static readonly Color speakingIndicatorActiveLabelColor = Color.FromNonPremultiplied(255, 255, 255, 255);
 
     public MainScreen() {
-      MicrophoneLevelMeter.Initialize();
-      MicrophoneLevelMeter.MicrophoneVolumeLevelUpdate += MicrophoneLevelMeter_MicrophoneVolumeLevelUpdate;
-
       WindowRoot = new WindowRoot();
 
       HeaderBar = new DockFillContainer();
@@ -85,18 +86,28 @@ namespace LiVerse.Screens
 
       WindowRoot.RootElement = mainFillContainer;
 
-      MicrophoneLevelMeter.CharacterStartSpeaking += MicrophoneLevelMeter_CharacterStartSpeaking;
-      MicrophoneLevelMeter.CharacterStopSpeaking += MicrophoneLevelMeter_CharacterStopSpeaking;
+      captureDeviceDriver = new WasapiCaptureDeviceDriver();
+
+      captureDeviceDriver.MicrophoneLevelTriggered += MicrophoneLevelMeter_CharacterStartSpeaking;
+      captureDeviceDriver.MicrophoneLevelUntriggered += MicrophoneLevelMeter_CharacterStopSpeaking;
+      captureDeviceDriver.MicrophoneVolumeLevelUpdated += MicrophoneLevelMeter_MicrophoneVolumeLevelUpdate;
+
+      captureDeviceDriver.Initialize();
+      captureDeviceDriver.SetDefaultDevice();
     }
 
     private void MicrophoneLevelMeter_CharacterStopSpeaking() {
       speakingIndicatorSolidColorRect.BackgroundColor = speakingIndicatorColor;
       speakingIndicatorLabel.Color = speakingIndicatorLabelColor;
+
+      characterRenderer.SetSpeaking(false);
     }
 
     private void MicrophoneLevelMeter_CharacterStartSpeaking() {
       speakingIndicatorSolidColorRect.BackgroundColor = speakingIndicatorActiveColor;
       speakingIndicatorLabel.Color = speakingIndicatorActiveLabelColor;
+
+      characterRenderer.SetSpeaking(true);
     }
 
     private void MicrophoneLevelMeter_MicrophoneVolumeLevelUpdate(double value) {
@@ -119,15 +130,13 @@ namespace LiVerse.Screens
     }
 
     public void Update(double deltaTime) {
-      MicrophoneLevelMeter.Update(deltaTime);
-
       // Set Values
-      levelDelayTrigger.CurrentValue = (float)MicrophoneLevelMeter.ActivationDelay;
+      levelDelayTrigger.CurrentValue = (float)captureDeviceDriver.ActivationDelay;
 
       // Sincronize Values
-      micLevelTrigger.TriggerLevel = MicrophoneLevelMeter.TriggerLevel;
-      micLevelTrigger.MaximumValue = MicrophoneLevelMeter.MaximumLevel;
-      levelDelayTrigger.TriggerLevel = MicrophoneLevelMeter.ActivationDelayTrigger;
+      micLevelTrigger.TriggerLevel = captureDeviceDriver.TriggerLevel;
+      micLevelTrigger.MaximumValue = captureDeviceDriver.MaximumLevel;
+      levelDelayTrigger.TriggerLevel = captureDeviceDriver.ActivationDelayTrigger;
 
       WindowRoot.Update(deltaTime);
 
@@ -135,15 +144,21 @@ namespace LiVerse.Screens
       if (characterRenderer.CurrentCharacter != null) {
         characterNameLabel.Text = characterRenderer.CurrentCharacter.Name;
       }else { characterNameLabel.Text = "No character selected"; }
-      
+
 
       // Sincronize Changes
-      MicrophoneLevelMeter.TriggerLevel = micLevelTrigger.TriggerLevel;
-      MicrophoneLevelMeter.ActivationDelayTrigger = levelDelayTrigger.TriggerLevel;
+      captureDeviceDriver.TriggerLevel = micLevelTrigger.TriggerLevel;
+      captureDeviceDriver.ActivationDelayTrigger = levelDelayTrigger.TriggerLevel;
+
+      captureDeviceDriver.Update(deltaTime);
 
       HeaderBar.Visible = !characterFullView;
       if (centerSplit.DockElement != null) centerSplit.DockElement.Visible = !characterFullView;
 
+      FullscreenViewToggle();
+    }
+
+    void FullscreenViewToggle() {
       // Check if toggle key has been pressed
       if (Keyboard.GetState().IsKeyDown(Keys.Escape) && oldState.IsKeyUp(Keys.Escape)) {
         characterFullView = !characterFullView;
@@ -151,5 +166,6 @@ namespace LiVerse.Screens
 
       oldState = Keyboard.GetState();
     }
+
   }
 }

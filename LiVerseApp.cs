@@ -3,6 +3,7 @@ using LiVerse.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using System.Reflection;
 
 namespace LiVerse {
   public class LiVerseApp : Game {
@@ -17,6 +18,7 @@ namespace LiVerse {
 
       // Enables VSync
       graphics.SynchronizeWithVerticalRetrace = true;
+      graphics.PreferHalfPixelOffset = true;
       graphics.ApplyChanges();
 
       IsMouseVisible = true;
@@ -26,7 +28,7 @@ namespace LiVerse {
     }
 
     protected override void Initialize() {
-      Window.Title = "LiVerse Alpha";
+      Window.Title = $"LiVerse Alpha";
       Window.AllowUserResizing = true;
 
       // Creates the sprite batch
