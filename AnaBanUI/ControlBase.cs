@@ -3,11 +3,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace LiVerse.AnaBanUI {
   public abstract class ControlBase {
-    /// A disabled control doesn't accept user input, but its still rendered
+    /// A disabled control doesn't accept user input, but its still rendered if visible
     public bool Enabled { get; set; } = true;
     /// A invisible control is invisible and doesn't process any events
     public bool Visible { get; set; } = true;
-
+    /// Hints the container to hide Control's overflow by drawing it inside a viewport
+    public bool HideOverflow { get; set; } = true;
     /// Backing field for ElementSize
     protected Vector2 _elementSize { get; set; }
     

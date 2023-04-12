@@ -12,7 +12,7 @@ namespace LiVerse.AnaBanUI.Containers {
     Fill, KeepMinimunSize
   }
 
-  public class DockFillContainer : ControlBase {
+  public class DockFillContainer : ContainerBase {
     public ControlBase? DockElement { get; set; }
     public ControlBase? FillElement { get; set; }
     public RectangleDrawable? BackgroundRectDrawble { get; set; }
@@ -108,8 +108,8 @@ namespace LiVerse.AnaBanUI.Containers {
         DockElement.RelativePosition = new Vector2(Margin, Margin);
         DockElement.AbsolutePosition = AbsolutePosition + DockElement.RelativePosition;
 
-        FillElement.Size = new Vector2(Size.X - (DockElement.Size.X + Margin * 2), Size.Y);
-        FillElement.RelativePosition = new Vector2(DockElement.Size.X + Margin * 2, 0);
+        FillElement.Size = new Vector2(Size.X - (DockElement.Size.X + Margin), Size.Y);
+        FillElement.RelativePosition = new Vector2(DockElement.Size.X + Margin, 0);
         FillElement.AbsolutePosition = AbsolutePosition + FillElement.RelativePosition;
 
         // Calculate MinimiumSize
@@ -138,26 +138,6 @@ namespace LiVerse.AnaBanUI.Containers {
 
     }
 
-    void DrawElement(SpriteBatch spriteBatch, double deltaTime, ControlBase element, bool drawLines = false) {
-      if (!element.Visible) { return; }
-
-      Viewport oldViewport = spriteBatch.GraphicsDevice.Viewport;
-
-      spriteBatch.End();
-      spriteBatch.GraphicsDevice.Viewport = new Viewport((int)element.AbsolutePosition.X, (int)element.AbsolutePosition.Y, (int)element.Size.X, (int)element.Size.Y);
-      //spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(element.RelativePosition.X, element.RelativePosition.Y, 0));
-      spriteBatch.Begin();
-
-      element.Draw(spriteBatch, deltaTime);
-      if (drawLines) spriteBatch.DrawRectangle(new RectangleF(0, 0, element.Size.X, element.Size.Y), Color.Red);
-
-      spriteBatch.End();
-      
-      spriteBatch.GraphicsDevice.Viewport = oldViewport;
-
-      spriteBatch.Begin();
-    }
-
     public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
       RecalculateUI();
 
@@ -166,26 +146,24 @@ namespace LiVerse.AnaBanUI.Containers {
 
       spriteBatch.End();
       spriteBatch.Begin();
-
       spriteBatch.GraphicsDevice.Viewport = elementViewport;
 
       BackgroundRectDrawble?.Draw(spriteBatch, deltaTime, Size, Vector2.Zero);
+      ForegroundRectDrawble?.Draw(spriteBatch, deltaTime, Size, Vector2.Zero);
       if (Lines) spriteBatch.DrawRectangle(new RectangleF(0, 0, MinimumSize.X, MinimumSize.Y), Color.Blue);
 
       // TODO: Bug that may haunt in the future: Fill Element's line doesn't translate to its correct position.
       if (DockElement != null) DrawElement(spriteBatch, deltaTime, DockElement, Lines);
       if (FillElement != null) DrawElement(spriteBatch, deltaTime, FillElement);
 
-      ForegroundRectDrawble?.Draw(spriteBatch, deltaTime, Size, Vector2.Zero);
       if (Lines) spriteBatch.DrawRectangle(new RectangleF(0, 0, Size.X, Size.Y), Color.Magenta);
 
       spriteBatch.End();
 
       //Restore SpriteBatch
       spriteBatch.GraphicsDevice.Viewport = oldViewport;
-
-
       spriteBatch.Begin();
+
     }
 
     public override void Update(double deltaTime) {

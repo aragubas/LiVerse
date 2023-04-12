@@ -10,19 +10,26 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace LiVerse.AnaBanUI.Controls {
+  public enum ButtonStyle {
+    Default, Selectable
+  }
+  
   public class Button : ControlBase {
-    public event Action? Clicked = null;
+    public event Action? Click = null;
     public Label Label;
+    public bool IsSelected;
+    public ButtonStyle ButtonStyle = ButtonStyle.Default;
     
     // Background Colors
-    static readonly Color normalBackground = new Color() { R = 225, G = 225, B = 230, A = 255 };
+    static readonly Color normalBackground = new Color() { R = 220, G = 225, B = 230, A = 255 };
     static readonly Color hoverBackground = new Color() { R = 220, G = 245, B = 255, A = 255 };
     static readonly Color downBackground = new Color() { R = 200, G = 220, B = 235, A = 255 };
+    static readonly Color selectedBackground = new Color() { R = 197, G = 215, B = 230, A = 255 };
     Color currentTargetBackgroundColor = normalBackground;
     Color currentBackgroundColor = normalBackground;
 
     // Foreground Colors
-    static readonly Color normalForeground = new Color() { R = 50, G = 50, B = 60, A = 255 };
+    static readonly Color normalForeground = new Color() { R = 20, G = 20, B = 40, A = 255 };
     static readonly Color downForeground = new Color() { R = 0, G = 0, B = 0, A = 255 };
     Color currentForegroundColor = normalForeground;
 
@@ -30,31 +37,45 @@ namespace LiVerse.AnaBanUI.Controls {
     static readonly Color normalBorder = new Color() { R = 10, G = 100, B = 200, A = 255 };
     static readonly Color hoverBorder = new Color() { R = 20, G = 135, B = 225, A = 255 };
     static readonly Color downBorder = new Color() { R = 30, G = 80, B = 160, A = 255 };
+    static readonly Color unSelectedBorder = new Color() { R = 0, G = 0, B = 0, A = 0 };
+    static readonly Color selectedBorder = new Color() { R = 30, G = 145, B = 235, A = 255 };
     Color currentTargetBorderColor = normalBorder;
     Color currentBorderColor = normalBorder;
     
     bool isMouseHovering = false;
 
-    public Button(string DefaultText, int defaultFontSize = 22) {
+    public Button(string DefaultText, int defaultFontSize = 22, ButtonStyle buttonStyle = ButtonStyle.Default) {
       Label = new Label(DefaultText, defaultFontSize);
+      ButtonStyle = buttonStyle;
     }
 
     public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
       spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, Size), currentBackgroundColor);
 
-      Label.Draw(spriteBatch, deltaTime);
+      if (ButtonStyle == ButtonStyle.Default) {
+        Label.Draw(spriteBatch, deltaTime);
+      } else {
+        spriteBatch.End();
+        spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(3, 0, 0));
 
-      spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), currentBorderColor);
+        Label.Draw(spriteBatch, deltaTime);
+
+        spriteBatch.End();
+        spriteBatch.Begin();
+      }
+
+      if (ButtonStyle == ButtonStyle.Default) spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), currentBorderColor);
+      if (ButtonStyle == ButtonStyle.Selectable) spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, new Point(2, (int)Size.Y)), currentBorderColor);
     }
 
     public override void Update(double deltaTime) {
       Label.Update(deltaTime);
 
       Label.Color = currentForegroundColor;
-      Label.Size = Size;
+      Label.Size = ButtonStyle == ButtonStyle.Default ? Size : new Vector2(Size.X - 2, Size.Y);
       MinimumSize = Label.MinimumSize + new Vector2(10, 2);
 
-
+      // Update Default Style
       if (Enabled && Visible) {
         // Interpolate
         currentBackgroundColor = Color.Lerp(currentBackgroundColor, currentTargetBackgroundColor, (float)(1 - Math.Pow(0.0025, deltaTime)));
@@ -67,23 +88,31 @@ namespace LiVerse.AnaBanUI.Controls {
         currentTargetBackgroundColor = normalBackground;
         currentTargetBorderColor = normalBorder;
 
+        if (ButtonStyle == ButtonStyle.Selectable && IsSelected) {
+          currentTargetBackgroundColor = selectedBackground;
+          currentTargetBorderColor = selectedBorder;
+          currentForegroundColor = downForeground;
+
+        } else if (ButtonStyle == ButtonStyle.Selectable && !IsSelected) {
+          currentTargetBorderColor = unSelectedBorder;
+        }
 
         if (isMouseHovering && !UIRoot.MouseDown) {
           currentTargetBackgroundColor = hoverBackground;
-          currentTargetBorderColor = hoverBorder;
-
+          if (IsSelected) currentTargetBorderColor = hoverBorder;
         }
 
         if (UIRoot.MouseDownRectangle.Intersects(absoluteRectangle)) {
           currentTargetBackgroundColor = downBackground;
-          currentForegroundColor = downForeground;
           currentTargetBorderColor = downBorder;
+          currentForegroundColor = downForeground;
         }
 
         if (UIRoot.MouseUpRectangle.Intersects(absoluteRectangle)) {
-          Clicked?.Invoke();
+          Click?.Invoke();
         }
       }
+
     }
 
   }

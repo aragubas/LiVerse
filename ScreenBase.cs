@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace LiVerse {
   public abstract class ScreenBase : IDisposable {
-    protected UILayer? WindowRoot { get; }
+    protected UILayer WindowRoot { get; set; }
     protected ScreenManager ScreenManager { get; }
 
     public ScreenBase(ScreenManager screenManagerRef) {

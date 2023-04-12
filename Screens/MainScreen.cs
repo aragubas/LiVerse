@@ -5,6 +5,7 @@ using LiVerse.AnaBanUI.Drawables;
 using LiVerse.CaptureDeviceDriver;
 using LiVerse.CaptureDeviceDriver.WasapiCaptureDevice;
 using LiVerse.CharacterRenderer;
+using LiVerse.Screens.MainScreenNested;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,7 +13,7 @@ using Microsoft.Xna.Framework.Input;
 namespace LiVerse.Screens
 {
     public class MainScreen : ScreenBase {
-    public UILayer WindowRoot { get; }
+    SettingsScreen? settingsScreen { get; set; }
 
     // MainUI Members
     DockFillContainer mainFillContainer = new();
@@ -38,15 +39,29 @@ namespace LiVerse.Screens
 
     public MainScreen(ScreenManager screenManager) : base(screenManager) {
       WindowRoot = new UILayer();
+      //settingsScreen = new SettingsScreen();
 
       HeaderBar = new DockFillContainer();
       centerSplit = new DockFillContainer();
       // Create CharacterRenderer
       characterRenderer = new CharacterRenderer.CharacterRenderer();
 
-      characterNameLabel = new Label("{character_name}", 26);
+      characterNameLabel = new Label("{character_name}", 21);
       characterNameLabel.Color = Color.Black;
-      Button charactersButton = new Button("Characters");
+      Button settingsButton = new Button("Settings", 21);
+      settingsButton.Click += new Action(() => { 
+        if (settingsScreen != null) {
+          settingsScreen = null;
+        } else {
+          settingsScreen = new SettingsScreen();
+          settingsScreen.Close += new Action(() => {
+            Console.WriteLine("Ceira");
+            settingsScreen = null;
+          });
+        }
+      });
+
+
       micLevelTrigger = new VerticalLevelTrigger();
       levelDelayTrigger = new VerticalLevelTrigger();
       micLevelTrigger.MaximumValue = 84;
@@ -62,20 +77,19 @@ namespace LiVerse.Screens
       sideBySide.Gap = 4f;
 
       sideFillContainer.DockType = DockFillContainerDockType.Bottom;
-      sideFillContainer.BackgroundRectDrawble = new RectangleDrawable() { Color = Color.FromNonPremultiplied(242, 242, 242, 255), IsFilled = true };
       sideFillContainer.FillElement = sideBySide;
 
-      speakingIndicatorLabel = new Label("Active", 22);
+      speakingIndicatorLabel = new Label("Active", 21);
       speakingIndicatorLabel.Color = speakingIndicatorLabelColor;
       speakingIndicatorSolidColorRect = new SolidColorRectangle(speakingIndicatorLabel);
       speakingIndicatorSolidColorRect.Margin = 4f;
       speakingIndicatorSolidColorRect.BackgroundColor = speakingIndicatorColor;
-
+      
       sideFillContainer.DockElement = speakingIndicatorSolidColorRect;
 
       HeaderBar.DockType = DockFillContainerDockType.Left;
-      HeaderBar.BackgroundRectDrawble = new RectangleDrawable() { Color = Color.FromNonPremultiplied(242, 242, 242, 255), IsFilled = true };
-      HeaderBar.DockElement = charactersButton;
+      HeaderBar.BackgroundRectDrawble = new RectangleDrawable() { Color = Color.FromNonPremultiplied(249, 249, 249, 255), IsFilled = true };
+      HeaderBar.DockElement = settingsButton;
       HeaderBar.FillElement = characterNameLabel;
       HeaderBar.Margin = 4f;
 
@@ -133,6 +147,7 @@ namespace LiVerse.Screens
       }
       
       WindowRoot.Draw(spriteBatch, deltaTime);
+      settingsScreen?.Draw(spriteBatch, deltaTime);
     }
 
     public override void Update(double deltaTime) {
@@ -144,13 +159,20 @@ namespace LiVerse.Screens
       micLevelTrigger.MaximumValue = captureDeviceDriver.MaximumLevel;
       levelDelayTrigger.TriggerLevel = captureDeviceDriver.ActivationDelayTrigger;
 
-      WindowRoot.Update(deltaTime);
+      if (settingsScreen == null) { 
+        WindowRoot.Update(deltaTime); 
 
+      } else {
+        settingsScreen.Update(deltaTime);
+
+      }
+      
+      
+      
       // Set CharacterName Label
       if (characterRenderer.CurrentCharacter != null) {
         characterNameLabel.Text = characterRenderer.CurrentCharacter.Name;
       }else { characterNameLabel.Text = "No character selected"; }
-
 
       // Sincronize Changes
       captureDeviceDriver.TriggerLevel = micLevelTrigger.TriggerLevel;

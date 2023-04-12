@@ -4,7 +4,7 @@ using MonoGame.Extended;
 
 namespace LiVerse.AnaBanUI.Drawables {
   public class RectangleDrawable : IDrawable {
-    public bool IsFilled { get; set; }
+    public bool IsFilled { get; set; } = true;
     public float BorderThickness { get; set; } = 1f;
     public Color Color { get; set; }
 

@@ -61,7 +61,6 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
         sum += sample * sample;
       }
       double rms = Math.Sqrt(sum / buffer.FloatBuffer.Length);
-
       double levelDB = 92.8 + 20 * Math.Log10(rms);
 
       MicrophoneVolumeLevelUpdated?.Invoke(levelDB);
@@ -70,7 +69,6 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
         MicrophoneTriggerLevelTriggered?.Invoke();
         ActivationDelay = 1;
       }
-
     }
 
     public void SetDefaultDevice() => SetDevice(new MMDeviceEnumerator().GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications));    

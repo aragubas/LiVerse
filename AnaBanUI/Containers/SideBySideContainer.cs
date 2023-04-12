@@ -13,7 +13,7 @@ namespace LiVerse.AnaBanUI.Containers {
     Left
   }
   
-  public class SideBySideContainer : ControlBase {
+  public class SideBySideContainer : ContainerBase {
     public bool Lines { get; set; } = false;
     public float Margin { get; set; } = 0;
     public float Gap { get; set; } = 0;
@@ -65,20 +65,6 @@ namespace LiVerse.AnaBanUI.Containers {
       
     }
 
-    void DrawElement(SpriteBatch spriteBatch, double deltaTime, ControlBase element) {
-
-      if (!element.Visible) { return; }
-      spriteBatch.End();
-      spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(element.RelativePosition.X, element.RelativePosition.Y, 0));
-
-      element.Draw(spriteBatch, deltaTime);
-      if (Lines) spriteBatch.DrawRectangle(new RectangleF(0, 0, element.Size.X, element.Size.Y), Color.Red);
-
-      spriteBatch.End();
-      spriteBatch.Begin();
-    }
-
-
     public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
       RecalculateUI();
 
@@ -87,7 +73,6 @@ namespace LiVerse.AnaBanUI.Containers {
 
       spriteBatch.End();
       spriteBatch.Begin();
-
       spriteBatch.GraphicsDevice.Viewport = elementViewport;
 
       //if (Lines) spriteBatch.DrawRectangle(new RectangleF(0, 0, MinimumSize.X, MinimumSize.Y), Color.Blue);
@@ -103,9 +88,7 @@ namespace LiVerse.AnaBanUI.Containers {
 
       //Restore SpriteBatch
       spriteBatch.GraphicsDevice.Viewport = oldViewport;
-
       spriteBatch.Begin();
-
     }
 
     public override void Update(double deltaTime) {
