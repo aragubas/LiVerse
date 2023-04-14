@@ -48,9 +48,9 @@ namespace LiVerse.AnaBanUI {
     public Vector2 AbsolutePosition {
       get => _absolutePosition;
       set {
-        if (value == _absolutePosition) { return; }
+        //if (value == _absolutePosition) { return; }
 
-        _absolutePosition = value;
+        _absolutePosition = value + new Vector2(Margin);
         _abosoluteArea = new RectangleF(_absolutePosition, _size);
       }
     }
@@ -71,7 +71,7 @@ namespace LiVerse.AnaBanUI {
       Viewport oldViewport = spriteBatch.GraphicsDevice.Viewport;
 
       spriteBatch.End();
-      spriteBatch.GraphicsDevice.Viewport = new Viewport((int)(AbsolutePosition.X + Margin), (int)(AbsolutePosition.Y + Margin), (int)Size.X, (int)Size.Y);
+      spriteBatch.GraphicsDevice.Viewport = new Viewport((int)(AbsolutePosition.X), (int)(AbsolutePosition.Y), (int)Size.X, (int)Size.Y);
       spriteBatch.Begin();
       DrawElement(spriteBatch, deltaTime);
 
@@ -79,14 +79,14 @@ namespace LiVerse.AnaBanUI {
         if (Margin != 0) {
           spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, ContentArea), Color.Magenta);
         }
-        
+
         spriteBatch.End();
-        spriteBatch.GraphicsDevice.Viewport = new Viewport((int)(AbsolutePosition.X), (int)(AbsolutePosition.Y), (int)Size.X, (int)Size.Y);
+        spriteBatch.GraphicsDevice.Viewport = new Viewport((int)(AbsolutePosition.X - Margin), (int)(AbsolutePosition.Y - Margin), (int)Size.X, (int)Size.Y);
         spriteBatch.Begin();
-        
+
         spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), Color.Blue);
       }
-        
+
       spriteBatch.End();
       spriteBatch.GraphicsDevice.Viewport = oldViewport;
       spriteBatch.Begin();

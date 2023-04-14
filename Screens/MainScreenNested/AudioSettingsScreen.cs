@@ -9,12 +9,12 @@ namespace LiVerse.Screens.MainScreenNested {
   public class AudioSettingsScreen : ControlBase {
 
     ScrollableList scrollableList;
-
+    DockFillContainer dockFill;
 
     public AudioSettingsScreen() {
       scrollableList = new();
 
-      DockFillContainer dockFill = new();
+      dockFill = new();
       Label audioInputDeviceToggleTitle = new("Input Device: ") { Color = Color.Black };
       Label e = new("todo") { Color = Color.Black };
 
@@ -30,8 +30,10 @@ namespace LiVerse.Screens.MainScreenNested {
     }
 
     public override void Update(double deltaTime) {
-      scrollableList.Size = Size;
+      scrollableList.Size = ContentArea;
+      scrollableList.RelativePosition = RelativePosition;
       scrollableList.AbsolutePosition = AbsolutePosition;
+
       MinimumSize = scrollableList.MinimumSize;
       
     }

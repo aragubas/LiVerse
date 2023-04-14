@@ -53,7 +53,7 @@ namespace LiVerse.Screens.MainScreenNested {
 
       bool isFirstPage = true;
       foreach (var category in settingsCategories) {
-        Label categoryTitle = new(category.Title, 26, "Ubuntu") { Margin = 16 };
+        Label categoryTitle = new(category.Title, 26, "Ubuntu") { Margin = 8 };
         categoryTitle.Color = Color.Black;
         categoryTitle.DrawDebugLines = true;
 
@@ -76,6 +76,8 @@ namespace LiVerse.Screens.MainScreenNested {
 
     void SelectCategory(Button sender, SettingsPage page) {
       settingViewDockFill.FillElement = page.SettingScreen;
+      settingViewDockFill.FillElement.Margin = 8f;
+      settingViewDockFill.FillElement.DrawDebugLines = true;
       currentPageTitle.Text = page.Title;
 
       if (lastSelectedPage != null) lastSelectedPage.IsSelected = false;
