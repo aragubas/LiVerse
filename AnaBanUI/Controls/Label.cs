@@ -61,8 +61,7 @@ namespace LiVerse.AnaBanUI.Controls {
       if (font == null || reBakeFont) {
         reBakeFont = false;
         font = ResourceManager.GetFont(FontName, FontSize, spriteBatch.GraphicsDevice); 
-
-         RecalculateUI();
+        RecalculateUI();
       }
       RecalculatePosition();
 
@@ -118,5 +117,6 @@ namespace LiVerse.AnaBanUI.Controls {
     public override void Update(double deltaTime) {
       RecalculateUI();      
     }
+
   }
 }

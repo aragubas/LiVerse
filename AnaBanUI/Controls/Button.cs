@@ -1,11 +1,13 @@
 ﻿using LiVerse.AnaBanUI;
 using LiVerse.AnaBanUI.Controls;
+using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +23,7 @@ namespace LiVerse.AnaBanUI.Controls {
     public ButtonStyle ButtonStyle = ButtonStyle.Default;
     
     // Background Colors
-    static readonly Color normalBackground = new Color() { R = 220, G = 225, B = 230, A = 255 };
+    static readonly Color normalBackground = new Color() { R = 228, G = 227, B = 230, A = 255 };
     static readonly Color hoverBackground = new Color() { R = 220, G = 245, B = 255, A = 255 };
     static readonly Color downBackground = new Color() { R = 200, G = 220, B = 235, A = 255 };
     static readonly Color selectedBackground = new Color() { R = 197, G = 215, B = 230, A = 255 };
@@ -68,6 +70,33 @@ namespace LiVerse.AnaBanUI.Controls {
       if (ButtonStyle == ButtonStyle.Selectable) spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, new Point(2, (int)Size.Y)), currentBorderColor);
     }
 
+    public override bool InputUpdate(PointerEvent pointerEvent) {
+      if (Enabled && Visible) {
+        isMouseHovering = pointerEvent.PositionRect.Intersects(AbsoluteArea);
+
+        if (isMouseHovering && !UIRoot.MouseDown) {
+          currentTargetBackgroundColor = hoverBackground;
+          if (IsSelected) currentTargetBorderColor = hoverBorder;
+        }
+
+        if (pointerEvent.DownRect.Intersects(AbsoluteArea)) {
+          currentTargetBackgroundColor = downBackground;
+          currentTargetBorderColor = downBorder;
+          currentForegroundColor = downForeground;
+          
+          return true;
+        }
+
+        if (pointerEvent.UpRect.Intersects(AbsoluteArea)) {
+          Click?.Invoke();
+          
+          return true;
+        }
+      }
+
+      return false;
+    }
+
     public override void Update(double deltaTime) {
       Label.Update(deltaTime);
 
@@ -82,7 +111,6 @@ namespace LiVerse.AnaBanUI.Controls {
         currentBackgroundColor = Color.Lerp(currentBackgroundColor, currentTargetBackgroundColor, (float)(1 - Math.Pow(0.0025, deltaTime)));
         currentBorderColor = Color.Lerp(currentBorderColor, currentTargetBorderColor, (float)(1 - Math.Pow(0.003, deltaTime)));
 
-        isMouseHovering = UIRoot.MousePositionRectangle.Intersects(AbsoluteArea);
 
         currentForegroundColor = normalForeground;
         currentTargetBackgroundColor = normalBackground;
@@ -95,21 +123,6 @@ namespace LiVerse.AnaBanUI.Controls {
 
         } else if (ButtonStyle == ButtonStyle.Selectable && !IsSelected) {
           currentTargetBorderColor = unSelectedBorder;
-        }
-
-        if (isMouseHovering && !UIRoot.MouseDown) {
-          currentTargetBackgroundColor = hoverBackground;
-          if (IsSelected) currentTargetBorderColor = hoverBorder;
-        }
-
-        if (UIRoot.MouseDownRectangle.Intersects(AbsoluteArea)) {
-          currentTargetBackgroundColor = downBackground;
-          currentTargetBorderColor = downBorder;
-          currentForegroundColor = downForeground;
-        }
-
-        if (UIRoot.MouseUpRectangle.Intersects(AbsoluteArea)) {
-          Click?.Invoke();
         }
       }
 

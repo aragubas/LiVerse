@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 
@@ -10,8 +11,25 @@ namespace LiVerse.AnaBanUI
     public static RectangleF MouseUpRectangle;
     public static bool MouseDown = false;
     public static bool WindowFocused = true;
-
+    public static List<UILayer> UILayers = new();
     static MouseState oldMouseState;
+
+    public static void DrawUILayers(SpriteBatch spriteBatch, double deltaTime) {      
+      for (int i = 0; i < UILayers.Count; i++) {
+        UILayers[i].Draw(spriteBatch, deltaTime);
+      }
+    }
+
+    public static void UpdateUILayers(double deltaTime) {
+      for (int i = UILayers.Count - 1; i >= 0; i--) {
+        UILayers[i].Update(deltaTime);
+      }
+
+      // Only process input for the highest Layer
+      if (UILayers.Last() != null && WindowFocused) {
+        UILayers.Last().InputUpdate();
+      }
+    }
 
     public static void Update(double deltaTime) {
       if (!WindowFocused) { MouseDown = false; return; }

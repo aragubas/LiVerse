@@ -1,3 +1,4 @@
+using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -61,7 +62,13 @@ namespace LiVerse.AnaBanUI {
     protected virtual void ElementSizeChanged() { }
 
     public abstract void Update(double deltaTime);
-    
+
+    /// <summary>
+    /// Method called when the UIRoot decides this element should receive/process
+    /// </summary>
+    /// <returns>True if the event should be blocked</returns>
+    public virtual bool InputUpdate(PointerEvent pointerEvent) { return false; }
+
     /// <summary>
     /// Applies a translation matrix and calls <seealso cref="DrawElement"/>
     /// </summary>

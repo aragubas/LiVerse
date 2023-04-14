@@ -1,4 +1,5 @@
 ﻿using LiVerse.AnaBanUI;
+using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -74,6 +75,19 @@ namespace LiVerse.AnaBanUI.Containers {
       }
     }
 
+    public override bool InputUpdate(PointerEvent pointerEvent) {
+      // Nothing to Update
+      if (Elements.Count == 0) { return false; }
+
+      for (int i = 0; i < Elements.Count; i++) {
+        if (Elements[i].InputUpdate(pointerEvent)) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
     public override void Update(double deltaTime) {
       // Nothing to Update
       if (Elements.Count == 0) { return; }
@@ -81,7 +95,6 @@ namespace LiVerse.AnaBanUI.Containers {
       for(int i = 0; i < Elements.Count; i++) {
         Elements[i].Update(deltaTime);
       }
-
 
     }
   }

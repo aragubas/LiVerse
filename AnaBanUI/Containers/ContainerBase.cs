@@ -12,6 +12,20 @@ namespace LiVerse.AnaBanUI.Containers {
 
       DrawElement(spriteBatch, deltaTime);
 
+      if (DrawDebugLines) {
+        spriteBatch.End();
+        spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(AbsolutePosition.X, AbsolutePosition.Y, 0));
+
+        if (Margin != 0) {
+          spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, ContentArea), Color.Magenta);
+        }
+
+        spriteBatch.End();
+        spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(AbsolutePosition.X - Margin, AbsolutePosition.Y - Margin, 0));
+
+        spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), Color.Blue);
+      }
+
       spriteBatch.End();
       spriteBatch.Begin();
     }

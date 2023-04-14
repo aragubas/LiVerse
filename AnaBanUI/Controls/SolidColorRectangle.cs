@@ -1,4 +1,5 @@
 ﻿using LiVerse.AnaBanUI;
+using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -12,7 +13,7 @@ namespace LiVerse.AnaBanUI.Controls {
   public class SolidColorRectangle : ControlBase {
     public ControlBase Element { get; set; }
     public Color BackgroundColor { get; set; } = Color.Transparent;
-
+    public float Padding { get; set; } = 4;
 
     public SolidColorRectangle(ControlBase element) {
       Element = element;
@@ -24,6 +25,10 @@ namespace LiVerse.AnaBanUI.Controls {
       Element.DrawElement(spriteBatch, deltaTime);
 
       //spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Element.Size), BorderColor, BorderThickness);
+    }
+
+    public override bool InputUpdate(PointerEvent pointerEvent) {
+      return Element.InputUpdate(pointerEvent);
     }
 
     public override void Update(double deltaTime) {

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LiVerse.AnaBanUI.Events;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
@@ -24,13 +25,13 @@ namespace LiVerse.AnaBanUI.Containers {
         element.RelativePosition = new Vector2(0, lastY);
         element.AbsolutePosition = AbsolutePosition + element.RelativePosition;
         
-        if (element.Size.X > minimumWidth) minimumWidth = element.Size.X;
+        if (element.Size.X > minimumWidth) minimumWidth = element.Size.X + Margin;
         lastY += element.Size.Y + Gap;
       }
 
       if (StretchElements) {
         foreach (var element in Elements) {
-          element.Size = new Vector2(minimumWidth, element.Size.Y);
+          element.Size = new Vector2(minimumWidth - Margin, element.Size.Y);
         }
 
       }
@@ -45,6 +46,17 @@ namespace LiVerse.AnaBanUI.Containers {
       for (int i = 0; i < Elements.Count; i++) {
         Elements[i].Draw(spriteBatch, deltaTime);
       }
+    }
+
+    public override bool InputUpdate(PointerEvent pointerEvent) {
+      // Nothing to Update
+      if (Elements.Count == 0) { return false; }
+
+      for (int i = 0; i < Elements.Count; i++) {
+        if (Elements[i].InputUpdate(pointerEvent)) return true;
+      }
+
+      return false;
     }
 
     public override void Update(double deltaTime) {

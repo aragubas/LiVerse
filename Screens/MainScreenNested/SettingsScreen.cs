@@ -18,7 +18,6 @@ namespace LiVerse.Screens.MainScreenNested {
   
   public class SettingsScreen {
     public bool Active { get; set; } = true;
-    public event Action? Close;
     UILayer UIRootLayer;
 
     List<SettingsCategory> settingsCategories = new();
@@ -55,7 +54,6 @@ namespace LiVerse.Screens.MainScreenNested {
       foreach (var category in settingsCategories) {
         Label categoryTitle = new(category.Title, 26, "Ubuntu") { Margin = 8 };
         categoryTitle.Color = Color.Black;
-        categoryTitle.DrawDebugLines = true;
 
         categoriesSelectList.Elements.Add(categoryTitle);
 
@@ -77,7 +75,6 @@ namespace LiVerse.Screens.MainScreenNested {
     void SelectCategory(Button sender, SettingsPage page) {
       settingViewDockFill.FillElement = page.SettingScreen;
       settingViewDockFill.FillElement.Margin = 8f;
-      settingViewDockFill.FillElement.DrawDebugLines = true;
       currentPageTitle.Text = page.Title;
 
       if (lastSelectedPage != null) lastSelectedPage.IsSelected = false;
@@ -86,12 +83,12 @@ namespace LiVerse.Screens.MainScreenNested {
     }
 
     public SettingsScreen() {
-      UIRootLayer = new UILayer();
+      UIRootLayer = new UILayer() { BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) } };
 
-      DockFillContainer dockFill = new() { Margin = 48, DrawDebugLines = true, DockType = DockFillContainerDockType.Left };
-      DockFillContainer titleDockFill = new() { Margin = 1, DockType = DockFillContainerDockType.Right };
+      DockFillContainer dockFill = new() { Margin = 48, DockType = DockFillContainerDockType.Left };
+      DockFillContainer titleDockFill = new() { DockType = DockFillContainerDockType.Right };
       Button exitButton = new(" X ");
-      exitButton.Click += new Action(() => { Close?.Invoke(); });
+      exitButton.Click += ToggleUILayer;
       categoriesSelectList = new() { Gap = 2 };
       settingViewDockFill = new();
       currentPageTitle = new Label("No page selected", 28, "Ubuntu") { Color = Color.Black };
@@ -112,14 +109,13 @@ namespace LiVerse.Screens.MainScreenNested {
       LoadDefaultSettingsPages();
     }
 
-    public void Draw(SpriteBatch spriteBatch, double deltaTime) {     
-      UIRootLayer.Draw(spriteBatch, deltaTime);
-    }
+    public void ToggleUILayer() {
+      if (UIRoot.UILayers.Contains(UIRootLayer)) {
+        UIRoot.UILayers.Remove(UIRootLayer);
+        return;
+      }
 
-    public void Update(double deltaTime) {
-      UIRootLayer.Update(deltaTime);
-
-      
+      UIRoot.UILayers.Add(UIRootLayer);
     }
   }
 }

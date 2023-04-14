@@ -13,7 +13,8 @@ using Microsoft.Xna.Framework.Input;
 namespace LiVerse.Screens
 {
     public class MainScreen : ScreenBase {
-    SettingsScreen? settingsScreen { get; set; }
+    SettingsScreen settingsScreen { get; set; }
+    UILayer WindowRoot;
 
     // MainUI Members
     DockFillContainer mainFillContainer = new();
@@ -39,7 +40,7 @@ namespace LiVerse.Screens
 
     public MainScreen(ScreenManager screenManager) : base(screenManager) {
       WindowRoot = new UILayer();
-      //settingsScreen = new SettingsScreen();
+      settingsScreen = new SettingsScreen();
 
       HeaderBar = new DockFillContainer();
       centerSplit = new DockFillContainer();
@@ -49,19 +50,7 @@ namespace LiVerse.Screens
       characterNameLabel = new Label("{character_name}", 21);
       characterNameLabel.Color = Color.Black;
       Button settingsButton = new Button("Settings", 21);
-      settingsButton.Click += new Action(() => { 
-        if (settingsScreen != null) {
-          settingsScreen = null;
-
-        } else {
-          settingsScreen = new SettingsScreen();
-          settingsScreen.Close += new Action(() => {
-            Console.WriteLine("Ceira");
-            settingsScreen = null;
-          });
-        }
-      });
-
+      settingsButton.Click += settingsScreen.ToggleUILayer;
 
       micLevelTrigger = new VerticalLevelTrigger();
       levelDelayTrigger = new VerticalLevelTrigger();
@@ -111,6 +100,10 @@ namespace LiVerse.Screens
 
       captureDeviceDriver.Initialize();
       captureDeviceDriver.SetDefaultDevice();
+
+      // Registers WindowRoot UILayer
+      UIRoot.UILayers.Add(WindowRoot);
+      //settingsScreen.ToggleUILayer();
     }
 
     private void MicrophoneLevelMeter_CharacterStopSpeaking() {
@@ -144,9 +137,8 @@ namespace LiVerse.Screens
       }else {
         spriteBatch.GraphicsDevice.Clear(Color.Transparent);
       }
-      
-      WindowRoot.Draw(spriteBatch, deltaTime);
-      settingsScreen?.Draw(spriteBatch, deltaTime);
+
+      UIRoot.DrawUILayers(spriteBatch, deltaTime);
     }
 
     public override void Update(double deltaTime) {
@@ -158,16 +150,8 @@ namespace LiVerse.Screens
       micLevelTrigger.MaximumValue = captureDeviceDriver.MaximumLevel;
       levelDelayTrigger.TriggerLevel = captureDeviceDriver.ActivationDelayTrigger;
 
-      if (settingsScreen == null) { 
-        WindowRoot.Update(deltaTime); 
+      UIRoot.UpdateUILayers(deltaTime);
 
-      } else {
-        settingsScreen.Update(deltaTime);
-
-      }
-      
-      
-      
       // Set CharacterName Label
       if (characterRenderer.CurrentCharacter != null) {
         characterNameLabel.Text = characterRenderer.CurrentCharacter.Name;

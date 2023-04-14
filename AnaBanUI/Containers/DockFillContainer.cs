@@ -1,4 +1,5 @@
 using LiVerse.AnaBanUI.Drawables;
+using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -118,11 +119,11 @@ namespace LiVerse.AnaBanUI.Containers {
       }
 
       if (DockType == DockFillContainerDockType.Right) {
-        FillElement.Size = new Vector2(Size.X - DockElement.Size.X, Size.Y);
+        FillElement.Size = new Vector2(ContentArea.X - DockElement.Size.X, ContentArea.Y);
         FillElement.RelativePosition = Vector2.Zero;
         FillElement.AbsolutePosition = AbsolutePosition;
 
-        DockElement.Size = new Vector2(DockElement.MinimumSize.X, Size.Y);
+        DockElement.Size = new Vector2(DockElement.MinimumSize.X, ContentArea.Y);
         DockElement.RelativePosition = new Vector2(FillElement.Size.X, 0);
         DockElement.AbsolutePosition = new Vector2(AbsolutePosition.X + FillElement.Size.X, AbsolutePosition.Y);
 
@@ -142,6 +143,15 @@ namespace LiVerse.AnaBanUI.Containers {
 
       if (DockElement != null) DockElement.Draw(spriteBatch, deltaTime);
       if (FillElement != null) FillElement.Draw(spriteBatch, deltaTime);
+
+      if (ForegroundRectDrawble != null) ForegroundRectDrawble.Draw(spriteBatch, deltaTime, ContentArea + (Vector2.One * 2), AbsolutePosition - (Vector2.One * 1));
+    }
+
+    public override bool InputUpdate(PointerEvent pointerEvent) {
+      if (DockElement != null && DockElement.Visible) if (DockElement.InputUpdate(pointerEvent)) return true;
+      if (FillElement != null && FillElement.Visible) if (FillElement.InputUpdate(pointerEvent)) return true;
+
+      return false;
     }
 
     public override void Update(double deltaTime) {

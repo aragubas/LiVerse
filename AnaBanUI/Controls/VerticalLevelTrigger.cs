@@ -1,5 +1,6 @@
 ﻿using LiVerse.AnaBanUI;
 using LiVerse.AnaBanUI.Controls;
+using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -60,7 +61,24 @@ namespace LiVerse.AnaBanUI.Controls {
       spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), borderColor);
     }
 
+    public override bool InputUpdate(PointerEvent pointerEvent) {
+      if (Enabled && Visible) {
+        triggerGrabbed = AbsoluteArea.Intersects(pointerEvent.DownRect);
+
+        if (triggerGrabbed) {
+          float mouseRelativePos = (Size.Y + AbsolutePosition.Y) - pointerEvent.PositionRect.Y;
+
+          TriggerLevel = Math.Clamp(mouseRelativePos / Size.Y, 0, 1);
+          return true;
+        }
+      }
+
+      return false;
+    }
+
     public override void Update(double deltaTime) {
+      if (!Visible) { return; }
+
       #region Update Peak Meter
       if (ShowPeaks) {
         peakReset += (float)deltaTime * 1;
@@ -73,16 +91,6 @@ namespace LiVerse.AnaBanUI.Controls {
         peakLevel = MathHelper.Lerp(peakLevel, peakLevelTarget, (float)(1 - Math.Pow(0.00005, deltaTime)));
       }
       #endregion
-
-      // Updatr Trigger Grabber
-      RectangleF rect = new RectangleF(AbsolutePosition, Size);
-      triggerGrabbed = rect.Intersects(UIRoot.MouseDownRectangle);
-
-      if (triggerGrabbed) {
-        float mouseRelativePos = (Size.Y + AbsolutePosition.Y) - UIRoot.MousePositionRectangle.Y;
-
-        TriggerLevel = Math.Clamp(mouseRelativePos / Size.Y, 0, 1);
-      }
 
       // Calculate Level Ratio
       ratio = CurrentValue / MaximumValue;
