@@ -18,7 +18,7 @@ namespace LiVerse.Screens.MainScreenNested {
   
   public class SettingsScreen {
     public bool Active { get; set; } = true;
-    public event Action Close;
+    public event Action? Close;
     UILayer UIRootLayer;
 
     List<SettingsCategory> settingsCategories = new();
@@ -26,8 +26,6 @@ namespace LiVerse.Screens.MainScreenNested {
 
     // UI Elements
     ScrollableList categoriesSelectList;
-    MarginContainer marginContainer;
-    MarginContainer currentPageMarginContainer;
     DockFillContainer settingViewDockFill;
     Label currentPageTitle;
 
@@ -55,8 +53,9 @@ namespace LiVerse.Screens.MainScreenNested {
 
       bool isFirstPage = true;
       foreach (var category in settingsCategories) {
-        Label categoryTitle = new(category.Title, 26, "Ubuntu");
+        Label categoryTitle = new(category.Title, 26, "Ubuntu") { Margin = 16 };
         categoryTitle.Color = Color.Black;
+        categoryTitle.DrawDebugLines = true;
 
         categoriesSelectList.Elements.Add(categoryTitle);
 
@@ -76,7 +75,7 @@ namespace LiVerse.Screens.MainScreenNested {
     }
 
     void SelectCategory(Button sender, SettingsPage page) {
-      currentPageMarginContainer.FillElement = page.SettingScreen;
+      settingViewDockFill.FillElement = page.SettingScreen;
       currentPageTitle.Text = page.Title;
 
       if (lastSelectedPage != null) lastSelectedPage.IsSelected = false;
@@ -87,9 +86,7 @@ namespace LiVerse.Screens.MainScreenNested {
     public SettingsScreen() {
       UIRootLayer = new UILayer();
 
-      marginContainer = new(16, backgroundRectDrable: new RectangleDrawable() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) });
-      currentPageMarginContainer = new(8);
-      DockFillContainer dockFill = new() { Margin = 1, DockType = DockFillContainerDockType.Left };
+      DockFillContainer dockFill = new() { Margin = 48, DrawDebugLines = true, DockType = DockFillContainerDockType.Left };
       DockFillContainer titleDockFill = new() { Margin = 1, DockType = DockFillContainerDockType.Right };
       Button exitButton = new(" X ");
       exitButton.Click += new Action(() => { Close?.Invoke(); });
@@ -102,16 +99,13 @@ namespace LiVerse.Screens.MainScreenNested {
 
       settingViewDockFill.BackgroundRectDrawble = new() { Color = Color.White };
       settingViewDockFill.DockElement = titleDockFill;
-      settingViewDockFill.FillElement = currentPageMarginContainer;
 
       dockFill.BackgroundRectDrawble = new() { Color = Color.FromNonPremultiplied(240, 240, 240, 255) };
       dockFill.ForegroundRectDrawble = new() { Color = Color.FromNonPremultiplied(194, 194, 194, 255), IsFilled = false };
       dockFill.DockElement = categoriesSelectList;
-      dockFill.FillElement = new MarginContainer(1, dockElement: settingViewDockFill);
+      dockFill.FillElement = settingViewDockFill;
 
-      marginContainer.FillElement = dockFill;
-
-      UIRootLayer.RootElement = marginContainer;
+      UIRootLayer.RootElement = dockFill;
 
       LoadDefaultSettingsPages();
     }

@@ -37,7 +37,7 @@ namespace LiVerse.AnaBanUI.Controls {
       MinimumSize = new Vector2(24, 64);
     }
 
-    public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, Size), backgroundColor);
 
       // Draw Level

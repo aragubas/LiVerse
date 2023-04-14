@@ -25,7 +25,7 @@ namespace LiVerse.Screens.MainScreenNested {
       scrollableList.Elements.Add(dockFill);
     }
 
-    public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       scrollableList.Draw(spriteBatch, deltaTime);
     }
 

@@ -49,7 +49,7 @@ namespace LiVerse.AnaBanUI.Controls {
       ButtonStyle = buttonStyle;
     }
 
-    public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, Size), currentBackgroundColor);
 
       if (ButtonStyle == ButtonStyle.Default) {
@@ -72,7 +72,8 @@ namespace LiVerse.AnaBanUI.Controls {
       Label.Update(deltaTime);
 
       Label.Color = currentForegroundColor;
-      Label.Size = ButtonStyle == ButtonStyle.Default ? Size : new Vector2(Size.X - 2, Size.Y);
+      Label.Size = ButtonStyle == ButtonStyle.Default ? Size : new Vector2(Size.X - 3, Size.Y);
+      Label.AbsolutePosition = ButtonStyle == ButtonStyle.Default ? AbsolutePosition : AbsolutePosition + (Vector2.UnitX * 3);
       MinimumSize = Label.MinimumSize + new Vector2(10, 2);
 
       // Update Default Style
@@ -81,8 +82,7 @@ namespace LiVerse.AnaBanUI.Controls {
         currentBackgroundColor = Color.Lerp(currentBackgroundColor, currentTargetBackgroundColor, (float)(1 - Math.Pow(0.0025, deltaTime)));
         currentBorderColor = Color.Lerp(currentBorderColor, currentTargetBorderColor, (float)(1 - Math.Pow(0.003, deltaTime)));
 
-        Rectangle absoluteRectangle = new Rectangle(AbsolutePosition.ToPoint(), Size.ToPoint());
-        isMouseHovering = UIRoot.MousePositionRectangle.Intersects(absoluteRectangle);
+        isMouseHovering = UIRoot.MousePositionRectangle.Intersects(AbsoluteArea);
 
         currentForegroundColor = normalForeground;
         currentTargetBackgroundColor = normalBackground;
@@ -102,13 +102,13 @@ namespace LiVerse.AnaBanUI.Controls {
           if (IsSelected) currentTargetBorderColor = hoverBorder;
         }
 
-        if (UIRoot.MouseDownRectangle.Intersects(absoluteRectangle)) {
+        if (UIRoot.MouseDownRectangle.Intersects(AbsoluteArea)) {
           currentTargetBackgroundColor = downBackground;
           currentTargetBorderColor = downBorder;
           currentForegroundColor = downForeground;
         }
 
-        if (UIRoot.MouseUpRectangle.Intersects(absoluteRectangle)) {
+        if (UIRoot.MouseUpRectangle.Intersects(AbsoluteArea)) {
           Click?.Invoke();
         }
       }

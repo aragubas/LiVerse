@@ -65,30 +65,13 @@ namespace LiVerse.AnaBanUI.Containers {
       
     }
 
-    public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       RecalculateUI();
-
-      Viewport elementViewport = new Viewport((int)AbsolutePosition.X, (int)AbsolutePosition.Y, (int)Size.X, (int)Size.Y);
-      Viewport oldViewport = spriteBatch.GraphicsDevice.Viewport;
-
-      spriteBatch.End();
-      spriteBatch.Begin();
-      spriteBatch.GraphicsDevice.Viewport = elementViewport;
-
-      //if (Lines) spriteBatch.DrawRectangle(new RectangleF(0, 0, MinimumSize.X, MinimumSize.Y), Color.Blue);
 
       // Draw Elements
       for (int i = 0; i < Elements.Count; i++) {
-        DrawElement(spriteBatch, deltaTime, Elements[i]);
+        Elements[i].Draw(spriteBatch, deltaTime);
       }
-
-      if (Lines) spriteBatch.DrawRectangle(new RectangleF(0, 0, Size.X, Size.Y), Color.Magenta);
-
-      spriteBatch.End();
-
-      //Restore SpriteBatch
-      spriteBatch.GraphicsDevice.Viewport = oldViewport;
-      spriteBatch.Begin();
     }
 
     public override void Update(double deltaTime) {

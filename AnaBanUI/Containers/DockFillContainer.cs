@@ -22,7 +22,6 @@ namespace LiVerse.AnaBanUI.Containers {
     /// The location that the dock element will be placed
     /// </summary>
     public DockFillContainerDockType DockType { get; set; }
-    public float Margin { get; set; }
     public bool Lines = false;
 
     public DockFillContainer(ControlBase? dockElement = null, ControlBase? fillElement = null) {
@@ -44,7 +43,6 @@ namespace LiVerse.AnaBanUI.Containers {
 
       MinimumSize = element.MinimumSize;
     }
-
 
     void RecalculateUI() {
       // Fill Dock Element if its the only one set
@@ -104,12 +102,12 @@ namespace LiVerse.AnaBanUI.Containers {
       }
 
       if (DockType == DockFillContainerDockType.Left) {
-        DockElement.Size = new Vector2(DockElement.MinimumSize.X, Size.Y - (Margin * 2));
-        DockElement.RelativePosition = new Vector2(Margin, Margin);
+        DockElement.Size = new Vector2(DockElement.MinimumSize.X, ContentArea.Y);
+        DockElement.RelativePosition = Vector2.Zero;
         DockElement.AbsolutePosition = AbsolutePosition + DockElement.RelativePosition;
 
-        FillElement.Size = new Vector2(Size.X - (DockElement.Size.X + Margin), Size.Y);
-        FillElement.RelativePosition = new Vector2(DockElement.Size.X + Margin, 0);
+        FillElement.Size = new Vector2(ContentArea.X - DockElement.Size.X, ContentArea.Y);
+        FillElement.RelativePosition = new Vector2(DockElement.Size.X, 0);
         FillElement.AbsolutePosition = AbsolutePosition + FillElement.RelativePosition;
 
         // Calculate MinimiumSize
@@ -137,33 +135,13 @@ namespace LiVerse.AnaBanUI.Containers {
       }
 
     }
-
-    public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       RecalculateUI();
 
-      Viewport elementViewport = new Viewport((int)AbsolutePosition.X, (int)AbsolutePosition.Y, (int)Size.X, (int)Size.Y);
-      Viewport oldViewport = spriteBatch.GraphicsDevice.Viewport;
+      if (BackgroundRectDrawble != null) BackgroundRectDrawble.Draw(spriteBatch, deltaTime, ContentArea, Vector2.Zero);
 
-      spriteBatch.End();
-      spriteBatch.Begin();
-      spriteBatch.GraphicsDevice.Viewport = elementViewport;
-
-      BackgroundRectDrawble?.Draw(spriteBatch, deltaTime, Size, Vector2.Zero);
-      ForegroundRectDrawble?.Draw(spriteBatch, deltaTime, Size, Vector2.Zero);
-      if (Lines) spriteBatch.DrawRectangle(new RectangleF(0, 0, MinimumSize.X, MinimumSize.Y), Color.Blue);
-
-      // TODO: Bug that may haunt in the future: Fill Element's line doesn't translate to its correct position.
-      if (DockElement != null) DrawElement(spriteBatch, deltaTime, DockElement, Lines);
-      if (FillElement != null) DrawElement(spriteBatch, deltaTime, FillElement);
-
-      if (Lines) spriteBatch.DrawRectangle(new RectangleF(0, 0, Size.X, Size.Y), Color.Magenta);
-
-      spriteBatch.End();
-
-      //Restore SpriteBatch
-      spriteBatch.GraphicsDevice.Viewport = oldViewport;
-      spriteBatch.Begin();
-
+      if (DockElement != null) DockElement.Draw(spriteBatch, deltaTime);
+      if (FillElement != null) FillElement.Draw(spriteBatch, deltaTime);
     }
 
     public override void Update(double deltaTime) {

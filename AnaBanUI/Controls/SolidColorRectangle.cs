@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 namespace LiVerse.AnaBanUI.Controls {
   public class SolidColorRectangle : ControlBase {
     public ControlBase Element { get; set; }
-    public float Margin { get; set; } = 0f;
     public Color BackgroundColor { get; set; } = Color.Transparent;
 
 
@@ -19,18 +18,18 @@ namespace LiVerse.AnaBanUI.Controls {
       Element = element;
     }
 
-    public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
-      spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, Size), BackgroundColor);
+    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
+      spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, ContentArea), BackgroundColor);
 
-      Element.Draw(spriteBatch, deltaTime);
+      Element.DrawElement(spriteBatch, deltaTime);
 
       //spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Element.Size), BorderColor, BorderThickness);
     }
 
     public override void Update(double deltaTime) {
-      Margin = 8f; 
-      MinimumSize = Element.MinimumSize + new Vector2(Margin);
-      Element.Size = Size;
+      MinimumSize = Element.MinimumSize;
+      Element.Size = ContentArea;
+      Element.AbsolutePosition = AbsolutePosition;
 
       Element.Update(deltaTime);
     }

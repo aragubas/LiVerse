@@ -1,19 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MonoGame.Extended;
 
 namespace LiVerse.AnaBanUI
 {
   public static class UIRoot {
-    public static Rectangle MousePositionRectangle;
-    public static Rectangle MouseDownRectangle;
-    public static Rectangle MouseUpRectangle;
+    public static RectangleF MousePositionRectangle;
+    public static RectangleF MouseDownRectangle;
+    public static RectangleF MouseUpRectangle;
     public static bool MouseDown = false;
     public static bool WindowFocused = true;
+
     static MouseState oldMouseState;
 
     public static void Update(double deltaTime) {
@@ -23,6 +20,7 @@ namespace LiVerse.AnaBanUI
 
       MousePositionRectangle = new Rectangle(newMouseState.Position, new Point(1));
 
+      // MouseDown
       if (newMouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released) {
         MouseDown = true;
 
@@ -34,7 +32,7 @@ namespace LiVerse.AnaBanUI
       }
 
       MouseUpRectangle = (newMouseState.LeftButton == ButtonState.Released && oldMouseState.LeftButton == ButtonState.Pressed) ? MousePositionRectangle : Rectangle.Empty;
-
+      
       oldMouseState = newMouseState;
     }
   }

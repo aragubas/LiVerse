@@ -57,7 +57,7 @@ namespace LiVerse.AnaBanUI.Controls {
       FontName = fontName;
     }  
 
-    public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       if (font == null || reBakeFont) {
         reBakeFont = false;
         font = ResourceManager.GetFont(FontName, FontSize, spriteBatch.GraphicsDevice); 
@@ -73,7 +73,7 @@ namespace LiVerse.AnaBanUI.Controls {
       // Calculates X
       switch (TextHorizontalAlignment) {
         case LabelTextHorizontalAlignment.Center: {
-          textPosition.X = Size.X / 2 - FontArea.X / 2;
+          textPosition.X = ContentArea.X / 2 - FontArea.X / 2;
           break;
         }
 
@@ -83,7 +83,7 @@ namespace LiVerse.AnaBanUI.Controls {
         }
 
         case LabelTextHorizontalAlignment.Right: {
-          textPosition.X = Size.X - FontArea.X;
+          textPosition.X = ContentArea.X - FontArea.X;
           break;
         }          
       }
@@ -91,7 +91,7 @@ namespace LiVerse.AnaBanUI.Controls {
       // Calculates Y
       switch (TextVerticalAlignment) {
         case LabelTextVerticalAlignment.Center: {
-            textPosition.Y = Size.Y / 2 - FontArea.Y / 2;
+            textPosition.Y = ContentArea.Y / 2 - FontArea.Y / 2;
           break;
         }
 
@@ -101,7 +101,7 @@ namespace LiVerse.AnaBanUI.Controls {
         }
 
         case LabelTextVerticalAlignment.Bottom: {
-          textPosition.Y = Size.Y - FontArea.Y;
+          textPosition.Y = ContentArea.Y - FontArea.Y;
           break;
         }          
       }
@@ -111,13 +111,12 @@ namespace LiVerse.AnaBanUI.Controls {
       if (reMeasureText && font != null) {
         reMeasureText = false;
         FontArea = font.MeasureString(Text);
-        Size = FontArea;
         MinimumSize = FontArea;
       }
     }
 
     public override void Update(double deltaTime) {
-      RecalculateUI();
+      RecalculateUI();      
     }
   }
 }

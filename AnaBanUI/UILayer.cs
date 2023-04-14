@@ -23,10 +23,13 @@ namespace LiVerse.AnaBanUI {
         Vector2 screenSize = new Vector2(spriteBatch.GraphicsDevice.Viewport.Width, spriteBatch.GraphicsDevice.Viewport.Height);
         RootElement.Size = screenSize;
         RootElement.MaximumSize = screenSize;
+        if (RootElement.Margin > 1) {
+           RootElement.AbsolutePosition = new Vector2(RootElement.Margin);
+        }
 
-        spriteBatch.Begin();
+        spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(RootElement.AbsolutePosition.X, RootElement.AbsolutePosition.Y, 0));
         
-        RootElement.Draw(spriteBatch, deltaTime);
+        RootElement.DrawElement(spriteBatch, deltaTime);
 
         spriteBatch.End();
       }

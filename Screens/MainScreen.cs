@@ -52,6 +52,7 @@ namespace LiVerse.Screens
       settingsButton.Click += new Action(() => { 
         if (settingsScreen != null) {
           settingsScreen = null;
+
         } else {
           settingsScreen = new SettingsScreen();
           settingsScreen.Close += new Action(() => {
@@ -91,8 +92,7 @@ namespace LiVerse.Screens
       HeaderBar.BackgroundRectDrawble = new RectangleDrawable() { Color = Color.FromNonPremultiplied(249, 249, 249, 255), IsFilled = true };
       HeaderBar.DockElement = settingsButton;
       HeaderBar.FillElement = characterNameLabel;
-      HeaderBar.Margin = 4f;
-
+      
       centerSplit.DockType = DockFillContainerDockType.Left;
       centerSplit.DockElement = sideFillContainer;
       centerSplit.FillElement = characterRenderer;
@@ -100,7 +100,6 @@ namespace LiVerse.Screens
       //HeaderBar.Lines = true;
       mainFillContainer.DockElement = HeaderBar;
       mainFillContainer.FillElement = centerSplit;
-      mainFillContainer.Margin = 4f;
 
       WindowRoot.RootElement = mainFillContainer;
 

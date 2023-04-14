@@ -46,7 +46,7 @@ namespace LiVerse.CharacterRenderer
       }
     }
 
-    public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       if (CurrentCharacter == null) {
         CharacterSpritesCollection spritesCollection = new();
         // Hardcoded path, will be removed on the future
