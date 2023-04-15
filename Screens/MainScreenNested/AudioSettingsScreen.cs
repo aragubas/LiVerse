@@ -1,21 +1,23 @@
 ﻿using LiVerse.AnaBanUI;
 using LiVerse.AnaBanUI.Containers;
 using LiVerse.AnaBanUI.Controls;
+using LiVerse.AnaBanUI.Controls.ComboBox;
 using LiVerse.AnaBanUI.Events;
 using LiVerse.CaptureDeviceDriver;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
-namespace LiVerse.Screens.MainScreenNested {
-  public class AudioSettingsScreen : ControlBase {
-    ScrollableList scrollableList;
-    DockFillContainer dockFill;
+namespace LiVerse.Screens.MainScreenNested
+{
+    public class AudioSettingsScreen : ControlBase {
+    ScrollableList ScrollableList { get; }
+    DockFillContainer DockFill { get; }
 
     public AudioSettingsScreen() {
-      scrollableList = new() { ParentControl = this, Gap = 6 };
+      ScrollableList = new() { ParentControl = this, Gap = 6 };
 
-      dockFill = new() { ParentControl = this };
+      DockFill = new() { ParentControl = this };
       Label audioInputDeviceToggleTitle = new("Input Device: ") { Color = Color.Black };
       List<ComboBoxOption> options = new();
 
@@ -23,20 +25,27 @@ namespace LiVerse.Screens.MainScreenNested {
         options.Add(new ComboBoxOption(captureDevice.DeviceName, captureDevice));
       }
 
-      ComboBox audioDevicesComboBox = new(options[0], options);
+      ComboBoxOption defaultOption = new() { OptionText = "None" };
+      if (CaptureDeviceDriverManager.CaptureDeviceDriver.CurrentCaptureDevice != null) {
+        defaultOption.OptionText = CaptureDeviceDriverManager.CaptureDeviceDriver.CurrentCaptureDevice.DeviceName;
+        defaultOption.ExtraData = CaptureDeviceDriverManager.CaptureDeviceDriver.CurrentCaptureDevice.DeviceId;
+      }
+
+      ComboBoxControl audioDevicesComboBox = new(defaultOption, options);
       audioDevicesComboBox.SelectedOptionChanged += ChangeAudioDevice;
 
-      dockFill.DockType = DockFillContainerDockType.Left;
-      dockFill.DockElement = audioInputDeviceToggleTitle;
-      dockFill.FillElement = audioDevicesComboBox;
+      DockFill.DockType = DockFillContainerDockType.Left;
+      DockFill.DockElement = audioInputDeviceToggleTitle;
+      DockFill.FillElement = audioDevicesComboBox;
 
       Label audioDriverNameLabel = new($"Current Audio Driver: " +
         $"{(CaptureDeviceDriverManager.CaptureDeviceDriver == null ? "None" : CaptureDeviceDriverManager.CaptureDeviceDriver.DriverName)}") {
-        Color = Color.Black
+        Color = Color.Black,
+        TextHorizontalAlignment = LabelTextHorizontalAlignment.Left
       };
 
-      scrollableList.Elements.Add(audioDriverNameLabel);
-      scrollableList.Elements.Add(dockFill);
+      ScrollableList.Elements.Add(audioDriverNameLabel);
+      ScrollableList.Elements.Add(DockFill);
     }
 
     void ChangeAudioDevice(ComboBoxOption option) {
@@ -48,21 +57,21 @@ namespace LiVerse.Screens.MainScreenNested {
     }
 
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
-      scrollableList.Draw(spriteBatch, deltaTime);
+      ScrollableList.Draw(spriteBatch, deltaTime);
     }
 
     public override bool InputUpdate(PointerEvent pointerEvent) {
-      return scrollableList.InputUpdate(pointerEvent);
+      return ScrollableList.InputUpdate(pointerEvent);
     }
 
     public override void Update(double deltaTime) {
-      scrollableList.Size = ContentArea;
-      scrollableList.RelativePosition = RelativePosition;
-      scrollableList.AbsolutePosition = AbsolutePosition;
+      ScrollableList.Size = ContentArea;
+      ScrollableList.RelativePosition = RelativePosition;
+      ScrollableList.AbsolutePosition = AbsolutePosition;
 
-      MinimumSize = scrollableList.MinimumSize;
+      MinimumSize = ScrollableList.MinimumSize;
 
-      scrollableList.Update(deltaTime);
+      ScrollableList.Update(deltaTime);
     }
   }
 }

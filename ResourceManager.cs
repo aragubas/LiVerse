@@ -30,7 +30,7 @@ namespace LiVerse {
     public static SpriteFont GetFont(string fontName, int size, GraphicsDevice graphicsDevice) {
       string fontKey = $"{fontName}:{size}";
 
-      if (FontCache.TryGetValue(fontKey, out SpriteFont foundValue)) {
+      if (FontCache.TryGetValue(fontKey, out SpriteFont? foundValue)) {
         return foundValue;
       }
 
@@ -54,7 +54,7 @@ namespace LiVerse {
         throw new FileNotFoundException($"Could not find Sprite to load. Path: {filePath}");
       }
 
-      using (FileStream fileStream = new FileStream(filePath, FileMode.Open)) {
+      using (FileStream fileStream = new(filePath, FileMode.Open)) {
         Texture2D ValToReturn = Texture2D.FromStream(graphicsDevice, fileStream, colorProcessor);
 
         return ValToReturn;

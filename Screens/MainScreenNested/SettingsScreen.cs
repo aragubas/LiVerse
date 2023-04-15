@@ -20,7 +20,7 @@ namespace LiVerse.Screens.MainScreenNested {
     public bool Active { get; set; } = true;
     UILayer UIRootLayer;
 
-    List<SettingsCategory> settingsCategories = new();
+    List<SettingsCategory> settingsCategories { get; } = new();
     Button? lastSelectedPage;
 
     // UI Elements
@@ -52,7 +52,7 @@ namespace LiVerse.Screens.MainScreenNested {
 
       bool isFirstPage = true;
       foreach (var category in settingsCategories) {
-        Label categoryTitle = new(category.Title, 26, "Ubuntu") { Margin = 8 };
+        Label categoryTitle = new(category.Title, 26, "Ubuntu") { Margin = new(8) };
         categoryTitle.Color = Color.Black;
 
         categoriesSelectList.Elements.Add(categoryTitle);
@@ -74,7 +74,7 @@ namespace LiVerse.Screens.MainScreenNested {
 
     void SelectCategory(Button sender, SettingsPage page) {
       settingViewDockFill.FillElement = page.SettingScreen;
-      settingViewDockFill.FillElement.Margin = 8f;
+      settingViewDockFill.FillElement.Margin = new(8);
       currentPageTitle.Text = page.Title;
 
       if (lastSelectedPage != null) lastSelectedPage.IsSelected = false;
@@ -83,9 +83,9 @@ namespace LiVerse.Screens.MainScreenNested {
     }
 
     public SettingsScreen() {
-      UIRootLayer = new UILayer() { BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) } };
+      UIRootLayer = new UILayer() { BackgroundRectDrawable = new() { Color = Color.Black, Opacity = 127 } };
 
-      DockFillContainer dockFill = new() { Margin = 48, DockType = DockFillContainerDockType.Left };
+      DockFillContainer dockFill = new() { Margin = new Vector2(48), DockType = DockFillContainerDockType.Left };
       DockFillContainer titleDockFill = new() { DockType = DockFillContainerDockType.Right };
       Button exitButton = new(" X ");
       exitButton.Click += ToggleUILayer;

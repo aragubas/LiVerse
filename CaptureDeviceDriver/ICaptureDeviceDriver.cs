@@ -5,6 +5,7 @@
     public event Action? MicrophoneTriggerLevelTriggered;
     public event Action? MicrophoneLevelTriggered;
     public event Action? MicrophoneLevelUntriggered;
+    public ICaptureDeviceInfo? CurrentCaptureDevice { get; }
     public float TriggerLevel { get; set; }
     public float MaximumLevel { get; set; }
     public double ActivationDelay { get; set; }

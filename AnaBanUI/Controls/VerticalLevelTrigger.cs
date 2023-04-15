@@ -12,7 +12,6 @@ namespace LiVerse.AnaBanUI.Controls {
     public float MaximumValue = 100;
     public float CurrentValue = 0;
     public bool ShowPeaks = false;
-    public event Action? LevelTriggered;
     public float TriggerLevel = 0;
 
     float peakLevel = 0;

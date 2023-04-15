@@ -63,6 +63,7 @@ namespace LiVerse.AnaBanUI.Controls {
         font = ResourceManager.GetFont(FontName, FontSize, spriteBatch.GraphicsDevice); 
         RecalculateUI();
       }
+      if (Text == null) { Text = ""; }
       RecalculatePosition();
 
       spriteBatch.DrawString(font, Text, textPosition, Color);
@@ -107,7 +108,7 @@ namespace LiVerse.AnaBanUI.Controls {
     }
 
     void RecalculateUI() {      
-      if (reMeasureText && font != null) {
+      if (reMeasureText && font != null && Text != null) {
         reMeasureText = false;
         FontArea = font.MeasureString(Text);
         MinimumSize = FontArea;

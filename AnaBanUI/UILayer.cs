@@ -10,7 +10,8 @@ namespace LiVerse.AnaBanUI {
   public class UILayer {
     public ControlBase? RootElement { get; set; }    
     public RectangleDrawable? BackgroundRectDrawable { get; set; }
-    public event Action<KeyboardEvent> InputUpdateEvent;
+    public event Action<KeyboardEvent>? KeyboardInputUpdateEvent;
+    public event Action<PointerEvent>? PointerInputUpdateEvent;
 
     // States
     KeyboardState oldKeyboardState;
@@ -20,20 +21,18 @@ namespace LiVerse.AnaBanUI {
     }
 
     public void Update(double deltaTime) {
-      if (RootElement != null) {
-        RootElement.Update(deltaTime);
-      }
+      RootElement?.Update(deltaTime);
     }
 
     public void InputUpdate() {
-      PointerEvent latestMouseEvent = new PointerEvent() { 
+      PointerEvent latestMouseEvent = new() { 
         PositionRect = UIRoot.MousePositionRectangle, 
         DownRect = UIRoot.MouseDownRectangle, 
         UpRect = UIRoot.MouseUpRectangle,
         Down = UIRoot.MouseDown
       };
       KeyboardState newState = Keyboard.GetState();
-      KeyboardEvent latestKeyboardEvent = new KeyboardEvent() {
+      KeyboardEvent latestKeyboardEvent = new() {
         NewKeyboardState = newState,
         OldKeyboardState = oldKeyboardState
       };
@@ -45,7 +44,8 @@ namespace LiVerse.AnaBanUI {
         keyboardEventConsumed = RootElement.InputUpdate(latestKeyboardEvent);
       }
 
-      if (!keyboardEventConsumed) InputUpdateEvent?.Invoke(latestKeyboardEvent);
+      if (!keyboardEventConsumed) KeyboardInputUpdateEvent?.Invoke(latestKeyboardEvent);
+      if (!mouseEventConsumed) PointerInputUpdateEvent?.Invoke(latestMouseEvent);
 
       oldKeyboardState = Keyboard.GetState();
     }
@@ -53,14 +53,14 @@ namespace LiVerse.AnaBanUI {
     public void Draw(SpriteBatch spriteBatch, double deltaTime) {
       if (RootElement != null) {
         // Make Sure the RootElement fills the entire viewport
-        Vector2 screenSize = new Vector2(spriteBatch.GraphicsDevice.Viewport.Width, spriteBatch.GraphicsDevice.Viewport.Height);
+        Vector2 screenSize = new(spriteBatch.GraphicsDevice.Viewport.Width, spriteBatch.GraphicsDevice.Viewport.Height);
         RootElement.Size = screenSize;
         RootElement.MaximumSize = screenSize;
         RootElement.AbsolutePosition = Vector2.Zero;
 
         spriteBatch.Begin();
 
-        if (BackgroundRectDrawable != null) BackgroundRectDrawable.Draw(spriteBatch, deltaTime, screenSize, Vector2.Zero);
+        BackgroundRectDrawable?.Draw(spriteBatch, deltaTime, screenSize, Vector2.Zero);
 
         RootElement.Draw(spriteBatch, deltaTime);
 

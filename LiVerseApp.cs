@@ -8,10 +8,11 @@ using System.Reflection;
 namespace LiVerse {
   public class LiVerseApp : Game {
     GraphicsDeviceManager graphics { get; }
-    SpriteBatch? spriteBatch;
+    SpriteBatch spriteBatch;
     readonly ScreenManager screenManager;
 
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public LiVerseApp() {
       graphics = new GraphicsDeviceManager(this);
       screenManager = new ScreenManager();
@@ -26,6 +27,7 @@ namespace LiVerse {
 
       InactiveSleepTime = TimeSpan.Zero;
     }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     protected override void OnExiting(object sender, EventArgs args) {
       Console.WriteLine("Exit!");

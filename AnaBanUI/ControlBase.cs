@@ -6,7 +6,7 @@ using MonoGame.Extended;
 namespace LiVerse.AnaBanUI {
   public abstract class ControlBase {
     public ControlBase? ParentControl { get; set; }
-    
+
     /// A disabled control doesn't accept user input, but its still rendered if visible
     public bool Enabled { get; set; } = true;
     /// A disabled control doesn't accept user input, but its still rendered if visible
@@ -32,16 +32,16 @@ namespace LiVerse.AnaBanUI {
       }
     }
 
-    public Vector2 ContentArea { get => new Vector2(Size.X - Margin * 2, Size.Y - Margin * 2); }
-
-    public float Margin { get; set; } = 0;
+    public Vector2 ContentArea { get => new Vector2(Size.X - Margin.X * 2, Size.Y - Margin.Y * 2); }
+    public Vector2 RenderOffset { get; set; } = Vector2.Zero;
+    public Vector2 Margin { get; set; } = Vector2.Zero;
 
     Vector2 _minimumSize = Vector2.Zero;
     public Vector2 MinimumSize { get => _minimumSize;
       set {
         //if (value == _minimumSize) { return; }
 
-        _minimumSize = new Vector2(value.X + Margin, value.Y + Margin);
+        _minimumSize = new Vector2(value.X + Margin.X, value.Y + Margin.Y);
       }
     }
 
@@ -53,7 +53,7 @@ namespace LiVerse.AnaBanUI {
       set {
         //if (value == _absolutePosition) { return; }
 
-        _absolutePosition = value + new Vector2(Margin);
+        _absolutePosition = value + Margin;
         _abosoluteArea = new RectangleF(_absolutePosition, _size);
       }
     }
@@ -61,7 +61,6 @@ namespace LiVerse.AnaBanUI {
     RectangleF _abosoluteArea = RectangleF.Empty;
     public RectangleF AbsoluteArea { get => _abosoluteArea; }
 
-    public Vector2 RenderOffset { get; set; } = Vector2.Zero;
     Viewport oldViewport;
 
     protected virtual void ElementSizeChanged() { }
@@ -90,12 +89,12 @@ namespace LiVerse.AnaBanUI {
       DrawElement(spriteBatch, deltaTime);
 
       if (DrawDebugLines) {
-        if (Margin != 0) {
+        if (Margin != Vector2.Zero) {
           spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, ContentArea), Color.Magenta);
         }
 
         spriteBatch.End();
-        spriteBatch.GraphicsDevice.Viewport = new Viewport((int)(AbsolutePosition.X - Margin), (int)(AbsolutePosition.Y - Margin), (int)Size.X, (int)Size.Y);
+        spriteBatch.GraphicsDevice.Viewport = new Viewport((int)(AbsolutePosition.X - Margin.X), (int)(AbsolutePosition.Y - Margin.Y), (int)Size.X, (int)Size.Y);
         spriteBatch.Begin();
 
         spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), Color.Blue);

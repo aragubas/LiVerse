@@ -32,11 +32,6 @@ namespace LiVerse.AnaBanUI.Containers {
       FillElement = fillElement;
     }
 
-    void FixMinimunSize(ControlBase control) {
-      if (control.Size.X < control.MinimumSize.X) { control.Size = new Vector2(control.MinimumSize.X, control.Size.Y); }
-      if (control.Size.Y < control.MinimumSize.Y) { control.Size = new Vector2(control.Size.X, control.MinimumSize.Y); }
-    }
-
     void FillControl(ControlBase element) {
       element.Size = Size; // Set element height to minimum size
       element.AbsolutePosition = AbsolutePosition;
@@ -73,7 +68,6 @@ namespace LiVerse.AnaBanUI.Containers {
         DockElement.AbsolutePosition = AbsolutePosition;
 
         FillElement.Size = new Vector2(ContentArea.X, ContentArea.Y - DockElement.Size.Y);
-        FixMinimunSize(FillElement);
 
         FillElement.RelativePosition = new Vector2(0, DockElement.Size.Y);
         FillElement.AbsolutePosition = AbsolutePosition + FillElement.RelativePosition;
@@ -86,20 +80,19 @@ namespace LiVerse.AnaBanUI.Containers {
       }
 
       if (DockType == DockFillContainerDockType.Bottom) {
-        FillElement.Size = new Vector2(Size.X - Margin * 2, (Size.Y - Margin) - DockElement.Size.Y - Margin * 2);
-        FixMinimunSize(FillElement);
-        FillElement.RelativePosition = new Vector2(Margin);
+        FillElement.Size = new Vector2(ContentArea.X - Margin.X * 2, (ContentArea.Y - Margin.Y) - DockElement.Size.Y - Margin.Y * 2);
+        FillElement.RelativePosition = Margin;
         FillElement.AbsolutePosition = AbsolutePosition + FillElement.RelativePosition;
 
         DockElement.Size = new Vector2(DockElement.MinimumSize.X, DockElement.MinimumSize.Y);
-        DockElement.RelativePosition = new Vector2(Margin, FillElement.Size.Y + Margin * 2);
+        DockElement.RelativePosition = new Vector2(Margin.X, FillElement.Size.Y + Margin.Y * 2);
         DockElement.AbsolutePosition = AbsolutePosition + DockElement.RelativePosition;
 
         // Calculate MinimiumSize
-        float minimumWidth = DockElement.MinimumSize.X + Margin * 2;
-        if (FillElement.MinimumSize.X > minimumWidth) { minimumWidth = FillElement.MinimumSize.X + Margin * 2; }
+        float minimumWidth = DockElement.MinimumSize.X + Margin.X * 2;
+        if (FillElement.MinimumSize.X > minimumWidth) { minimumWidth = FillElement.MinimumSize.X + Margin.X * 2; }
 
-        MinimumSize = new Vector2(minimumWidth, FillElement.MinimumSize.Y + Margin * 2 + DockElement.MinimumSize.Y + Margin * 2);
+        MinimumSize = new Vector2(minimumWidth, FillElement.MinimumSize.Y + Margin.Y * 2 + DockElement.MinimumSize.Y + Margin.Y * 2);
       }
 
       if (DockType == DockFillContainerDockType.Left) {
@@ -115,7 +108,7 @@ namespace LiVerse.AnaBanUI.Containers {
         float minimumHeight = DockElement.MinimumSize.Y;
         if (FillElement.MinimumSize.Y > minimumHeight) { minimumHeight = FillElement.MinimumSize.Y; }
 
-        MinimumSize = new Vector2(DockElement.MinimumSize.X + FillElement.MinimumSize.X, minimumHeight + Margin);
+        MinimumSize = new Vector2(DockElement.MinimumSize.X + FillElement.MinimumSize.X, minimumHeight + Margin.Y);
       }
 
       if (DockType == DockFillContainerDockType.Right) {
@@ -141,12 +134,12 @@ namespace LiVerse.AnaBanUI.Containers {
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       RecalculateUI();
 
-      if (BackgroundRectDrawble != null) BackgroundRectDrawble.Draw(spriteBatch, deltaTime, ContentArea, Vector2.Zero);
+      BackgroundRectDrawble?.Draw(spriteBatch, deltaTime, ContentArea, Vector2.Zero);
 
-      if (DockElement != null) DockElement.Draw(spriteBatch, deltaTime);
-      if (FillElement != null) FillElement.Draw(spriteBatch, deltaTime);
+      DockElement?.Draw(spriteBatch, deltaTime);
+      FillElement?.Draw(spriteBatch, deltaTime);
 
-      if (ForegroundRectDrawble != null) ForegroundRectDrawble.Draw(spriteBatch, deltaTime, ContentArea + (Vector2.One * 2), AbsolutePosition - (Vector2.One * 1));
+      ForegroundRectDrawble?.Draw(spriteBatch, deltaTime, ContentArea + (Vector2.One * 2), AbsolutePosition - (Vector2.One * 1));
     }
 
     public override bool InputUpdate(PointerEvent pointerEvent) {

@@ -16,7 +16,6 @@ namespace LiVerse.AnaBanUI.Containers {
   
   public class SideBySideContainer : ContainerBase {
     public bool Lines { get; set; } = false;
-    public float Margin { get; set; } = 0;
     public float Gap { get; set; } = 0;
     public List<ControlBase> Elements { get; set; } = new();
     public SideBySideCointainerLayoutFlow LayoutFlow { get; set; } = SideBySideCointainerLayoutFlow.Left;
@@ -30,9 +29,9 @@ namespace LiVerse.AnaBanUI.Containers {
         float weightedMinimumHeight = 0;
         
         foreach (ControlBase element in Elements) {
-          element.Size = new Vector2(element.MinimumSize.X, Size.Y - (Margin * 2));
-          element.RelativePosition = new Vector2(lastX + Margin, Margin);
-          element.AbsolutePosition = new Vector2(AbsolutePosition.X + element.RelativePosition.X, AbsolutePosition.Y + element.RelativePosition.Y);
+          element.Size = new(element.MinimumSize.X, Size.Y - (Margin.Y * 2));
+          element.RelativePosition = new(lastX + Margin.X, Margin.Y);
+          element.AbsolutePosition = new(AbsolutePosition.X + element.RelativePosition.X, AbsolutePosition.Y + element.RelativePosition.Y);
           element.ParentControl = this;
 
           lastX += element.Size.X + Gap;            
@@ -42,16 +41,16 @@ namespace LiVerse.AnaBanUI.Containers {
           }
         }
 
-        MinimumSize = new Vector2((lastX - Gap) + (Margin * 2), weightedMinimumHeight);
+        MinimumSize = new((lastX - Gap) + (Margin.X * 2), weightedMinimumHeight);
 
         if (Size.X > MinimumSize.X) {
           lastX = 0;
           weightedMinimumHeight = 0;
 
           foreach (ControlBase element in Elements) {            
-            element.Size = new Vector2((Size.X - Gap) / Elements.Count - Margin, Size.Y - (Margin * 2));
-            element.RelativePosition = new Vector2(lastX + Margin, Margin);
-            element.AbsolutePosition = new Vector2(AbsolutePosition.X + element.RelativePosition.X, AbsolutePosition.Y + element.RelativePosition.Y);
+            element.Size = new((Size.X - Gap) / Elements.Count - Margin.X, Size.Y - (Margin.Y * 2));
+            element.RelativePosition = new(lastX + Margin.X, Margin.Y);
+            element.AbsolutePosition = new(AbsolutePosition.X + element.RelativePosition.X, AbsolutePosition.Y + element.RelativePosition.Y);
 
             lastX += element.Size.X + Gap;
 

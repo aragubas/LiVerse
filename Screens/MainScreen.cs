@@ -29,7 +29,6 @@ namespace LiVerse.Screens
     Label speakingIndicatorLabel;
     Label characterNameLabel;
 
-    KeyboardState oldState;
     bool characterFullView = false;
 
     // Static ReadOnly Fields
@@ -39,28 +38,28 @@ namespace LiVerse.Screens
     static readonly Color speakingIndicatorActiveLabelColor = Color.FromNonPremultiplied(255, 255, 255, 255);
 
     public MainScreen(ScreenManager screenManager) : base(screenManager) {
-      WindowRoot = new UILayer();
-      settingsScreen = new SettingsScreen();      
+      WindowRoot = new();
+      settingsScreen = new();      
 
-      HeaderBar = new DockFillContainer();
-      centerSplit = new DockFillContainer();
+      HeaderBar = new();
+      centerSplit = new();
       // Create CharacterRenderer
-      characterRenderer = new CharacterRenderer.CharacterRenderer();
+      characterRenderer = new();
 
-      characterNameLabel = new Label("{character_name}", 21);
+      characterNameLabel = new("{character_name}", 21);
       characterNameLabel.Color = Color.Black;
-      Button settingsButton = new Button("Settings", 21);
+      Button settingsButton = new("Settings", 21);
       settingsButton.Click += settingsScreen.ToggleUILayer;
 
-      micLevelTrigger = new VerticalLevelTrigger();
-      levelDelayTrigger = new VerticalLevelTrigger();
+      micLevelTrigger = new();
+      levelDelayTrigger = new();
       micLevelTrigger.MaximumValue = 84;
       micLevelTrigger.ShowPeaks = true;
       levelDelayTrigger.MaximumValue = 1;
 
-      SideBySideContainer sideBySide = new SideBySideContainer();
-      sideFillContainer = new DockFillContainer();
-      sideFillContainer.Margin = 4f;
+      SideBySideContainer sideBySide = new();
+      sideFillContainer = new();
+      sideFillContainer.Margin = new(4);
 
       sideBySide.Elements.Add(micLevelTrigger);
       sideBySide.Elements.Add(levelDelayTrigger);
@@ -69,16 +68,16 @@ namespace LiVerse.Screens
       sideFillContainer.DockType = DockFillContainerDockType.Bottom;
       sideFillContainer.FillElement = sideBySide;
 
-      speakingIndicatorLabel = new Label("Active", 21);
+      speakingIndicatorLabel = new("Active", 21);
       speakingIndicatorLabel.Color = speakingIndicatorLabelColor;
-      speakingIndicatorSolidColorRect = new SolidColorRectangle(speakingIndicatorLabel);
-      speakingIndicatorSolidColorRect.Margin = 4f;
+      speakingIndicatorSolidColorRect = new(speakingIndicatorLabel);
+      speakingIndicatorSolidColorRect.Margin = new(4);
       speakingIndicatorSolidColorRect.BackgroundColor = speakingIndicatorColor;
       
       sideFillContainer.DockElement = speakingIndicatorSolidColorRect;
 
       HeaderBar.DockType = DockFillContainerDockType.Left;
-      HeaderBar.BackgroundRectDrawble = new RectangleDrawable() { Color = Color.FromNonPremultiplied(249, 249, 249, 255), IsFilled = true };
+      HeaderBar.BackgroundRectDrawble = new() { Color = Color.FromNonPremultiplied(249, 249, 249, 255), IsFilled = true };
       HeaderBar.DockElement = settingsButton;
       HeaderBar.FillElement = characterNameLabel;
       
@@ -92,16 +91,14 @@ namespace LiVerse.Screens
 
       WindowRoot.RootElement = mainFillContainer;
 
-
       CaptureDeviceDriverManager.CaptureDeviceDriver.MicrophoneLevelTriggered += MicrophoneLevelMeter_CharacterStartSpeaking;
       CaptureDeviceDriverManager.CaptureDeviceDriver.MicrophoneLevelUntriggered += MicrophoneLevelMeter_CharacterStopSpeaking;
       CaptureDeviceDriverManager.CaptureDeviceDriver.MicrophoneVolumeLevelUpdated += MicrophoneLevelMeter_MicrophoneVolumeLevelUpdate;
 
-
       CaptureDeviceDriverManager.CaptureDeviceDriver.Initialize();
       CaptureDeviceDriverManager.CaptureDeviceDriver.SetDefaultDevice();
 
-      WindowRoot.InputUpdateEvent += FullscreenViewToggle;
+      WindowRoot.KeyboardInputUpdateEvent += FullscreenViewToggle;
 
       // Registers WindowRoot UILayer
       UIRoot.UILayers.Add(WindowRoot);
