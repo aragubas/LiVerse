@@ -82,7 +82,7 @@ namespace LiVerse.AnaBanUI.Controls {
         }
 
         if (pointerEvent.DownRect.Intersects(AbsoluteArea)) {
-          currentTargetBackgroundColor = downBackground;
+          currentTargetBackgroundColor = hoverBackground;
           currentTargetBorderColor = downBorder;
           currentForegroundColor = downForeground;
           
