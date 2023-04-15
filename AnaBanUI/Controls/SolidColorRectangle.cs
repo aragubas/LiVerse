@@ -31,8 +31,12 @@ namespace LiVerse.AnaBanUI.Controls {
       return Element.InputUpdate(pointerEvent);
     }
 
+    public override bool InputUpdate(KeyboardEvent keyboardEvent) {
+      return Element.InputUpdate(keyboardEvent);
+    }
+
     public override void Update(double deltaTime) {
-      MinimumSize = Element.MinimumSize;
+      MinimumSize = Element.MinimumSize + (Vector2.One * (Element.Margin + Margin));
       Element.Size = ContentArea;
       Element.AbsolutePosition = AbsolutePosition;
 

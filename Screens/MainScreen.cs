@@ -2,6 +2,7 @@
 using LiVerse.AnaBanUI.Containers;
 using LiVerse.AnaBanUI.Controls;
 using LiVerse.AnaBanUI.Drawables;
+using LiVerse.AnaBanUI.Events;
 using LiVerse.CaptureDeviceDriver;
 using LiVerse.CaptureDeviceDriver.WasapiCaptureDevice;
 using LiVerse.CharacterRenderer;
@@ -30,7 +31,6 @@ namespace LiVerse.Screens
 
     KeyboardState oldState;
     bool characterFullView = false;
-    ICaptureDeviceDriver captureDeviceDriver;
 
     // Static ReadOnly Fields
     static readonly Color speakingIndicatorColor = Color.FromNonPremultiplied(8, 7, 5, 50);
@@ -40,7 +40,7 @@ namespace LiVerse.Screens
 
     public MainScreen(ScreenManager screenManager) : base(screenManager) {
       WindowRoot = new UILayer();
-      settingsScreen = new SettingsScreen();
+      settingsScreen = new SettingsScreen();      
 
       HeaderBar = new DockFillContainer();
       centerSplit = new DockFillContainer();
@@ -92,18 +92,20 @@ namespace LiVerse.Screens
 
       WindowRoot.RootElement = mainFillContainer;
 
-      captureDeviceDriver = new WasapiCaptureDeviceDriver();
 
-      captureDeviceDriver.MicrophoneLevelTriggered += MicrophoneLevelMeter_CharacterStartSpeaking;
-      captureDeviceDriver.MicrophoneLevelUntriggered += MicrophoneLevelMeter_CharacterStopSpeaking;
-      captureDeviceDriver.MicrophoneVolumeLevelUpdated += MicrophoneLevelMeter_MicrophoneVolumeLevelUpdate;
+      CaptureDeviceDriverManager.CaptureDeviceDriver.MicrophoneLevelTriggered += MicrophoneLevelMeter_CharacterStartSpeaking;
+      CaptureDeviceDriverManager.CaptureDeviceDriver.MicrophoneLevelUntriggered += MicrophoneLevelMeter_CharacterStopSpeaking;
+      CaptureDeviceDriverManager.CaptureDeviceDriver.MicrophoneVolumeLevelUpdated += MicrophoneLevelMeter_MicrophoneVolumeLevelUpdate;
 
-      captureDeviceDriver.Initialize();
-      captureDeviceDriver.SetDefaultDevice();
+
+      CaptureDeviceDriverManager.CaptureDeviceDriver.Initialize();
+      CaptureDeviceDriverManager.CaptureDeviceDriver.SetDefaultDevice();
+
+      WindowRoot.InputUpdateEvent += FullscreenViewToggle;
 
       // Registers WindowRoot UILayer
       UIRoot.UILayers.Add(WindowRoot);
-      //settingsScreen.ToggleUILayer();
+      settingsScreen.ToggleUILayer();
     }
 
     private void MicrophoneLevelMeter_CharacterStopSpeaking() {
@@ -128,7 +130,7 @@ namespace LiVerse.Screens
     public override void Deattach() { }
 
     public override void Dispose() {
-      captureDeviceDriver.Dispose();
+      CaptureDeviceDriverManager.CaptureDeviceDriver.Dispose();
     }
 
     public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
@@ -143,12 +145,12 @@ namespace LiVerse.Screens
 
     public override void Update(double deltaTime) {
       // Set Values
-      levelDelayTrigger.CurrentValue = (float)captureDeviceDriver.ActivationDelay;
+      levelDelayTrigger.CurrentValue = (float)CaptureDeviceDriverManager.CaptureDeviceDriver.ActivationDelay;
 
       // Sincronize Values
-      micLevelTrigger.TriggerLevel = captureDeviceDriver.TriggerLevel;
-      micLevelTrigger.MaximumValue = captureDeviceDriver.MaximumLevel;
-      levelDelayTrigger.TriggerLevel = captureDeviceDriver.ActivationDelayTrigger;
+      micLevelTrigger.TriggerLevel = CaptureDeviceDriverManager.CaptureDeviceDriver.TriggerLevel;
+      micLevelTrigger.MaximumValue = CaptureDeviceDriverManager.CaptureDeviceDriver.MaximumLevel;
+      levelDelayTrigger.TriggerLevel = CaptureDeviceDriverManager.CaptureDeviceDriver.ActivationDelayTrigger;
 
       UIRoot.UpdateUILayers(deltaTime);
 
@@ -158,24 +160,20 @@ namespace LiVerse.Screens
       }else { characterNameLabel.Text = "No character selected"; }
 
       // Sincronize Changes
-      captureDeviceDriver.TriggerLevel = micLevelTrigger.TriggerLevel;
-      captureDeviceDriver.ActivationDelayTrigger = levelDelayTrigger.TriggerLevel;
+      CaptureDeviceDriverManager.CaptureDeviceDriver.TriggerLevel = micLevelTrigger.TriggerLevel;
+      CaptureDeviceDriverManager.CaptureDeviceDriver.ActivationDelayTrigger = levelDelayTrigger.TriggerLevel;
 
-      captureDeviceDriver.Update(deltaTime);
+      CaptureDeviceDriverManager.CaptureDeviceDriver.Update(deltaTime);
 
       HeaderBar.Visible = !characterFullView;
       if (centerSplit.DockElement != null) centerSplit.DockElement.Visible = !characterFullView;
-
-      FullscreenViewToggle();
     }
 
-    void FullscreenViewToggle() {
+    void FullscreenViewToggle(KeyboardEvent keyboardEvent) {
       // Check if toggle key has been pressed
-      if (Keyboard.GetState().IsKeyDown(Keys.Escape) && oldState.IsKeyUp(Keys.Escape)) {
+      if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.Escape) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.Escape)) {
         characterFullView = !characterFullView;
       }
-
-      oldState = Keyboard.GetState();
     }
 
   }

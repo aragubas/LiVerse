@@ -24,8 +24,9 @@ namespace LiVerse.AnaBanUI.Containers {
         element.Size = new Vector2(element.MinimumSize.X + element.Margin, element.MinimumSize.Y + element.Margin);
         element.RelativePosition = new Vector2(0, lastY);
         element.AbsolutePosition = AbsolutePosition + element.RelativePosition;
-        
+        element.ParentControl = this;
         if (element.Size.X > minimumWidth) minimumWidth = element.Size.X + Margin;
+
         lastY += element.Size.Y + Gap;
       }
 

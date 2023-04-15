@@ -33,6 +33,7 @@ namespace LiVerse.AnaBanUI.Containers {
           element.Size = new Vector2(element.MinimumSize.X, Size.Y - (Margin * 2));
           element.RelativePosition = new Vector2(lastX + Margin, Margin);
           element.AbsolutePosition = new Vector2(AbsolutePosition.X + element.RelativePosition.X, AbsolutePosition.Y + element.RelativePosition.Y);
+          element.ParentControl = this;
 
           lastX += element.Size.X + Gap;            
 

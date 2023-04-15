@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
   public class WasapiCaptureDeviceInfo : ICaptureDeviceInfo {
     public string DeviceName { get; set; }
-    public string DeviceId { get; set; }
+    public object DeviceId { get; set; }
 
-    public WasapiCaptureDeviceInfo(string deviceName, string deviceId) {
+    public WasapiCaptureDeviceInfo(string deviceName, object deviceId) {
       DeviceName = deviceName;
       DeviceId = deviceId;
     }

@@ -7,7 +7,7 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
     public float MaximumLevel { get; set; } = 76.1f;
     public double ActivationDelay { get; set; }
     public float ActivationDelayTrigger { get; set; } = 0.65f;
-
+    public string DriverName => "NAudio WasapiCaptureDeviceDriver";
     public event Action<double>? MicrophoneVolumeLevelUpdated;
     public event Action? MicrophoneTriggerLevelTriggered;
     public event Action? MicrophoneLevelTriggered;
@@ -22,7 +22,19 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
     }
 
     public void ChangeDevice(ICaptureDeviceInfo device) {
-      
+      MMDeviceCollection devices = new MMDeviceEnumerator().EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active);
+
+      foreach (MMDevice mmDevice in devices) {
+        var info = new WasapiCaptureDeviceInfo(mmDevice.DeviceFriendlyName, mmDevice.DeviceTopology.DeviceId);
+        
+        // Device Found
+        if (device.DeviceName == info.DeviceName && (string)device.DeviceId == mmDevice.DeviceTopology.DeviceId) {
+          SetDevice(mmDevice);
+          return;
+        }
+      }
+
+      Console.WriteLine($"[WasapiCaptureDeviceDriver->ChangeDeviceDevice] {device.DeviceName} not found.");
     }
 
     public ICaptureDeviceInfo[] GetCaptureDevices() {
@@ -39,10 +51,11 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
     
     void SetDevice(MMDevice device) {
       // Stop capturing if capturing
-      if (CurrentWasapiCaptureDevice != null && CurrentWasapiCaptureDevice.CaptureState == CaptureState.Capturing) {
+      if (CurrentWasapiCaptureDevice != null) {
         // Remove listener and stop recording
         CurrentWasapiCaptureDevice.DataAvailable -= CurrentWasapiCaptureDevice_DataAvailable;
         CurrentWasapiCaptureDevice.StopRecording();
+        CurrentWasapiCaptureDevice.Dispose();
       }
 
       CurrentWasapiCaptureDevice = new WasapiCapture(device, false, 50);

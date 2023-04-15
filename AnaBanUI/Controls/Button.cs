@@ -13,13 +13,15 @@ using System.Threading.Tasks;
 
 namespace LiVerse.AnaBanUI.Controls {
   public enum ButtonStyle {
-    Default, Selectable
+    Default, Selectable, Flat
   }
   
   public class Button : ControlBase {
     public event Action? Click = null;
+    public event Action? BlinkingStarted = null;
     public Label Label;
     public bool IsSelected;
+    public bool BlinkWhenPressed { get; set; }
     public ButtonStyle ButtonStyle = ButtonStyle.Default;
     
     // Background Colors
@@ -45,33 +47,33 @@ namespace LiVerse.AnaBanUI.Controls {
     Color currentBorderColor = normalBorder;
     
     bool isMouseHovering = false;
+    bool isBlinking = false;
+    bool blinkingEnd = false;
+    double blinkTimer = 0;
 
     public Button(string DefaultText, int defaultFontSize = 22, ButtonStyle buttonStyle = ButtonStyle.Default) {
-      Label = new Label(DefaultText, defaultFontSize);
+      Label = new Label(DefaultText, defaultFontSize) { ParentControl = this };
       ButtonStyle = buttonStyle;
     }
 
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, Size), currentBackgroundColor);
 
-      if (ButtonStyle == ButtonStyle.Default) {
-        Label.Draw(spriteBatch, deltaTime);
-      } else {
-        spriteBatch.End();
-        spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(3, 0, 0));
-
-        Label.Draw(spriteBatch, deltaTime);
-
-        spriteBatch.End();
-        spriteBatch.Begin();
-      }
+      Label.Draw(spriteBatch, deltaTime);
+      
+      // Restore After drawing context switch
+      //EndDraw(spriteBatch);
+      //BeginDraw(spriteBatch);
 
       if (ButtonStyle == ButtonStyle.Default) spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), currentBorderColor);
       if (ButtonStyle == ButtonStyle.Selectable) spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, new Point(2, (int)Size.Y)), currentBorderColor);
+      if (ButtonStyle == ButtonStyle.Flat && isMouseHovering) spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), currentBorderColor);
+
+      //EndDraw(spriteBatch);
     }
 
     public override bool InputUpdate(PointerEvent pointerEvent) {
-      if (Enabled && Visible) {
+      if (Enabled && Visible && !isBlinking) {
         isMouseHovering = pointerEvent.PositionRect.Intersects(AbsoluteArea);
 
         if (isMouseHovering && !UIRoot.MouseDown) {
@@ -88,8 +90,20 @@ namespace LiVerse.AnaBanUI.Controls {
         }
 
         if (pointerEvent.UpRect.Intersects(AbsoluteArea)) {
-          Click?.Invoke();
-          
+          if (!BlinkWhenPressed) {
+            Click?.Invoke();
+
+          } else {
+            isBlinking = true;
+
+            currentBackgroundColor = normalBackground;
+            currentBorderColor = normalBorder;
+            currentForegroundColor = normalForeground;
+            isMouseHovering = false;
+            IsSelected = false;
+            BlinkingStarted?.Invoke();
+          }
+
           return true;
         }
       }
@@ -105,12 +119,41 @@ namespace LiVerse.AnaBanUI.Controls {
       Label.AbsolutePosition = ButtonStyle == ButtonStyle.Default ? AbsolutePosition : AbsolutePosition + (Vector2.UnitX * 3);
       MinimumSize = Label.MinimumSize + new Vector2(10, 2);
 
+      if (isBlinking) {
+        blinkTimer += 1 * deltaTime;
+
+        if (blinkTimer >= 0.13) {
+          blinkTimer = 0;
+          blinkingEnd = true;
+        
+        } else if (blinkTimer >= 0.1) {
+          if (!blinkingEnd) {
+            currentBackgroundColor = downBackground;
+            currentBorderColor = downBorder;
+            currentForegroundColor = downForeground;
+            isMouseHovering = true;
+            IsSelected = true;
+
+          }
+          else {
+            blinkingEnd = false;
+            isBlinking = false;
+            isMouseHovering = false;
+            IsSelected = false;
+            blinkTimer = 0;
+
+            Click?.Invoke();
+          }
+
+        }
+
+      }
+
       // Update Default Style
-      if (Enabled && Visible) {
+      if (Enabled && Visible && !isBlinking) {
         // Interpolate
         currentBackgroundColor = Color.Lerp(currentBackgroundColor, currentTargetBackgroundColor, (float)(1 - Math.Pow(0.0025, deltaTime)));
         currentBorderColor = Color.Lerp(currentBorderColor, currentTargetBorderColor, (float)(1 - Math.Pow(0.003, deltaTime)));
-
 
         currentForegroundColor = normalForeground;
         currentTargetBackgroundColor = normalBackground;

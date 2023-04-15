@@ -135,6 +135,8 @@ namespace LiVerse.AnaBanUI.Containers {
         MinimumSize = new Vector2(DockElement.MinimumSize.X + FillElement.MinimumSize.X, minimumHeight);
       }
 
+      DockElement.ParentControl = this;
+      FillElement.ParentControl = this;
     }
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       RecalculateUI();

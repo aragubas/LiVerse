@@ -5,6 +5,8 @@ using MonoGame.Extended;
 
 namespace LiVerse.AnaBanUI {
   public abstract class ControlBase {
+    public ControlBase? ParentControl { get; set; }
+    
     /// A disabled control doesn't accept user input, but its still rendered if visible
     public bool Enabled { get; set; } = true;
     /// A disabled control doesn't accept user input, but its still rendered if visible
@@ -59,15 +61,24 @@ namespace LiVerse.AnaBanUI {
     RectangleF _abosoluteArea = RectangleF.Empty;
     public RectangleF AbsoluteArea { get => _abosoluteArea; }
 
+    public Vector2 RenderOffset { get; set; } = Vector2.Zero;
+    Viewport oldViewport;
+
     protected virtual void ElementSizeChanged() { }
 
     public abstract void Update(double deltaTime);
 
     /// <summary>
-    /// Method called when the UIRoot decides this element should receive/process
+    /// Method called when the UIRoot decides this element should receive/process pointer events
     /// </summary>
     /// <returns>True if the event should be blocked</returns>
     public virtual bool InputUpdate(PointerEvent pointerEvent) { return false; }
+
+    /// <summary>
+    /// Method called when the UIRoot decides this element should receive/process keyboard events
+    /// </summary>
+    /// <returns>True if the event should be blocked</returns>
+    public virtual bool InputUpdate(KeyboardEvent keyboardEvent) { return false; }
 
     /// <summary>
     /// Applies a translation matrix and calls <seealso cref="DrawElement"/>
@@ -75,11 +86,7 @@ namespace LiVerse.AnaBanUI {
     public virtual void Draw(SpriteBatch spriteBatch, double deltaTime) {
       if (!Visible) { return; }
 
-      Viewport oldViewport = spriteBatch.GraphicsDevice.Viewport;
-
-      spriteBatch.End();
-      spriteBatch.GraphicsDevice.Viewport = new Viewport((int)(AbsolutePosition.X), (int)(AbsolutePosition.Y), (int)Size.X, (int)Size.Y);
-      spriteBatch.Begin();
+      BeginDraw(spriteBatch);
       DrawElement(spriteBatch, deltaTime);
 
       if (DrawDebugLines) {
@@ -94,10 +101,22 @@ namespace LiVerse.AnaBanUI {
         spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), Color.Blue);
       }
 
+      EndDraw(spriteBatch);
+    }
+
+    public void BeginDraw(SpriteBatch spriteBatch) {
+      oldViewport = spriteBatch.GraphicsDevice.Viewport;
+
+      spriteBatch.End();
+      Vector2 additionalOffset = ParentControl == null ? Vector2.Zero : ParentControl.RenderOffset;
+      spriteBatch.GraphicsDevice.Viewport = new Viewport((int)(AbsolutePosition.X + RenderOffset.X + additionalOffset.X), (int)(AbsolutePosition.Y + RenderOffset.Y + additionalOffset.Y), (int)Size.X, (int)Size.Y);
+      spriteBatch.Begin();
+    }
+
+    public void EndDraw(SpriteBatch spriteBatch) {
       spriteBatch.End();
       spriteBatch.GraphicsDevice.Viewport = oldViewport;
       spriteBatch.Begin();
-
     }
 
     /// <summary>
@@ -105,4 +124,4 @@ namespace LiVerse.AnaBanUI {
     /// </summary>
     public abstract void DrawElement(SpriteBatch spriteBatch, double deltaTime);
   }
-}
+} 
