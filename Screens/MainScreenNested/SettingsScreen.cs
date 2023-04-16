@@ -100,7 +100,6 @@ namespace LiVerse.Screens.MainScreenNested {
       settingViewDockFill.DockElement = titleDockFill;
 
       dockFill.BackgroundRectDrawble = new() { Color = Color.FromNonPremultiplied(240, 240, 240, 255) };
-      dockFill.ForegroundRectDrawble = new() { Color = Color.FromNonPremultiplied(194, 194, 194, 255), IsFilled = false };
       dockFill.DockElement = categoriesSelectList;
       dockFill.FillElement = settingViewDockFill;
 

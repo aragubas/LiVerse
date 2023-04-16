@@ -64,6 +64,17 @@ namespace LiVerse.AnaBanUI.Containers {
       return false;
     }
 
+    public override bool InputUpdate(KeyboardEvent keyboardEvent) {
+      // Nothing to Update
+      if (Elements.Count == 0) { return false; }
+
+      for (int i = 0; i < Elements.Count; i++) {
+        if (Elements[i].InputUpdate(keyboardEvent)) return true;
+      }
+
+      return false;
+    }
+
     public override void Update(double deltaTime) {
       // Nothing to Update
       if (Elements.Count == 0) { return; }

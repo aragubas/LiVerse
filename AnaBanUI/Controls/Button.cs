@@ -70,7 +70,7 @@ namespace LiVerse.AnaBanUI.Controls {
       if (Enabled && Visible && !isBlinking) {
         isMouseHovering = pointerEvent.PositionRect.Intersects(AbsoluteArea);
 
-        if (isMouseHovering && !UIRoot.MouseDown) {
+        if (isMouseHovering && !pointerEvent.Down) {
           currentTargetBackgroundColor = ButtonStyle != ButtonStyle.Flat ? hoverBackground : flatHoverBackground;
           currentForegroundColor = ButtonStyle != ButtonStyle.Flat ? normalForeground : flatHoverForeground;
           if (ButtonStyle != ButtonStyle.Selectable) currentTargetBorderColor = hoverBorder;

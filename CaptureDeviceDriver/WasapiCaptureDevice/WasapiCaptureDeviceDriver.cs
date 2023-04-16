@@ -70,7 +70,7 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
       CurrentWasapiCaptureDevice.StartRecording();
 
       _currentCaptureDevice = new WasapiCaptureDeviceInfo(device.DeviceFriendlyName, device.DeviceTopology.DeviceId);
-      Console.WriteLine(_currentCaptureDevice);
+      Console.WriteLine($"[WasapiCaptureDeviceDriver->SetDevice] {device.DeviceFriendlyName}");
     }
 
     private void CurrentWasapiCaptureDevice_DataAvailable(object? sender, WaveInEventArgs e) {

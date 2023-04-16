@@ -39,7 +39,6 @@ namespace LiVerse.Screens
 
     public MainScreen(ScreenManager screenManager) : base(screenManager) {
       WindowRoot = new();
-      settingsScreen = new();      
 
       HeaderBar = new();
       centerSplit = new();
@@ -49,7 +48,6 @@ namespace LiVerse.Screens
       characterNameLabel = new("{character_name}", 21);
       characterNameLabel.Color = Color.Black;
       Button settingsButton = new("Settings", 21);
-      settingsButton.Click += settingsScreen.ToggleUILayer;
 
       micLevelTrigger = new();
       levelDelayTrigger = new();
@@ -101,6 +99,8 @@ namespace LiVerse.Screens
       WindowRoot.KeyboardInputUpdateEvent += FullscreenViewToggle;
 
       // Registers WindowRoot UILayer
+      settingsScreen = new();
+      settingsButton.Click += settingsScreen.ToggleUILayer;
       UIRoot.UILayers.Add(WindowRoot);
       settingsScreen.ToggleUILayer();
     }

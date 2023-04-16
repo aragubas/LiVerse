@@ -6,7 +6,6 @@ using LiVerse.AnaBanUI.Events;
 using LiVerse.CaptureDeviceDriver;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 
 namespace LiVerse.Screens.MainScreenNested
 {
@@ -17,7 +16,7 @@ namespace LiVerse.Screens.MainScreenNested
     public AudioSettingsScreen() {
       ScrollableList = new() { ParentControl = this, Gap = 6 };
 
-      DockFill = new() { ParentControl = this };
+      DockFill = new() { ParentControl = this, DockType = DockFillContainerDockType.Right, Gap = 6, DrawDebugLines = true };
       Label audioInputDeviceToggleTitle = new("Input Device: ") { Color = Color.Black };
       List<ComboBoxOption> options = new();
 
@@ -34,14 +33,13 @@ namespace LiVerse.Screens.MainScreenNested
       ComboBoxControl audioDevicesComboBox = new(defaultOption, options);
       audioDevicesComboBox.SelectedOptionChanged += ChangeAudioDevice;
 
-      DockFill.DockType = DockFillContainerDockType.Left;
       DockFill.DockElement = audioInputDeviceToggleTitle;
       DockFill.FillElement = audioDevicesComboBox;
 
       Label audioDriverNameLabel = new($"Current Audio Driver: " +
         $"{(CaptureDeviceDriverManager.CaptureDeviceDriver == null ? "None" : CaptureDeviceDriverManager.CaptureDeviceDriver.DriverName)}") {
         Color = Color.Black,
-        TextHorizontalAlignment = LabelTextHorizontalAlignment.Left
+        TextHorizontalAlignment = LabelTextHorizontalAlignment.Left,
       };
 
       ScrollableList.Elements.Add(audioDriverNameLabel);

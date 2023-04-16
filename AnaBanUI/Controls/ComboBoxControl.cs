@@ -24,7 +24,6 @@ namespace LiVerse.AnaBanUI.Controls {
 
     public ComboBoxControl(ComboBoxOption selectedOption, List<ComboBoxOption> options) {
       ToggleButton = new(selectedOption.OptionText);
-      //ToggleButton.Label.TextHorizontalAlignment = LabelTextHorizontalAlignment.Left;
       ToggleButton.Click += ToggleOptionsContainer;
 
       Options = options;
@@ -42,7 +41,7 @@ namespace LiVerse.AnaBanUI.Controls {
         SelectedOptionChanged?.Invoke(option);
         ToggleOptionsContainer();
       });
-      boxOverlayContainer.ComboBoxPosition = new(AbsolutePosition, ContentArea);
+      boxOverlayContainer.ComboBoxRectangle = new(AbsolutePosition, ContentArea);
 
       OptionsUILayer.RootElement = boxOverlayContainer;
       OptionsUILayer.PointerInputUpdateEvent += OptionsUILayer_PointerInputUpdateEvent;
@@ -68,7 +67,8 @@ namespace LiVerse.AnaBanUI.Controls {
     public override void Update(double deltaTime) {
       ToggleButton.Size = ContentArea;
       ToggleButton.RelativePosition = RelativePosition;
-      ToggleButton.AbsolutePosition = AbsolutePosition;
+      ToggleButton.AbsolutePosition = AbsolutePosition;      
+      if (boxOverlayContainer != null) boxOverlayContainer.ComboBoxRectangle = new(AbsolutePosition, ContentArea);
 
       MinimumSize = ToggleButton.MinimumSize;
 

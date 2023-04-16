@@ -8,7 +8,7 @@ namespace LiVerse.AnaBanUI.Controls.ComboBox {
   public class ComboBoxOverlayContainer : ControlBase {
     public List<ComboBoxOption> Options { get; }
     public ScrollableList ScrollableList { get; }
-    public RectangleF ComboBoxPosition { get; set; }
+    public RectangleF ComboBoxRectangle { get; set; }
     public event Action<ComboBoxOption>? Callback;
     public bool OptionSelected = false;
 
@@ -40,8 +40,8 @@ namespace LiVerse.AnaBanUI.Controls.ComboBox {
     }
 
     public override void Update(double deltaTime) {
-      ScrollableList.Size = new Vector2(ComboBoxPosition.Size.Width, ScrollableList.MinimumSize.Y);
-      ScrollableList.AbsolutePosition = ComboBoxPosition.Position;
+      ScrollableList.Size = new Vector2(ComboBoxRectangle.Size.Width, ScrollableList.MinimumSize.Y);
+      ScrollableList.AbsolutePosition = ComboBoxRectangle.Position;
 
       ScrollableList.Update(deltaTime);
     }
