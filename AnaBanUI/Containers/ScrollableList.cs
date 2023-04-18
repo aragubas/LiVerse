@@ -5,12 +5,17 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
 namespace LiVerse.AnaBanUI.Containers {
+  public enum ScrollableListDirection {
+    Horizontal, Vertical
+  }
+  
   public class ScrollableList : ContainerBase {
     public List<ControlBase> Elements { get; } = new();
     public RectangleDrawable? BackgroundRectDrawable { get; set; }
     public bool Lines { get; set; } = false;
     public bool StretchElements { get; set; } = true;
     public float Gap { get; set; }
+    public ScrollableListDirection ListDirection { get; set; } = ScrollableListDirection.Vertical;
 
     public ScrollableList() {
       
@@ -19,27 +24,53 @@ namespace LiVerse.AnaBanUI.Containers {
     void RecalculateUI() {
       if (Elements.Count == 0) { return; }
 
-      float minimumWidth = 0;
-      float lastY = 0;
+      if (ListDirection == ScrollableListDirection.Vertical) {
+        float minimumWidth = 0;
+        float lastY = 0;
 
-      foreach(var element in Elements) {
-        element.Size = new Vector2(element.MinimumSize.X + element.Margin.X, element.MinimumSize.Y + element.Margin.Y);
-        element.RelativePosition = new Vector2(0, lastY);
-        element.AbsolutePosition = AbsolutePosition + element.RelativePosition;
-        element.ParentControl = this;
-        if (element.Size.X > minimumWidth) minimumWidth = element.Size.X + Margin.X;
-
-        lastY += element.Size.Y + Gap;
-      }
-
-      if (StretchElements) {
         foreach (var element in Elements) {
-          element.Size = new Vector2(ContentArea.X, element.Size.Y);
+          element.Size = new Vector2(element.MinimumSize.X + element.Margin.X, element.MinimumSize.Y + element.Margin.Y);
+          element.RelativePosition = new Vector2(0, lastY);
+          element.AbsolutePosition = AbsolutePosition + element.RelativePosition;
+          element.ParentControl = this;
+          if (element.Size.X > minimumWidth) minimumWidth = element.Size.X + Margin.X;
+
+          lastY += element.Size.Y + Gap;
         }
 
+        if (StretchElements) {
+          foreach (var element in Elements) {
+            element.Size = new Vector2(ContentArea.X, element.Size.Y);
+          }
+
+        }
+
+        MinimumSize = new Vector2(minimumWidth, 0);
       }
 
-      MinimumSize = new Vector2(minimumWidth, 0);      
+      else if (ListDirection == ScrollableListDirection.Horizontal) {
+        float minimumHeight = 0;
+        float lastX = 0;
+
+        foreach (var element in Elements) {
+          element.Size = new Vector2(element.MinimumSize.X + element.Margin.X, element.MinimumSize.Y + element.Margin.Y);
+          element.RelativePosition = new Vector2(lastX, 0);
+          element.AbsolutePosition = AbsolutePosition + element.RelativePosition;
+          element.ParentControl = this;
+          if (element.Size.Y > minimumHeight) minimumHeight = element.Size.Y + Margin.Y;
+
+          lastX += element.Size.X + Gap;
+        }
+
+        if (StretchElements) {
+          foreach (var element in Elements) {
+            element.Size = new Vector2(element.Size.X, ContentArea.Y);
+          }
+
+        }
+
+        MinimumSize = new Vector2(0, minimumHeight);
+      }
     }
 
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {

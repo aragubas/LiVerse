@@ -8,7 +8,8 @@ using MonoGame.Extended;
 
 namespace LiVerse.AnaBanUI {
   public class UILayer {
-    public ControlBase? RootElement { get; set; }    
+    public ControlBase? RootElement { get; set; }
+    public bool HasInputProcessing { get; set; } = true;
     public RectangleDrawable? BackgroundRectDrawable { get; set; }
     public event Action<KeyboardEvent>? KeyboardInputUpdateEvent;
     public event Action<PointerEvent>? PointerInputUpdateEvent;

@@ -25,9 +25,10 @@ namespace LiVerse.AnaBanUI
         UILayers[i].Update(deltaTime);
       }
 
-      // Only process input for the highest Layer
-      if (UILayers.Last() != null && WindowFocused) {
-        UILayers.Last().InputUpdate();
+      // Only process input for the highest Layer with input processing
+      UILayer highestValidUILayer = UILayers.Where((element) => element.HasInputProcessing).Last();
+      if (highestValidUILayer != null && WindowFocused) {
+        highestValidUILayer.InputUpdate();
       }
     }
 
@@ -52,6 +53,8 @@ namespace LiVerse.AnaBanUI
       MouseUpRectangle = (newMouseState.LeftButton == ButtonState.Released && oldMouseState.LeftButton == ButtonState.Pressed) ? MousePositionRectangle : Rectangle.Empty;
       
       oldMouseState = newMouseState;
+
+      UpdateUILayers(deltaTime);
     }
   }
 }

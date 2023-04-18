@@ -42,7 +42,7 @@ namespace LiVerse.AnaBanUI.Controls {
       }
     }
 
-    public Color Color { get; set; } = Color.White;
+    public Color Color { get; set; } = Color.Black;
     public LabelTextVerticalAlignment TextVerticalAlignment = LabelTextVerticalAlignment.Center;
     public LabelTextHorizontalAlignment TextHorizontalAlignment = LabelTextHorizontalAlignment.Center;
     public Vector2 FontArea = Vector2.Zero;
