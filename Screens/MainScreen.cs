@@ -54,7 +54,7 @@ namespace LiVerse.Screens
       levelDelayTrigger = new() { MaximumValue = 1 };
 
       SideBySideContainer sideBySide = new() { Gap = 4f };
-      sideFillContainer = new() { DockType = DockFillContainerDockType.Bottom, Margin = new(4), Gap = 4, FillElement = sideBySide };
+      sideFillContainer = new() { DockType = DockFillContainerDockType.Bottom, Margin = new(6), Gap = 6, FillElement = sideBySide };
 
       sideBySide.Elements.Add(micLevelTrigger);
       sideBySide.Elements.Add(levelDelayTrigger);

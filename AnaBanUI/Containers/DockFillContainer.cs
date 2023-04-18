@@ -91,8 +91,8 @@ namespace LiVerse.AnaBanUI.Containers {
         DockElement.AbsolutePosition = AbsolutePosition + DockElement.RelativePosition;
 
         // Calculate MinimiumSize
-        float minimumWidth = DockElement.MinimumSize.X + Margin.X * 2;
-        if (FillElement.MinimumSize.X > minimumWidth) { minimumWidth = FillElement.MinimumSize.X + Margin.X * 2; }
+        float minimumWidth = DockElement.MinimumSize.X + Margin.X;
+        if (FillElement.MinimumSize.X > minimumWidth) { minimumWidth = FillElement.MinimumSize.X + Margin.X; }
 
         MinimumSize = new Vector2(minimumWidth, FillElement.MinimumSize.Y + Margin.Y * 2 + DockElement.MinimumSize.Y + Margin.Y * 2 + Gap);
       }
