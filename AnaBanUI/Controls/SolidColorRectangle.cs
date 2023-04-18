@@ -36,9 +36,11 @@ namespace LiVerse.AnaBanUI.Controls {
     }
 
     public override void Update(double deltaTime) {
-      MinimumSize = Element.MinimumSize + (Vector2.One * (Element.Margin + Margin));
+      MinimumSize = Element.MinimumSize;
       Element.Size = ContentArea;
       Element.AbsolutePosition = AbsolutePosition;
+      Element.RelativePosition = RelativePosition;
+
 
       Element.Update(deltaTime);
     }

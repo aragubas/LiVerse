@@ -29,7 +29,7 @@ namespace LiVerse.Screens {
 
     public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
       if (startupBannerTexture == null) {
-        startupBannerTexture = ResourceManager.LoadTexture2DFromFile(spriteBatch.GraphicsDevice, Path.Combine(ResourceManager.DefaultContentPath, "Images", "startup_banner.png"), DefaultColorProcessors.PremultiplyAlpha);
+        startupBannerTexture = ResourceManager.LoadTexture2DFromFile(Path.Combine(ResourceManager.DefaultContentPath, "Images", "startup_banner.png"), DefaultColorProcessors.PremultiplyAlpha);
       }
 
       spriteBatch.GraphicsDevice.Clear(clearColor);

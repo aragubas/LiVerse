@@ -16,7 +16,7 @@ namespace LiVerse.Screens.MainScreenNested
     public AudioSettingsScreen() {
       ScrollableList = new() { ParentControl = this, Gap = 6 };
 
-      DockFill = new() { ParentControl = this, DockType = DockFillContainerDockType.Right, Gap = 6, DrawDebugLines = true };
+      DockFill = new() { ParentControl = this, DockType = DockFillContainerDockType.Left, Gap = 6, DrawDebugLines = true };
       Label audioInputDeviceToggleTitle = new("Input Device: ") { Color = Color.Black };
       List<ComboBoxOption> options = new();
 

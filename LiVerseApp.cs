@@ -1,4 +1,5 @@
 ﻿using LiVerse.AnaBanUI;
+using LiVerse.CaptureDeviceDriver;
 using LiVerse.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,20 +8,20 @@ using System.Reflection;
 
 namespace LiVerse {
   public class LiVerseApp : Game {
-    GraphicsDeviceManager graphics { get; }
+    public static GraphicsDeviceManager? Graphics { get; set; }
     SpriteBatch spriteBatch;
     readonly ScreenManager screenManager;
 
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public LiVerseApp() {
-      graphics = new GraphicsDeviceManager(this);
+      Graphics = new GraphicsDeviceManager(this);
       screenManager = new ScreenManager();
 
       // Enables VSync
-      graphics.SynchronizeWithVerticalRetrace = true;
-      graphics.PreferHalfPixelOffset = true;
-      graphics.ApplyChanges();
+      Graphics.SynchronizeWithVerticalRetrace = true;
+      Graphics.PreferHalfPixelOffset = true;
+      Graphics.ApplyChanges();
 
       IsMouseVisible = true;
       IsFixedTimeStep = false;
@@ -43,7 +44,10 @@ namespace LiVerse {
       Window.AllowUserResizing = true;
 
       // Creates the sprite batch
-      spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
+      if (Graphics == null) {
+        throw new NullReferenceException("Could not create SpriteBatch, GraphicsDeviceManager is null");
+      }
+      spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);        
 
       // Load base resources
       ResourceManager.LoadBaseResources(GraphicsDevice);
@@ -60,9 +64,13 @@ namespace LiVerse {
     protected override void Update(GameTime gameTime) {
       UIRoot.WindowFocused = IsActive;
 
+      // Update Microphone
+      CaptureDeviceDriverManager.Update(gameTime.GetElapsedSeconds());
+
       // Update UIRoot
       UIRoot.Update(gameTime.GetElapsedSeconds());
 
+      // Update Screen
       screenManager.Update(gameTime.GetElapsedSeconds());
     }
 

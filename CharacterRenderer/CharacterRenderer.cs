@@ -1,5 +1,6 @@
 ﻿using LiVerse.AnaBanUI;
 using LiVerse.CharacterRenderer.BuiltInAnimators;
+using LiVerse.Stores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -7,7 +8,6 @@ using MonoGame.Extended;
 namespace LiVerse.CharacterRenderer
 {
     public class CharacterRenderer : ControlBase {
-    public Character? CurrentCharacter { get; set; }
     public CharacterSpriteState CurrentSpriteState = CharacterSpriteState.Idle;
     public CharacterState State = new();
     public List<IAnimator> Animators { get; set; } = new();
@@ -27,42 +27,32 @@ namespace LiVerse.CharacterRenderer
 
     Texture2D? CurrentSprite {
       get {
-        if (CurrentCharacter == null) { return null; }
+        if (CharacterStore.CurrentCharacter == null) { return null; }
         if (!State.IsSpeaking && !State.IsBlinking) {
-          return CurrentCharacter.characterSprites.Idle;
+          return CharacterStore.CurrentCharacter.CurrentSpriteCollection.Idle;
         }
 
         else if (!State.IsSpeaking && State.IsBlinking) {
-          return CurrentCharacter.characterSprites.IdleBlink;
+          return CharacterStore.CurrentCharacter.CurrentSpriteCollection.IdleBlink;
         }
 
         else if (State.IsSpeaking && !State.IsBlinking) {
-          return CurrentCharacter.characterSprites.Speaking;
+          return CharacterStore.CurrentCharacter.CurrentSpriteCollection.Speaking;
         }
 
         else {
-          return CurrentCharacter.characterSprites.SpeakingBlink;
+          return CharacterStore.CurrentCharacter.CurrentSpriteCollection.SpeakingBlink;
         }
       }
     }
 
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
-      if (CurrentCharacter == null) {
-        CharacterSpritesCollection spritesCollection = new();
-        // Hardcoded path, will be removed on the future
-        // TODO: Remove hardcoded path
-        spritesCollection.Idle = ResourceManager.LoadTexture2DFromFile(spriteBatch.GraphicsDevice, @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Fechada.png");
-        spritesCollection.Speaking = ResourceManager.LoadTexture2DFromFile(spriteBatch.GraphicsDevice, @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Aberta.png");
-        spritesCollection.IdleBlink = ResourceManager.LoadTexture2DFromFile(spriteBatch.GraphicsDevice, @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Fechada.png");
-        spritesCollection.SpeakingBlink = ResourceManager.LoadTexture2DFromFile(spriteBatch.GraphicsDevice, @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Aberta.png");
-
-        CurrentCharacter = new Character("Aragubas", spritesCollection);
-      }
-
       CalculatePosition(deltaTime);
 
       // Render current state
-      spriteBatch.Draw(CurrentSprite, spriteDestinationRect, Color.White);
+      if (CurrentSprite != null) {
+        spriteBatch.Draw(CurrentSprite, spriteDestinationRect, Color.White);
+      }
     }
 
     void CalculatePosition(double deltaTime) {
@@ -104,15 +94,15 @@ namespace LiVerse.CharacterRenderer
 
     public override void Update(double deltaTime) {
       // Update Blinking
-      if (CurrentCharacter != null) {
+      if (CharacterStore.CurrentCharacter != null) {
         blinkingPeriod += 1 * deltaTime;
 
-        if (blinkingPeriod > CurrentCharacter.BlinkingTriggerEnd) {
+        if (blinkingPeriod > CharacterStore.CurrentCharacter.BlinkingTriggerEnd) {
           State.IsBlinking = false;
           blinkingPeriod = 0;
 
         }
-        else if (blinkingPeriod > CurrentCharacter.BlinkingTrigger) {
+        else if (blinkingPeriod > CharacterStore.CurrentCharacter.BlinkingTrigger) {
           State.IsBlinking = true;
         }
 

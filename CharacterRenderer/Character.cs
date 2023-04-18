@@ -3,11 +3,11 @@
     public string Name { get; set; }
     public double BlinkingTrigger { get; set; } = 5;
     public double BlinkingTriggerEnd { get; set; } = 5.15;
-    public CharacterSpritesCollection characterSprites { get; set; }
+    public SpriteCollection CurrentSpriteCollection { get; set; }
 
-    public Character(string name, CharacterSpritesCollection sprites) {
+    public Character(string name, SpriteCollection sprites) {
       Name = name;
-      characterSprites = sprites;
+      CurrentSpriteCollection = sprites;
     }
 
     public override string ToString() {

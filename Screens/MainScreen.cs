@@ -7,6 +7,7 @@ using LiVerse.CaptureDeviceDriver;
 using LiVerse.CaptureDeviceDriver.WasapiCaptureDevice;
 using LiVerse.CharacterRenderer;
 using LiVerse.Screens.MainScreenNested;
+using LiVerse.Stores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -23,6 +24,7 @@ namespace LiVerse.Screens
     VerticalLevelTrigger levelDelayTrigger;
     DockFillContainer HeaderBar;
     DockFillContainer centerSplit;
+    DockFillContainer centerCharacterSplit;
     CharacterRenderer.CharacterRenderer characterRenderer;
     DockFillContainer sideFillContainer;
     SolidColorRectangle speakingIndicatorSolidColorRect;
@@ -45,31 +47,22 @@ namespace LiVerse.Screens
       // Create CharacterRenderer
       characterRenderer = new();
 
-      characterNameLabel = new("{character_name}", 21);
-      characterNameLabel.Color = Color.Black;
+      characterNameLabel = new("{character_name}", 21) { Color = Color.Black };
       Button settingsButton = new("Settings", 21);
 
-      micLevelTrigger = new();
-      levelDelayTrigger = new();
-      micLevelTrigger.MaximumValue = 84;
-      micLevelTrigger.ShowPeaks = true;
-      levelDelayTrigger.MaximumValue = 1;
+      micLevelTrigger = new() { ShowPeaks = true, MaximumValue = 84 };
+      levelDelayTrigger = new() { MaximumValue = 1 };
 
-      SideBySideContainer sideBySide = new();
-      sideFillContainer = new();
-      sideFillContainer.Margin = new(4);
+      SideBySideContainer sideBySide = new() { Gap = 4f };
+      sideFillContainer = new() { DockType = DockFillContainerDockType.Bottom, Margin = new(4), Gap = 4, FillElement = sideBySide };
 
       sideBySide.Elements.Add(micLevelTrigger);
       sideBySide.Elements.Add(levelDelayTrigger);
-      sideBySide.Gap = 4f;
-
-      sideFillContainer.DockType = DockFillContainerDockType.Bottom;
-      sideFillContainer.FillElement = sideBySide;
 
       speakingIndicatorLabel = new("Active", 21);
       speakingIndicatorLabel.Color = speakingIndicatorLabelColor;
       speakingIndicatorSolidColorRect = new(speakingIndicatorLabel);
-      speakingIndicatorSolidColorRect.Margin = new(4);
+      //speakingIndicatorSolidColorRect.Margin = new(4);
       speakingIndicatorSolidColorRect.BackgroundColor = speakingIndicatorColor;
       
       sideFillContainer.DockElement = speakingIndicatorSolidColorRect;
@@ -78,10 +71,13 @@ namespace LiVerse.Screens
       HeaderBar.BackgroundRectDrawble = new() { Color = Color.FromNonPremultiplied(249, 249, 249, 255), IsFilled = true };
       HeaderBar.DockElement = settingsButton;
       HeaderBar.FillElement = characterNameLabel;
-      
+
+      centerCharacterSplit = new() { DockType = DockFillContainerDockType.Bottom };
+      centerCharacterSplit.FillElement = characterRenderer;
+
       centerSplit.DockType = DockFillContainerDockType.Left;
       centerSplit.DockElement = sideFillContainer;
-      centerSplit.FillElement = characterRenderer;
+      centerSplit.FillElement = centerCharacterSplit;
 
       //HeaderBar.Lines = true;
       mainFillContainer.DockElement = HeaderBar;
@@ -102,7 +98,14 @@ namespace LiVerse.Screens
       settingsScreen = new();
       settingsButton.Click += settingsScreen.ToggleUILayer;
       UIRoot.UILayers.Add(WindowRoot);
-      settingsScreen.ToggleUILayer();
+      //settingsScreen.ToggleUILayer();
+
+      CharacterStore.LoadCharacter(new Character("Aragubas", new SpriteCollection() {
+        Idle = ResourceManager.LoadTexture2DFromFile(@"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Fechada.png"),
+        IdleBlink = ResourceManager.LoadTexture2DFromFile(@"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Fechada.png"),
+        Speaking = ResourceManager.LoadTexture2DFromFile(@"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Aberta.png"),
+        SpeakingBlink = ResourceManager.LoadTexture2DFromFile(@"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Aberta.png")
+      }));
     }
 
     private void MicrophoneLevelMeter_CharacterStopSpeaking() {
@@ -151,16 +154,14 @@ namespace LiVerse.Screens
 
       UIRoot.UpdateUILayers(deltaTime);
 
-      // Set CharacterName Label
-      if (characterRenderer.CurrentCharacter != null) {
-        characterNameLabel.Text = characterRenderer.CurrentCharacter.Name;
+      // Set CharacterName Label      
+      if (CharacterStore.CurrentCharacter != null) {
+        characterNameLabel.Text = CharacterStore.CurrentCharacter.Name;
       }else { characterNameLabel.Text = "No character selected"; }
 
       // Sincronize Changes
       CaptureDeviceDriverManager.CaptureDeviceDriver.TriggerLevel = micLevelTrigger.TriggerLevel;
-      CaptureDeviceDriverManager.CaptureDeviceDriver.ActivationDelayTrigger = levelDelayTrigger.TriggerLevel;
-
-      CaptureDeviceDriverManager.CaptureDeviceDriver.Update(deltaTime);
+      CaptureDeviceDriverManager.CaptureDeviceDriver.ActivationDelayTrigger = levelDelayTrigger.TriggerLevel;      
 
       HeaderBar.Visible = !characterFullView;
       if (centerSplit.DockElement != null) centerSplit.DockElement.Visible = !characterFullView;

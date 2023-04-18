@@ -58,11 +58,7 @@ namespace LiVerse.AnaBanUI.Controls {
     }  
 
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
-      if (font == null || reBakeFont) {
-        reBakeFont = false;
-        font = ResourceManager.GetFont(FontName, FontSize, spriteBatch.GraphicsDevice); 
-        RecalculateUI();
-      }
+      if (font == null) { return; }
       if (Text == null) { Text = ""; }
       RecalculatePosition();
 
@@ -116,7 +112,13 @@ namespace LiVerse.AnaBanUI.Controls {
     }
 
     public override void Update(double deltaTime) {
-      RecalculateUI();      
+      if (font == null || reBakeFont) {
+        reBakeFont = false;
+        font = ResourceManager.GetFont(FontName, FontSize);
+        RecalculateUI();
+      }
+
+      RecalculateUI();
     }
 
   }

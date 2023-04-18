@@ -17,5 +17,9 @@
     <None Include="ApplicationData/**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ReactiveBanana\" />
+  </ItemGroup>
+
 
 </Project>

@@ -9,7 +9,7 @@ namespace LiVerse {
     //public static FontSystem GlobalFontSystem = new FontSystem();
     public static Dictionary<string, SpriteFont> FontCache = new();
 
-    public static SpriteFont BakeFont(string fontName, int size, GraphicsDevice graphicsDevice) {
+    public static SpriteFont BakeFont(string fontName, int size) {
       string fontPath = Path.Combine(DefaultContentPath, "Fonts", fontName + ".ttf");
       if (fontPath.EndsWith(".ttf.ttf")) fontPath.Replace(".ttf.ttf", ".ttf");
       
@@ -21,20 +21,20 @@ namespace LiVerse {
           CharacterRange.Cyrillic
         });
 
-      return fontBakeResult.CreateSpriteFont(graphicsDevice);
+      return fontBakeResult.CreateSpriteFont(LiVerseApp.Graphics.GraphicsDevice);
     }
 
     /// <summary>
     /// Gets font from FontCache, bake font if not found in cache
     /// </summary>
-    public static SpriteFont GetFont(string fontName, int size, GraphicsDevice graphicsDevice) {
+    public static SpriteFont GetFont(string fontName, int size) {
       string fontKey = $"{fontName}:{size}";
 
       if (FontCache.TryGetValue(fontKey, out SpriteFont? foundValue)) {
         return foundValue;
       }
 
-      SpriteFont bakeResult = BakeFont(fontName, size, graphicsDevice);
+      SpriteFont bakeResult = BakeFont(fontName, size);
       FontCache.Add(fontKey, bakeResult);
 
       return bakeResult;
@@ -49,20 +49,20 @@ namespace LiVerse {
     }
 
     // Load Sprite From File
-    public static Texture2D LoadTexture2DFromFile(GraphicsDevice graphicsDevice, string filePath, Action<byte[]> colorProcessor) {
+    public static Texture2D LoadTexture2DFromFile(string filePath, Action<byte[]> colorProcessor) {
       if (!File.Exists(filePath)) {
         throw new FileNotFoundException($"Could not find Sprite to load. Path: {filePath}");
       }
 
       using (FileStream fileStream = new(filePath, FileMode.Open)) {
-        Texture2D ValToReturn = Texture2D.FromStream(graphicsDevice, fileStream, colorProcessor);
+        Texture2D ValToReturn = Texture2D.FromStream(LiVerseApp.Graphics.GraphicsDevice, fileStream, colorProcessor);
 
         return ValToReturn;
       }
     }
     
-    public static Texture2D LoadTexture2DFromFile(GraphicsDevice graphicsDevice, string filePath) {
-      return LoadTexture2DFromFile(graphicsDevice, filePath, DefaultColorProcessors.ZeroTransparentPixels);
+    public static Texture2D LoadTexture2DFromFile(string filePath) {
+      return LoadTexture2DFromFile(filePath, DefaultColorProcessors.ZeroTransparentPixels);
     }
 
   }

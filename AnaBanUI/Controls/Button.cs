@@ -13,7 +13,7 @@ namespace LiVerse.AnaBanUI.Controls {
     public event Action? BlinkingStarted = null;
     public Label Label;
     public bool IsSelected;
-    public bool BlinkWhenPressed { get; set; }
+    public bool BlinkWhenPressed { get; set; } = false;
     public ButtonStyle ButtonStyle = ButtonStyle.Default;
     public Vector2 LabelPadding { get; set; } = new(10, 2);
 

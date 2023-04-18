@@ -12,5 +12,9 @@ namespace LiVerse.CaptureDeviceDriver {
     static CaptureDeviceDriverManager() {
       CaptureDeviceDriver = new WasapiCaptureDeviceDriver();
     }
+
+    public static void Update(double deltaTime) {
+      CaptureDeviceDriver?.Update(deltaTime);
+    }
   }
 }

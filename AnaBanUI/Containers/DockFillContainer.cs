@@ -82,12 +82,12 @@ namespace LiVerse.AnaBanUI.Containers {
       }
 
       if (DockType == DockFillContainerDockType.Bottom) {
-        FillElement.Size = new Vector2(ContentArea.X - Margin.X * 2, (ContentArea.Y - Margin.Y) - DockElement.Size.Y - Margin.Y * 2 - Gap);
-        FillElement.RelativePosition = Margin;
+        FillElement.Size = new Vector2(ContentArea.X, ContentArea.Y - DockElement.Size.Y - Gap);
+        FillElement.RelativePosition = Vector2.Zero;
         FillElement.AbsolutePosition = AbsolutePosition + FillElement.RelativePosition;
 
-        DockElement.Size = new Vector2(DockElement.MinimumSize.X, DockElement.MinimumSize.Y);
-        DockElement.RelativePosition = new Vector2(Margin.X, FillElement.Size.Y + Margin.Y * 2 + Gap);
+        DockElement.Size = new Vector2(ContentArea.X, DockElement.MinimumSize.Y);
+        DockElement.RelativePosition = new Vector2(0, FillElement.Size.Y + Gap);
         DockElement.AbsolutePosition = AbsolutePosition + DockElement.RelativePosition;
 
         // Calculate MinimiumSize
