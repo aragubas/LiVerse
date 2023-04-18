@@ -36,9 +36,9 @@ namespace LiVerse {
     }
 
     protected override void Initialize() {
-      Window.Title = $"LiVerse Alpha";
+      Window.Title = $"{ResourceManager.AppInfo.Name} {ResourceManager.AppInfo.Version}";
 #if DEBUG
-      Window.Title += " (Debug)";
+      Window.Title += " {Debug}";
 #endif
 
       Window.AllowUserResizing = true;

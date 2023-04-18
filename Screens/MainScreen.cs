@@ -167,6 +167,7 @@ namespace LiVerse.Screens
       // Set CharacterName Label      
       if (CharacterStore.CurrentCharacter != null) {
         characterNameLabel.Text = CharacterStore.CurrentCharacter.Name;
+
       }else { characterNameLabel.Text = "No character selected"; }
 
       HeaderBar.Visible = !characterFullView;

@@ -1,23 +1,48 @@
-﻿using MonoGame.Framework;
+﻿using LiVerse.AppInfo;
+using MonoGame.Framework;
+using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace LiVerse {
   public class Program {
     public static int Main(string[] arguments) {
       // Check if ApplicationData Directory Exists
       if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "ApplicationData"))) {
-        Console.Write("Fatal Error! Could not find ApplicationData Directory in the current Working Directory.");
+        Console.WriteLine("Fatal Error! Could not find ApplicationData Directory in the current Working Directory.");
         return -1;
       }
 
       // Create LocalApplicationData Dir
       Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "LiVerse"));
 
-      #if DEBUG // Run without error handler in Debug
+      // Loads AppInfo
+      if (!File.Exists(Path.Combine(ResourceManager.DefaultContentPath, "appinfo.json"))) {
+        Console.WriteLine("Fatal Error! Could not find appinfo file inside ApplicationData directory.");
+        return -1;
+      }
+      try {
+        string appDataFile = File.ReadAllText(Path.Combine(ResourceManager.DefaultContentPath, "appinfo.json"));
+        Info appInfo = JsonConvert.DeserializeObject<Info>(appDataFile);
+
+        ResourceManager.AppInfo = appInfo;
+      } catch (Exception exception) {
+        Console.WriteLine("Fatal Error! Could not read AppInfo from ApplicationData. Reinstalling may fix this problem.");
+        Console.WriteLine(exception.Message);
+        LogException(exception);
+
+        return -1;
+      }
+
+
+
+
+
+#if DEBUG // Run without error handler in Debug
       using (LiVerseApp app = new LiVerseApp()) {
         app.Run();
       }
 
-      #else
+#else
       try {
         using (LiVerseApp app = new LiVerseApp()) {
           app.Run();
@@ -30,7 +55,7 @@ namespace LiVerse {
 
           return -1;
       }
-      #endif
+#endif
 
       return 0;
     }
@@ -45,8 +70,8 @@ namespace LiVerse {
 
       if (ex.Data.Count >= 1) {
         logFileData += "Additional Data:";
-         
-        foreach(string data in ex.Data) {
+
+        foreach (string data in ex.Data) {
           logFileData += $"{data}\n";
         }
       }
@@ -56,8 +81,9 @@ namespace LiVerse {
 
       try {
         File.WriteAllText(logFilePath, logFileData, System.Text.Encoding.UTF8);
-      
-      } catch (Exception _ex) {
+
+      }
+      catch (Exception _ex) {
         Console.WriteLine($"Could not write log file. {_ex.Message}");
         return;
       }

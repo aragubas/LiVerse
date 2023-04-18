@@ -1,10 +1,8 @@
-using LiVerse.AnaBanUI;
 using LiVerse.AnaBanUI.Drawables;
 using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended;
 
 namespace LiVerse.AnaBanUI {
   public class UILayer {

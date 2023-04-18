@@ -1,3 +1,4 @@
+using LiVerse.AppInfo;
 using Microsoft.Xna.Framework.Graphics;
 using SpriteFontPlus;
 
@@ -6,6 +7,8 @@ namespace LiVerse {
     public static string DefaultContentPath = Path.Combine(Environment.CurrentDirectory, "ApplicationData");
     public static string DefaultContentUserDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                                                                   "LiVerse");
+    public static Info AppInfo;
+
     //public static FontSystem GlobalFontSystem = new FontSystem();
     public static Dictionary<string, SpriteFont> FontCache = new();
 
