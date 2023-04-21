@@ -26,9 +26,11 @@ namespace LiVerse.AnaBanUI
       }
 
       // Only process input for the highest Layer with input processing
-      UILayer highestValidUILayer = UILayers.Where((element) => element.HasInputProcessing).Last();
-      if (highestValidUILayer != null && WindowFocused) {
-        highestValidUILayer.InputUpdate();
+      if (UILayers.Count >= 1) {
+        UILayer highestValidUILayer = UILayers.Where((element) => element.HasInputProcessing).Last();
+        if (highestValidUILayer != null && WindowFocused) {
+          highestValidUILayer.InputUpdate();
+        }
       }
     }
 

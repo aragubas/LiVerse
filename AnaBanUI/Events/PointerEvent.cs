@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using MonoGame.Extended;
+﻿using MonoGame.Extended;
 using System.Diagnostics.CodeAnalysis;
 
 namespace LiVerse.AnaBanUI.Events {

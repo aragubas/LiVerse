@@ -1,13 +1,14 @@
 ﻿using LiVerse.AnaBanUI;
-using LiVerse.CaptureDeviceDriver;
 using LiVerse.Screens;
+using LiVerse.Stores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using System.Reflection;
 
-namespace LiVerse {
-  public class LiVerseApp : Game {
+namespace LiVerse
+{
+    public class LiVerseApp : Game {
     public static GraphicsDeviceManager? Graphics { get; set; }
     SpriteBatch spriteBatch;
     readonly ScreenManager screenManager;
@@ -20,7 +21,6 @@ namespace LiVerse {
 
       // Enables VSync
       Graphics.SynchronizeWithVerticalRetrace = true;
-      Graphics.PreferHalfPixelOffset = true;
       Graphics.ApplyChanges();
 
       IsMouseVisible = true;
@@ -31,12 +31,12 @@ namespace LiVerse {
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     protected override void OnExiting(object sender, EventArgs args) {
-      Console.WriteLine("Exit!");
+      Console.WriteLine("Goodbye!");
       screenManager.DetachScreen();
     }
 
     protected override void Initialize() {
-      Window.Title = $"{ResourceManager.AppInfo.Name} {ResourceManager.AppInfo.Version}";
+      Window.Title = $"{ResourceManager.AppInfo.Name} v{ResourceManager.AppInfo.Version}";
 #if DEBUG
       Window.Title += " {Debug}";
 #endif
@@ -50,14 +50,10 @@ namespace LiVerse {
       spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);        
 
       // Load base resources
-      ResourceManager.LoadBaseResources(GraphicsDevice);
+      ResourceManager.LoadBaseResources();
 
       // Attach MainScreen to ScreenManager
-#if DEBUG
-      screenManager.AttachScreen(new MainScreen(screenManager));
-#else
       screenManager.AttachScreen(new StartupScreen(screenManager));
-#endif
 
     }
 
@@ -65,7 +61,7 @@ namespace LiVerse {
       UIRoot.WindowFocused = IsActive;
 
       // Update Microphone
-      CaptureDeviceDriverManager.Update(gameTime.GetElapsedSeconds());
+      CaptureDeviceDriverStore.Update(gameTime.GetElapsedSeconds());
 
       // Update UIRoot
       UIRoot.Update(gameTime.GetElapsedSeconds());

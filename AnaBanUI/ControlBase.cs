@@ -1,7 +1,9 @@
+using LiVerse.AnaBanUI.Containers;
 using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using System.Runtime.CompilerServices;
 
 namespace LiVerse.AnaBanUI {
   public abstract class ControlBase {
@@ -15,12 +17,12 @@ namespace LiVerse.AnaBanUI {
     public bool Visible { get; set; } = true;
     /// Backing field for ElementSize
     protected Vector2 _size { get; set; }
-    
+
     /// <summary>
     /// Total Size, including padding/margins.<br></br>Don't change this value manually, this value should be determined by the container
     /// </summary>
-    public Vector2 Size { 
-      get => _size; 
+    public Vector2 Size {
+      get => _size;
       set {
         if (value == _size) {
           return;
@@ -37,7 +39,8 @@ namespace LiVerse.AnaBanUI {
     public Vector2 Margin { get; set; } = Vector2.Zero;
 
     Vector2 _minimumSize = Vector2.Zero;
-    public Vector2 MinimumSize { get => _minimumSize;
+    public Vector2 MinimumSize {
+      get => _minimumSize;
       set {
         //if (value == _minimumSize) { return; }
 
@@ -65,7 +68,17 @@ namespace LiVerse.AnaBanUI {
 
     protected virtual void ElementSizeChanged() { }
 
+    /// <summary>
+    /// Updates internal logic
+    /// </summary>
+    /// <param name="deltaTime"></param>
     public abstract void Update(double deltaTime);
+
+    /// <summary>
+    /// Called after drawing, updates Positions, Animations etc
+    /// </summary>
+    /// <param name="deltaTime"></param>
+    public virtual void UpdateUI(double deltaTime) { }
 
     /// <summary>
     /// Method called when the UIRoot decides this element should receive/process pointer events
@@ -86,6 +99,7 @@ namespace LiVerse.AnaBanUI {
       if (!Visible) { return; }
 
       BeginDraw(spriteBatch);
+      UpdateUI(deltaTime);
       DrawElement(spriteBatch, deltaTime);
 
       if (DrawDebugLines) {
@@ -103,6 +117,7 @@ namespace LiVerse.AnaBanUI {
       EndDraw(spriteBatch);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void BeginDraw(SpriteBatch spriteBatch) {
       oldViewport = spriteBatch.GraphicsDevice.Viewport;
 
@@ -112,6 +127,7 @@ namespace LiVerse.AnaBanUI {
       spriteBatch.Begin();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void EndDraw(SpriteBatch spriteBatch) {
       spriteBatch.End();
       spriteBatch.GraphicsDevice.Viewport = oldViewport;
@@ -119,8 +135,20 @@ namespace LiVerse.AnaBanUI {
     }
 
     /// <summary>
-    /// Draws the element. Keep in mind that <u>the origin point is always (0, 0)</u>
+    /// Make a element use all this control's space and also sets this as the elements parent control
+    /// </summary>
+    internal void FillElement(ControlBase element, bool overrideMinimumSize = true) {
+      element.Size = ContentArea;
+      element.RelativePosition = RelativePosition;
+      element.AbsolutePosition = AbsolutePosition;
+      element.ParentControl = this;
+
+      if (overrideMinimumSize) MinimumSize = element.MinimumSize;
+    }
+
+    /// <summary>
+    /// Draws the element without transformation
     /// </summary>
     public abstract void DrawElement(SpriteBatch spriteBatch, double deltaTime);
   }
-} 
+}

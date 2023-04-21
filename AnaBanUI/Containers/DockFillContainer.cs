@@ -2,8 +2,6 @@ using LiVerse.AnaBanUI.Drawables;
 using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
-using System.Reflection.PortableExecutable;
 
 namespace LiVerse.AnaBanUI.Containers {
   public enum DockFillContainerDockType {
@@ -33,33 +31,25 @@ namespace LiVerse.AnaBanUI.Containers {
       FillElement = fillElement;
     }
 
-    void FillControl(ControlBase element) {
-      element.Size = Size; // Set element height to minimum size
-      element.AbsolutePosition = AbsolutePosition;
-      element.RelativePosition = Vector2.Zero;
-
-      MinimumSize = element.MinimumSize;
-    }
-
     void RecalculateUI() {
       // Fill Dock Element if its the only one set
-      if (FillElement == null && DockElement != null) { FillControl(DockElement); return; }
+      if (FillElement == null && DockElement != null) { FillElement(DockElement); return; }
 
       // Fill Fill Element if its the only one set
-      if (FillElement != null && DockElement == null) { FillControl(FillElement); return; }
+      if (FillElement != null && DockElement == null) { FillElement(FillElement); return; }
 
       // Check if there's nothing to calculate
       if (FillElement == null || DockElement == null) { return; }
 
       // Fill Fill Element if the Dock Element is invisible
       if (!DockElement.Visible) {
-        FillControl(FillElement);
+        FillElement(FillElement);
         return;
       }
 
       // Fill Dock Element if the Fill Element is invisible
       if (!FillElement.Visible) {
-        FillControl(DockElement);
+        FillElement(DockElement);
         return;
       }
 
@@ -132,9 +122,12 @@ namespace LiVerse.AnaBanUI.Containers {
       DockElement.ParentControl = this;
       FillElement.ParentControl = this;
     }
-    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
-      RecalculateUI();
 
+    public override void UpdateUI(double deltaTime) {
+      RecalculateUI();
+    }
+
+    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       BackgroundRectDrawble?.Draw(spriteBatch, deltaTime, ContentArea, Vector2.Zero);
 
       DockElement?.Draw(spriteBatch, deltaTime);
@@ -144,6 +137,13 @@ namespace LiVerse.AnaBanUI.Containers {
     public override bool InputUpdate(PointerEvent pointerEvent) {
       if (DockElement != null && DockElement.Visible) if (DockElement.InputUpdate(pointerEvent)) return true;
       if (FillElement != null && FillElement.Visible) if (FillElement.InputUpdate(pointerEvent)) return true;
+
+      return false;
+    }
+
+    public override bool InputUpdate(KeyboardEvent keyboardEvent) {
+      if (DockElement != null && DockElement.Visible) if (DockElement.InputUpdate(keyboardEvent)) return true;
+      if (FillElement != null && FillElement.Visible) if (FillElement.InputUpdate(keyboardEvent)) return true;
 
       return false;
     }

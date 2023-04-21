@@ -3,10 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
 namespace LiVerse.AnaBanUI.Controls {
-  public enum LabelTextHorizontalAlignment {
+  public enum LabelHorizontalAlignment {
     Left, Center, Right
   }
-  public enum LabelTextVerticalAlignment {
+  public enum LabelVerticalAlignment {
     Top, Center, Bottom
   }
   
@@ -43,8 +43,8 @@ namespace LiVerse.AnaBanUI.Controls {
     }
 
     public Color Color { get; set; } = Color.Black;
-    public LabelTextVerticalAlignment TextVerticalAlignment = LabelTextVerticalAlignment.Center;
-    public LabelTextHorizontalAlignment TextHorizontalAlignment = LabelTextHorizontalAlignment.Center;
+    public LabelVerticalAlignment VerticalAlignment = LabelVerticalAlignment.Center;
+    public LabelHorizontalAlignment HorizontalAlignment = LabelHorizontalAlignment.Center;
     public Vector2 FontArea = Vector2.Zero;
     SpriteFont? font; 
     bool reBakeFont = true;
@@ -55,70 +55,69 @@ namespace LiVerse.AnaBanUI.Controls {
       Text = text;
       FontSize = fontSize;
       FontName = fontName;
-    }  
+    }
+
+    public override void UpdateUI(double deltaTime) {
+      if (Text == null) { Text = ""; }
+
+      if (font == null || reBakeFont) {
+        reBakeFont = false;
+        font = ResourceManager.GetFont(FontName, FontSize);
+      }
+
+      if (reMeasureText && font != null && Text != null) {
+        reMeasureText = false;
+        FontArea = font.MeasureString(Text);
+        MinimumSize = FontArea;
+      }
+
+      RecalculatePosition();
+    }
 
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       if (font == null) { return; }
-      if (Text == null) { Text = ""; }
-      RecalculatePosition();
-
       spriteBatch.DrawString(font, Text, textPosition, Color);
     }
 
     void RecalculatePosition() {
       // Calculates X
-      switch (TextHorizontalAlignment) {
-        case LabelTextHorizontalAlignment.Center: {
+      switch (HorizontalAlignment) {
+        case LabelHorizontalAlignment.Center: {
           textPosition.X = ContentArea.X / 2 - FontArea.X / 2;
           break;
         }
 
-        case LabelTextHorizontalAlignment.Left: {
+        case LabelHorizontalAlignment.Left: {
           textPosition.X = 0;
           break;
         }
 
-        case LabelTextHorizontalAlignment.Right: {
+        case LabelHorizontalAlignment.Right: {
           textPosition.X = ContentArea.X - FontArea.X;
           break;
         }          
       }
 
       // Calculates Y
-      switch (TextVerticalAlignment) {
-        case LabelTextVerticalAlignment.Center: {
+      switch (VerticalAlignment) {
+        case LabelVerticalAlignment.Center: {
             textPosition.Y = ContentArea.Y / 2 - FontArea.Y / 2;
           break;
         }
 
-        case LabelTextVerticalAlignment.Top: {
+        case LabelVerticalAlignment.Top: {
           textPosition.Y = 0;
           break;
         }
 
-        case LabelTextVerticalAlignment.Bottom: {
+        case LabelVerticalAlignment.Bottom: {
           textPosition.Y = ContentArea.Y - FontArea.Y;
           break;
         }          
       }
     }
 
-    void RecalculateUI() {      
-      if (reMeasureText && font != null && Text != null) {
-        reMeasureText = false;
-        FontArea = font.MeasureString(Text);
-        MinimumSize = FontArea;
-      }
-    }
-
     public override void Update(double deltaTime) {
-      if (font == null || reBakeFont) {
-        reBakeFont = false;
-        font = ResourceManager.GetFont(FontName, FontSize);
-        RecalculateUI();
-      }
-
-      RecalculateUI();
     }
 
   }

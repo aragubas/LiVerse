@@ -27,21 +27,20 @@ namespace LiVerse.CharacterRenderer
 
     Texture2D? CurrentSprite {
       get {
-        if (CharacterStore.CurrentCharacter == null) { return null; }
         if (!State.IsSpeaking && !State.IsBlinking) {
-          return CharacterStore.CurrentCharacter.CurrentSpriteCollection.Idle;
+          return CharacterStore.CurrentCharacter?.CurrentSpriteCollection?.Idle;
         }
 
         else if (!State.IsSpeaking && State.IsBlinking) {
-          return CharacterStore.CurrentCharacter.CurrentSpriteCollection.IdleBlink;
+          return CharacterStore.CurrentCharacter?.CurrentSpriteCollection?.IdleBlink;
         }
 
         else if (State.IsSpeaking && !State.IsBlinking) {
-          return CharacterStore.CurrentCharacter.CurrentSpriteCollection.Speaking;
+          return CharacterStore.CurrentCharacter?.CurrentSpriteCollection?.Speaking;
         }
 
         else {
-          return CharacterStore.CurrentCharacter.CurrentSpriteCollection.SpeakingBlink;
+          return CharacterStore.CurrentCharacter?.CurrentSpriteCollection?.SpeakingBlink;
         }
       }
     }

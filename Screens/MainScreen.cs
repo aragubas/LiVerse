@@ -1,10 +1,7 @@
 ﻿using LiVerse.AnaBanUI;
 using LiVerse.AnaBanUI.Containers;
 using LiVerse.AnaBanUI.Controls;
-using LiVerse.AnaBanUI.Drawables;
 using LiVerse.AnaBanUI.Events;
-using LiVerse.CaptureDeviceDriver;
-using LiVerse.CaptureDeviceDriver.WasapiCaptureDevice;
 using LiVerse.CharacterRenderer;
 using LiVerse.Screens.MainScreenNested;
 using LiVerse.Stores;
@@ -12,33 +9,22 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace LiVerse.Screens
-{
-    public class MainScreen : ScreenBase {
+namespace LiVerse.Screens {
+  public class MainScreen : ScreenBase {
     SettingsScreen settingsScreen { get; set; }
     UILayer WindowRoot;
 
     // MainUI Members
     DockFillContainer mainFillContainer = new();
-    VerticalLevelTrigger micLevelTrigger;
-    VerticalLevelTrigger levelDelayTrigger;
     DockFillContainer HeaderBar;
     DockFillContainer centerSplit;
     DockFillContainer centerCharacterSplit;
     CharacterRenderer.CharacterRenderer characterRenderer;
-    DockFillContainer sideFillContainer;
-    SolidColorRectangle speakingIndicatorSolidColorRect;
     ScrollableList expressionsList;
-    Label speakingIndicatorLabel;
     Label characterNameLabel;
+    AudioCaptureDevicePanel audioCaptureDevicePanel;
 
     bool characterFullView = false;
-
-    // Static ReadOnly Fields
-    static readonly Color speakingIndicatorColor = Color.FromNonPremultiplied(8, 7, 5, 50);
-    static readonly Color speakingIndicatorActiveColor = Color.FromNonPremultiplied(230, 50, 75, 255);
-    static readonly Color speakingIndicatorLabelColor = Color.FromNonPremultiplied(255, 255, 255, 50);
-    static readonly Color speakingIndicatorActiveLabelColor = Color.FromNonPremultiplied(255, 255, 255, 255);
 
     public MainScreen(ScreenManager screenManager) : base(screenManager) {
       WindowRoot = new();
@@ -50,20 +36,6 @@ namespace LiVerse.Screens
 
       characterNameLabel = new("{character_name}", 21) { Color = Color.Black };
       Button settingsButton = new("Settings");
-
-      micLevelTrigger = new() { ShowPeaks = true, MaximumValue = 84 };
-      levelDelayTrigger = new() { MaximumValue = 1 };
-
-      SideBySideContainer sideBySide = new() { Gap = 4f };
-      sideFillContainer = new() { DockType = DockFillContainerDockType.Bottom, Margin = new(6), Gap = 6, FillElement = sideBySide };
-
-      sideBySide.Elements.Add(micLevelTrigger);
-      sideBySide.Elements.Add(levelDelayTrigger);
-
-      speakingIndicatorLabel = new("Active", 21) { Color = speakingIndicatorLabelColor };
-      speakingIndicatorSolidColorRect = new(speakingIndicatorLabel) { BackgroundColor = speakingIndicatorColor };
-      
-      sideFillContainer.DockElement = speakingIndicatorSolidColorRect;
 
       HeaderBar.BackgroundRectDrawble = new() { Color = Color.FromNonPremultiplied(249, 249, 249, 255), IsFilled = true };
       HeaderBar.DockElement = settingsButton;
@@ -78,8 +50,9 @@ namespace LiVerse.Screens
 
       centerCharacterSplit.DockElement = expressionsList;
 
+      audioCaptureDevicePanel = new();
 
-      centerSplit.DockElement = sideFillContainer;
+      centerSplit.DockElement = audioCaptureDevicePanel;
       centerSplit.FillElement = centerCharacterSplit;
 
       mainFillContainer.DockElement = HeaderBar;
@@ -87,12 +60,11 @@ namespace LiVerse.Screens
 
       WindowRoot.RootElement = mainFillContainer;
 
-      CaptureDeviceDriverManager.CaptureDeviceDriver.MicrophoneLevelTriggered += MicrophoneLevelMeter_CharacterStartSpeaking;
-      CaptureDeviceDriverManager.CaptureDeviceDriver.MicrophoneLevelUntriggered += MicrophoneLevelMeter_CharacterStopSpeaking;
-      CaptureDeviceDriverManager.CaptureDeviceDriver.MicrophoneVolumeLevelUpdated += MicrophoneLevelMeter_MicrophoneVolumeLevelUpdate;
+      CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneLevelTriggered += MicrophoneLevelMeter_MicrophoneLevelTriggered;
+      CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneLevelUntriggered += MicrophoneLevelMeter_MicrophoneLevelUntriggered;
 
-      CaptureDeviceDriverManager.CaptureDeviceDriver.Initialize();
-      CaptureDeviceDriverManager.CaptureDeviceDriver.SetDefaultDevice();
+      CaptureDeviceDriverStore.CaptureDeviceDriver.Initialize();
+      CaptureDeviceDriverStore.CaptureDeviceDriver.SetDefaultDevice();
 
       WindowRoot.KeyboardInputUpdateEvent += FullscreenViewToggle;
 
@@ -102,73 +74,50 @@ namespace LiVerse.Screens
       UIRoot.UILayers.Add(WindowRoot);
       //settingsScreen.ToggleUILayer();
 
-      // Sincronize Values
-      micLevelTrigger.TriggerLevel = CaptureDeviceDriverManager.CaptureDeviceDriver.TriggerLevel;
-      micLevelTrigger.MaximumValue = CaptureDeviceDriverManager.CaptureDeviceDriver.MaximumLevel;
-      levelDelayTrigger.TriggerLevel = CaptureDeviceDriverManager.CaptureDeviceDriver.ActivationDelayTrigger;
-
       // TODO: Remove hardcoded paths
-      CharacterStore.LoadCharacter(new Character("Aragubas", new SpriteCollection() {
-        Idle = ResourceManager.LoadTexture2DFromFile(@"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Fechada.png"),
-        IdleBlink = ResourceManager.LoadTexture2DFromFile(@"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Fechada.png"),
-        Speaking = ResourceManager.LoadTexture2DFromFile(@"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Aberta.png"),
-        SpeakingBlink = ResourceManager.LoadTexture2DFromFile(@"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Aberta.png")
-      }));
+      CharacterStore.CurrentCharacter = new Character("Aragubas", new() { new ExpressionBuilder() {
+          Name = "default",
+          SpriteCollectionBuilder = new() {
+          Idle = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Fechada.png",
+          IdleBlink = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Fechada.png",
+          Speaking = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Aberta.png",
+          SpeakingBlink = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Aberta.png"
+        }
+      }});
+
     }
 
-    private void MicrophoneLevelMeter_CharacterStopSpeaking() {
-      speakingIndicatorSolidColorRect.BackgroundColor = speakingIndicatorColor;
-      speakingIndicatorLabel.Color = speakingIndicatorLabelColor;
-
+    private void MicrophoneLevelMeter_MicrophoneLevelUntriggered() {
       characterRenderer.SetSpeaking(false);
     }
 
-    private void MicrophoneLevelMeter_CharacterStartSpeaking() {
-      speakingIndicatorSolidColorRect.BackgroundColor = speakingIndicatorActiveColor;
-      speakingIndicatorLabel.Color = speakingIndicatorActiveLabelColor;
-
+    private void MicrophoneLevelMeter_MicrophoneLevelTriggered() {
       characterRenderer.SetSpeaking(true);
-    }
-
-    private void MicrophoneLevelMeter_MicrophoneVolumeLevelUpdate(double value) {
-      micLevelTrigger.CurrentValue = (float)value;
     }
 
 
     public override void Deattach() { }
 
     public override void Dispose() {
-      CaptureDeviceDriverManager.CaptureDeviceDriver.Dispose();
+      CaptureDeviceDriverStore.CaptureDeviceDriver.Dispose();
     }
 
     public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
       if (!characterFullView) {
         spriteBatch.GraphicsDevice.Clear(Color.CornflowerBlue);
-      }else {
-        spriteBatch.GraphicsDevice.Clear(Color.Transparent);
+      } else {
+        spriteBatch.GraphicsDevice.Clear(SettingsStore.WindowTransparencyColor);
       }
 
       UIRoot.DrawUILayers(spriteBatch, deltaTime);
     }
 
     public override void Update(double deltaTime) {
-      // Set Values
-      levelDelayTrigger.CurrentValue = (float)CaptureDeviceDriverManager.CaptureDeviceDriver.ActivationDelay;
-
-      // Sincronize Changes
-      CaptureDeviceDriverManager.CaptureDeviceDriver.TriggerLevel = micLevelTrigger.TriggerLevel;
-      CaptureDeviceDriverManager.CaptureDeviceDriver.ActivationDelayTrigger = levelDelayTrigger.TriggerLevel;
-
-      // Sincronize Values
-      micLevelTrigger.TriggerLevel = CaptureDeviceDriverManager.CaptureDeviceDriver.TriggerLevel;
-      micLevelTrigger.MaximumValue = CaptureDeviceDriverManager.CaptureDeviceDriver.MaximumLevel;
-      levelDelayTrigger.TriggerLevel = CaptureDeviceDriverManager.CaptureDeviceDriver.ActivationDelayTrigger;
-
       // Set CharacterName Label      
       if (CharacterStore.CurrentCharacter != null) {
         characterNameLabel.Text = CharacterStore.CurrentCharacter.Name;
 
-      }else { characterNameLabel.Text = "No character selected"; }
+      } else { characterNameLabel.Text = "No character selected"; }
 
       HeaderBar.Visible = !characterFullView;
       expressionsList.Visible = !characterFullView;

@@ -33,10 +33,6 @@ namespace LiVerse {
         return -1;
       }
 
-
-
-
-
 #if DEBUG // Run without error handler in Debug
       using (LiVerseApp app = new LiVerseApp()) {
         app.Run();

@@ -37,6 +37,24 @@ namespace LiVerse.AnaBanUI.Controls {
       MinimumSize = new Vector2(24, 64);
     }
 
+    public override void UpdateUI(double deltaTime) {
+      #region Update Peak Meter
+      if (ShowPeaks) {
+        peakReset += (float)deltaTime * 1;
+
+        if (peakReset >= 3) {
+          peakReset = 0;
+          peakLevelTarget = CurrentValue / MaximumValue;
+        }
+
+        peakLevel = MathHelper.Lerp(peakLevel, peakLevelTarget, (float)(1 - Math.Pow(0.00005, deltaTime)));
+      }
+      #endregion
+
+      // Calculate Level Ratio
+      ratio = CurrentValue / MaximumValue;
+    }
+
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, Size), backgroundColor);
 
@@ -77,22 +95,6 @@ namespace LiVerse.AnaBanUI.Controls {
 
     public override void Update(double deltaTime) {
       if (!Visible) { return; }
-
-      #region Update Peak Meter
-      if (ShowPeaks) {
-        peakReset += (float)deltaTime * 1;
-
-        if (peakReset >= 3) {
-          peakReset = 0;
-          peakLevelTarget = CurrentValue / MaximumValue;
-        }
-
-        peakLevel = MathHelper.Lerp(peakLevel, peakLevelTarget, (float)(1 - Math.Pow(0.00005, deltaTime)));
-      }
-      #endregion
-
-      // Calculate Level Ratio
-      ratio = CurrentValue / MaximumValue;
 
       triggerActive = (CurrentValue / MaximumValue) >= TriggerLevel;
     }

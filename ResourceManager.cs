@@ -7,6 +7,7 @@ namespace LiVerse {
     public static string DefaultContentPath = Path.Combine(Environment.CurrentDirectory, "ApplicationData");
     public static string DefaultContentUserDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                                                                   "LiVerse");
+    public static string DefaultStoresPath = Path.Combine(DefaultContentUserDataPath, "Stores");
     public static Info AppInfo;
 
     //public static FontSystem GlobalFontSystem = new FontSystem();
@@ -24,7 +25,7 @@ namespace LiVerse {
           CharacterRange.Cyrillic
         });
 
-      return fontBakeResult.CreateSpriteFont(LiVerseApp.Graphics.GraphicsDevice);
+      return fontBakeResult.CreateSpriteFont(LiVerseApp.Graphics!.GraphicsDevice);
     }
 
     /// <summary>
@@ -43,12 +44,16 @@ namespace LiVerse {
       return bakeResult;
     }
 
-    public static void LoadBaseResources(GraphicsDevice graphicsDevice) {
+    public static void LoadBaseResources() {
+      // Create Directories
+      Directory.CreateDirectory(DefaultContentUserDataPath);
+      Directory.CreateDirectory(DefaultStoresPath);
+
       // Check if OpenSans font exists
       string openSansFontPath = Path.Combine(DefaultContentPath, "Fonts", "OpenSans.ttf");
       if (!File.Exists(openSansFontPath)) {
         throw new FileNotFoundException("Could not find default font \"OpenSans.ttf\".");
-      }
+      }      
     }
 
     // Load Sprite From File

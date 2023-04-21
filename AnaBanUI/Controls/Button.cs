@@ -108,6 +108,20 @@ namespace LiVerse.AnaBanUI.Controls {
       return false;
     }
 
+    public override void UpdateUI(double deltaTime) {
+      if (isBlinking) return;
+
+      // Interpolate
+      if (ButtonStyle != ButtonStyle.Flat) {
+        currentBackgroundColor = Color.Lerp(currentBackgroundColor, currentTargetBackgroundColor, (float)(1 - Math.Pow(0.00025, deltaTime)));
+        currentBorderColor = Color.Lerp(currentBorderColor, currentTargetBorderColor, (float)(1 - Math.Pow(0.000025, deltaTime)));
+
+      } else {
+        currentBackgroundColor = currentTargetBackgroundColor;
+        currentBorderColor = currentTargetBorderColor;
+      }      
+    }
+
     public override void Update(double deltaTime) {
       Label.Update(deltaTime);
 
@@ -151,17 +165,6 @@ namespace LiVerse.AnaBanUI.Controls {
 
       // Update Default Style
       if (Enabled && Visible && !isBlinking) {
-        // Interpolate
-        if (ButtonStyle != ButtonStyle.Flat) {
-          currentBackgroundColor = Color.Lerp(currentBackgroundColor, currentTargetBackgroundColor, (float)(1 - Math.Pow(0.00025, deltaTime)));
-          currentBorderColor = Color.Lerp(currentBorderColor, currentTargetBorderColor, (float)(1 - Math.Pow(0.000025, deltaTime)));
-
-        }
-        else {
-          currentBackgroundColor = currentTargetBackgroundColor;
-          currentBorderColor = currentTargetBorderColor;
-        }
-
         currentForegroundColor = normalForeground;
         currentTargetBackgroundColor = normalBackground;
         currentTargetBorderColor = normalBorder;

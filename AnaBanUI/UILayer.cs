@@ -16,17 +16,21 @@ namespace LiVerse.AnaBanUI {
     KeyboardState oldKeyboardState;
 
     public UILayer() {
-      RootElement = null;      
+      RootElement = null;
     }
 
     public void Update(double deltaTime) {
       RootElement?.Update(deltaTime);
+
+      //if (RootElement != null) {
+      //  RootElement.RenderOffset = new Vector2(10, 5);
+      //}
     }
 
     public void InputUpdate() {
-      PointerEvent latestMouseEvent = new() { 
-        PositionRect = UIRoot.MousePositionRectangle, 
-        DownRect = UIRoot.MouseDownRectangle, 
+      PointerEvent latestMouseEvent = new() {
+        PositionRect = UIRoot.MousePositionRectangle,
+        DownRect = UIRoot.MouseDownRectangle,
         UpRect = UIRoot.MouseUpRectangle,
         Down = UIRoot.MouseDown
       };
@@ -58,14 +62,13 @@ namespace LiVerse.AnaBanUI {
         RootElement.AbsolutePosition = Vector2.Zero;
 
         spriteBatch.Begin();
-
         BackgroundRectDrawable?.Draw(spriteBatch, deltaTime, screenSize, Vector2.Zero);
 
         RootElement.Draw(spriteBatch, deltaTime);
 
         spriteBatch.End();
       }
-      
+
     }
   }
 }

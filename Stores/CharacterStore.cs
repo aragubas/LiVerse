@@ -3,24 +3,18 @@
 namespace LiVerse.Stores {
   public static class CharacterStore {
     public static Character? CurrentCharacter { get; set; }
+    public static List<Character> Characters { get; set; } = new();
 
     static CharacterStore() {
 
     }
 
-    public static void LoadCharacter(Character character, SpriteCollectionBuilder? spritesBuilder = null) {
-      if (spritesBuilder != null) {
-        SpriteCollection sprites = new SpriteCollection();
-        sprites.Idle = ResourceManager.LoadTexture2DFromFile(spritesBuilder.Value.Idle);
-        sprites.IdleBlink = ResourceManager.LoadTexture2DFromFile(spritesBuilder.Value.IdleBlink);
-        sprites.Speaking = ResourceManager.LoadTexture2DFromFile(spritesBuilder.Value.Speaking);
-        sprites.SpeakingBlink = ResourceManager.LoadTexture2DFromFile(spritesBuilder.Value.SpeakingBlink);
+    public static void Load() {
 
-        character.CurrentSpriteCollection = sprites;
-      }
-
-      CurrentCharacter = character;
     }
 
+    public static void Save() {
+
+    }
   }
 }

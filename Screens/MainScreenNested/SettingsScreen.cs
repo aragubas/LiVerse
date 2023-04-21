@@ -1,9 +1,9 @@
 ﻿using LiVerse.AnaBanUI;
 using LiVerse.AnaBanUI.Containers;
 using LiVerse.AnaBanUI.Controls;
-using LiVerse.AnaBanUI.Drawables;
+using LiVerse.Screens.MainScreenNested.SettingsScreenNested;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace LiVerse.Screens.MainScreenNested {  
   public struct SettingsPage {
@@ -34,7 +34,7 @@ namespace LiVerse.Screens.MainScreenNested {
       SettingsCategory generalCategory = new();
       List<SettingsPage> generalCategoryPages = new();
       SettingsPage audioSettingsPage = new() { Title = "Audio", SettingScreen = new AudioSettingsScreen() };
-      SettingsPage graphicsSettingsPage = new() { Title = "Graphics", SettingScreen = new AudioSettingsScreen() };
+      SettingsPage graphicsSettingsPage = new() { Title = "Graphics", SettingScreen = new GraphicsSettingsScreen() };
 
       generalCategoryPages.Add(audioSettingsPage);
       generalCategoryPages.Add(graphicsSettingsPage);
@@ -59,10 +59,10 @@ namespace LiVerse.Screens.MainScreenNested {
 
         foreach(var page in category.Pages) {
           Button settingsPageButton = new(page.Title, buttonStyle: ButtonStyle.Selectable);
-          settingsPageButton.Label.TextHorizontalAlignment = LabelTextHorizontalAlignment.Left;
+          settingsPageButton.Label.HorizontalAlignment = LabelHorizontalAlignment.Left;
           settingsPageButton.Click += new Action(() => { SelectCategory(settingsPageButton, page); });
 
-          if (isFirstPage) {
+          if (settingsPageButton.Label.Text == "Graphics") {
             isFirstPage = false;
             SelectCategory(settingsPageButton, page);
           }
@@ -83,7 +83,7 @@ namespace LiVerse.Screens.MainScreenNested {
     }
 
     public SettingsScreen() {
-      UIRootLayer = new UILayer() { BackgroundRectDrawable = new() { Color = Color.Black, Opacity = 127 } };
+      UIRootLayer = new UILayer() { BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) } };
 
       DockFillContainer dockFill = new() { Margin = new Vector2(48), DockType = DockFillContainerDockType.Left };
       DockFillContainer titleDockFill = new() { DockType = DockFillContainerDockType.Right };
@@ -104,8 +104,15 @@ namespace LiVerse.Screens.MainScreenNested {
       dockFill.FillElement = settingViewDockFill;
 
       UIRootLayer.RootElement = dockFill;
+      UIRootLayer.KeyboardInputUpdateEvent += UIRootLayer_KeyboardInputUpdateEvent;
 
       LoadDefaultSettingsPages();
+    }
+
+    private void UIRootLayer_KeyboardInputUpdateEvent(AnaBanUI.Events.KeyboardEvent obj) {
+      if (obj.NewKeyboardState.IsKeyUp(Keys.Escape) && obj.OldKeyboardState.IsKeyDown(Keys.Escape)) {
+        ToggleUILayer();
+      }
     }
 
     public void ToggleUILayer() {

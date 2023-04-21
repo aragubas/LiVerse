@@ -3,11 +3,6 @@ using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LiVerse.AnaBanUI.Controls {
   public class SolidColorRectangle : ControlBase {
@@ -19,12 +14,17 @@ namespace LiVerse.AnaBanUI.Controls {
       Element = element;
     }
 
+    public override void UpdateUI(double deltaTime) {
+      MinimumSize = Element.MinimumSize;
+      Element.Size = ContentArea;
+      Element.AbsolutePosition = AbsolutePosition;
+      Element.RelativePosition = RelativePosition;
+    }
+
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, ContentArea), BackgroundColor);
 
-      Element.DrawElement(spriteBatch, deltaTime);
-
-      //spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Element.Size), BorderColor, BorderThickness);
+      Element.Draw(spriteBatch, deltaTime);
     }
 
     public override bool InputUpdate(PointerEvent pointerEvent) {
@@ -36,12 +36,6 @@ namespace LiVerse.AnaBanUI.Controls {
     }
 
     public override void Update(double deltaTime) {
-      MinimumSize = Element.MinimumSize;
-      Element.Size = ContentArea;
-      Element.AbsolutePosition = AbsolutePosition;
-      Element.RelativePosition = RelativePosition;
-
-
       Element.Update(deltaTime);
     }
 

@@ -1,4 +1,5 @@
 ﻿using LiVerse.AnaBanUI.Containers;
+using LiVerse.AnaBanUI.Drawables;
 using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -31,6 +32,11 @@ namespace LiVerse.AnaBanUI.Controls.ComboBox {
       }
     }
 
+    public override void UpdateUI(double deltaTime) {
+      ScrollableList.Size = new Vector2(ComboBoxRectangle.Size.Width, ScrollableList.MinimumSize.Y);
+      ScrollableList.AbsolutePosition = ComboBoxRectangle.Position;
+    }
+
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       ScrollableList.Draw(spriteBatch, deltaTime);
     }
@@ -40,9 +46,6 @@ namespace LiVerse.AnaBanUI.Controls.ComboBox {
     }
 
     public override void Update(double deltaTime) {
-      ScrollableList.Size = new Vector2(ComboBoxRectangle.Size.Width, ScrollableList.MinimumSize.Y);
-      ScrollableList.AbsolutePosition = ComboBoxRectangle.Position;
-
       ScrollableList.Update(deltaTime);
     }
   }
