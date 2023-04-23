@@ -57,12 +57,8 @@ namespace LiVerse.AnaBanUI.Controls {
     }
 
     public override void UpdateUI(double deltaTime) {
-      ToggleButton.Size = ContentArea;
-      ToggleButton.RelativePosition = RelativePosition;
-      ToggleButton.AbsolutePosition = AbsolutePosition;
+      FillElement(ToggleButton);
       if (boxOverlayContainer != null) boxOverlayContainer.ComboBoxRectangle = new(AbsolutePosition, ContentArea);
-
-      MinimumSize = ToggleButton.MinimumSize;
     }
 
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {

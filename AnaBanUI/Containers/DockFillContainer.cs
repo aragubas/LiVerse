@@ -22,7 +22,6 @@ namespace LiVerse.AnaBanUI.Containers {
     /// The location that the dock element will be placed
     /// </summary>
     public DockFillContainerDockType DockType { get; set; }
-    public bool Lines = false;
 
     public DockFillContainer(ControlBase? dockElement = null, ControlBase? fillElement = null) {
       DockType = DockFillContainerDockType.Top;

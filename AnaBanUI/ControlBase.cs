@@ -39,6 +39,9 @@ namespace LiVerse.AnaBanUI {
     public Vector2 Margin { get; set; } = Vector2.Zero;
 
     Vector2 _minimumSize = Vector2.Zero;
+    /// <summary>
+    /// Minimum element size (including margins)
+    /// </summary>
     public Vector2 MinimumSize {
       get => _minimumSize;
       set {
@@ -49,7 +52,7 @@ namespace LiVerse.AnaBanUI {
     }
 
     public Vector2? MaximumSize { get; set; } = null;
-    /// Absolute Position on Screen, Used for collision detection.
+    /// Absolute Position on Screen
     Vector2 _absolutePosition = Vector2.Zero;
     public Vector2 AbsolutePosition {
       get => _absolutePosition;
@@ -60,7 +63,10 @@ namespace LiVerse.AnaBanUI {
         _abosoluteArea = new RectangleF(_absolutePosition, _size);
       }
     }
+
     public Vector2 RelativePosition { get; set; }
+    Vector2 _renderRelativePosition = Vector2.Zero;
+    public Vector2 RenderRelativePosition { get => _renderRelativePosition; }
     RectangleF _abosoluteArea = RectangleF.Empty;
     public RectangleF AbsoluteArea { get => _abosoluteArea; }
 
@@ -75,7 +81,7 @@ namespace LiVerse.AnaBanUI {
     public abstract void Update(double deltaTime);
 
     /// <summary>
-    /// Called after drawing, updates Positions, Animations etc
+    /// Called before draw element, updates elements positioning, animation steps etc
     /// </summary>
     /// <param name="deltaTime"></param>
     public virtual void UpdateUI(double deltaTime) { }
@@ -93,7 +99,7 @@ namespace LiVerse.AnaBanUI {
     public virtual bool InputUpdate(KeyboardEvent keyboardEvent) { return false; }
 
     /// <summary>
-    /// Applies a translation matrix and calls <seealso cref="DrawElement"/>
+    /// Creates a virtual viewport, calls <seealso cref="DrawElement"/> and restores old viewport
     /// </summary>
     public virtual void Draw(SpriteBatch spriteBatch, double deltaTime) {
       if (!Visible) { return; }
@@ -122,8 +128,14 @@ namespace LiVerse.AnaBanUI {
       oldViewport = spriteBatch.GraphicsDevice.Viewport;
 
       spriteBatch.End();
-      Vector2 additionalOffset = ParentControl == null ? Vector2.Zero : ParentControl.RenderOffset;
-      spriteBatch.GraphicsDevice.Viewport = new Viewport((int)(AbsolutePosition.X + RenderOffset.X + additionalOffset.X), (int)(AbsolutePosition.Y + RenderOffset.Y + additionalOffset.Y), (int)Size.X, (int)Size.Y);
+      //Vector2 additionalOffset = ParentControl == null ? Vector2.Zero : ParentControl.RenderOffset;
+      Vector2 renderOffset = RenderOffset;
+      if (ParentControl != null) {
+        renderOffset = RenderOffset + ParentControl._renderRelativePosition;
+      }
+      _renderRelativePosition = renderOffset;
+      spriteBatch.GraphicsDevice.Viewport = new Viewport((int)(AbsolutePosition.X + renderOffset.X), (int)(AbsolutePosition.Y + renderOffset.X), (int)Size.X, (int)Size.Y);
+
       spriteBatch.Begin();
     }
 

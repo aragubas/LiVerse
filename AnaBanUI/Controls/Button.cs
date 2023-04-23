@@ -44,6 +44,7 @@ namespace LiVerse.AnaBanUI.Controls {
     bool isMouseHovering = false;
     bool isBlinking = false;
     bool blinkingEnd = false;
+    bool wasHolding = false;
     double blinkTimer = 0;
 
     public Button(string DefaultText, int defaultFontSize = 21, ButtonStyle buttonStyle = ButtonStyle.Default) {
@@ -74,17 +75,20 @@ namespace LiVerse.AnaBanUI.Controls {
           currentTargetBackgroundColor = ButtonStyle != ButtonStyle.Flat ? hoverBackground : flatHoverBackground;
           currentForegroundColor = ButtonStyle != ButtonStyle.Flat ? normalForeground : flatHoverForeground;
           if (ButtonStyle != ButtonStyle.Selectable) currentTargetBorderColor = hoverBorder;
-        }
+        } else { wasHolding = false; }
 
         if (pointerEvent.DownRect.Intersects(AbsoluteArea)) {
           currentTargetBackgroundColor = ButtonStyle != ButtonStyle.Flat ? downBackground : normalBackground;
           currentTargetBorderColor = downBorder;
           currentForegroundColor = ButtonStyle != ButtonStyle.Flat ? downForeground : normalForeground;
+          wasHolding = true;
 
           return true;
         }
 
-        if (pointerEvent.UpRect.Intersects(AbsoluteArea)) {
+        if (pointerEvent.UpRect.Intersects(AbsoluteArea) && wasHolding) {
+          wasHolding = false;
+
           if (!BlinkWhenPressed) {
             Click?.Invoke();
 

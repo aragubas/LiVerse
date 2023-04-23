@@ -21,10 +21,6 @@ namespace LiVerse.AnaBanUI {
 
     public void Update(double deltaTime) {
       RootElement?.Update(deltaTime);
-
-      //if (RootElement != null) {
-      //  RootElement.RenderOffset = new Vector2(10, 5);
-      //}
     }
 
     public void InputUpdate() {
@@ -64,6 +60,9 @@ namespace LiVerse.AnaBanUI {
         spriteBatch.Begin();
         BackgroundRectDrawable?.Draw(spriteBatch, deltaTime, screenSize, Vector2.Zero);
 
+        if (RootElement != null) {
+          //RootElement.RenderOffset = new Vector2(10, 5);
+        }
         RootElement.Draw(spriteBatch, deltaTime);
 
         spriteBatch.End();

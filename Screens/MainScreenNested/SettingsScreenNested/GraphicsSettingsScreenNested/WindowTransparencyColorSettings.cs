@@ -16,12 +16,13 @@ namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested.GraphicsSettings
   public class WindowTransparencyColorSettings : ControlBase {
     ScrollableList optionsList { get; }
     Label transparentBackgroudWarning { get; }
+    SolidColorRectangle colorPreview;
 
     public WindowTransparencyColorSettings() {
       optionsList = new() { ParentControl = this, Gap = 4 };
 
-      DockFillContainer DockFill = new() { ParentControl = this, DockType = DockFillContainerDockType.Left, Gap = 6 };
-      Label backgroundTransparencyTypeTitle = new("Background Transparency Type: ") { Color = Color.Black };
+      DockFillContainer DockFillTransparencyType = new() { ParentControl = this, DockType = DockFillContainerDockType.Left, Gap = 6 };
+      Label backgroundTransparencyTypeTitleLabel = new("Background Transparency Type: ") { Color = Color.Black };
       List<ComboBoxOption> options = new();
       ComboBoxOption defaultOption = new();
 
@@ -55,10 +56,46 @@ namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested.GraphicsSettings
       ComboBoxControl backgroundTransparencyOptionsComboBox = new(defaultOption, options);
       backgroundTransparencyOptionsComboBox.SelectedOptionChanged += BackgroundTransparencyOptionsComboBox_SelectedOptionChanged; ;
 
-      DockFill.DockElement = backgroundTransparencyTypeTitle;
-      DockFill.FillElement = backgroundTransparencyOptionsComboBox;
+      DockFillTransparencyType.DockElement = backgroundTransparencyTypeTitleLabel;
+      DockFillTransparencyType.FillElement = backgroundTransparencyOptionsComboBox;
 
-      optionsList.Elements.Add(DockFill);
+      optionsList.Elements.Add(DockFillTransparencyType);
+
+      DockFillContainer dockFillCustomColor = new() { Gap = 8f, DockType = DockFillContainerDockType.Right };
+      ScrollableList rgbSlidersList = new() { Gap = 4f };
+
+      DockFillContainer rSliderDockFill = new() { DockType = DockFillContainerDockType.Left };
+      Slider rSlider = new();
+      rSliderDockFill.DockElement = new Label("R: ");
+      rSliderDockFill.FillElement = rSlider;
+
+      rgbSlidersList.Elements.Add(rSliderDockFill);
+
+      DockFillContainer gSliderDockFill = new() { DockType = DockFillContainerDockType.Left };
+      Slider gSlider = new();
+      gSliderDockFill.DockElement = new Label("G: ");
+      gSliderDockFill.FillElement = gSlider;
+
+      rgbSlidersList.Elements.Add(gSliderDockFill);
+
+      DockFillContainer bSliderDockFill = new() { DockType = DockFillContainerDockType.Left };
+      Slider bSlider = new();
+      bSliderDockFill.DockElement = new Label("B: ");
+      bSliderDockFill.FillElement = bSlider;
+
+      rgbSlidersList.Elements.Add(bSliderDockFill);
+
+      DockFillContainer colorPreviewDockFill = new() { Gap = 4f };
+
+      colorPreview = new() { BackgroundColor = Color.Magenta };
+
+      colorPreviewDockFill.DockElement = new Label("Color Preview:");
+      colorPreviewDockFill.FillElement = colorPreview;
+
+      dockFillCustomColor.DockElement = colorPreviewDockFill;
+      dockFillCustomColor.FillElement = rgbSlidersList;
+
+      optionsList.Elements.Add(dockFillCustomColor);
 
       transparentBackgroudWarning = new Label("For transparent background to work you will need to use GameCapture on OBS\nor any capture method that supports the alpha channel") { HorizontalAlignment = LabelHorizontalAlignment.Left };
       optionsList.Elements.Add(transparentBackgroudWarning);

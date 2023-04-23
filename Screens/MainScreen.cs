@@ -72,7 +72,7 @@ namespace LiVerse.Screens {
       settingsScreen = new();
       settingsButton.Click += settingsScreen.ToggleUILayer;
       UIRoot.UILayers.Add(WindowRoot);
-      //settingsScreen.ToggleUILayer();
+      settingsScreen.ToggleUILayer();
 
       // TODO: Remove hardcoded paths
       CharacterStore.CurrentCharacter = new Character("Aragubas", new() { new ExpressionBuilder() {

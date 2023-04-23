@@ -20,7 +20,6 @@ namespace LiVerse.AnaBanUI.Controls {
     float ratio = 0;
 
     // Colors
-    // Color.FromNonPremultiplied(66, 100, 234, 255);
     static readonly Color backgroundColor = Color.FromNonPremultiplied(66, 100, 234, 100);
     static readonly Color borderColor = Color.FromNonPremultiplied(50, 118, 234, 255);
     static readonly Color levelMeterColor = Color.FromNonPremultiplied(50, 150, 248, 255);

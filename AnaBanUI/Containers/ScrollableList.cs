@@ -33,8 +33,9 @@ namespace LiVerse.AnaBanUI.Containers {
           element.RelativePosition = new Vector2(0, lastY);
           element.AbsolutePosition = AbsolutePosition + element.RelativePosition;
           element.ParentControl = this;
+          
           if (element.Size.X > minimumWidth) minimumWidth = element.Size.X + Margin.X;
-
+         
           lastY += element.Size.Y + Gap;
         }
 
@@ -45,7 +46,7 @@ namespace LiVerse.AnaBanUI.Containers {
 
         }
 
-        MinimumSize = new Vector2(minimumWidth, 0);
+        MinimumSize = new Vector2(minimumWidth, lastY);
       }
 
       else if (ListDirection == ScrollableListDirection.Horizontal) {
@@ -57,6 +58,7 @@ namespace LiVerse.AnaBanUI.Containers {
           element.RelativePosition = new Vector2(lastX, 0);
           element.AbsolutePosition = AbsolutePosition + element.RelativePosition;
           element.ParentControl = this;
+
           if (element.Size.Y > minimumHeight) minimumHeight = element.Size.Y + Margin.Y;
 
           lastX += element.Size.X + Gap;
