@@ -8,7 +8,7 @@ namespace LiVerse.AnaBanUI.Controls {
   public class SolidColorRectangle : ControlBase {
     public ControlBase? Element { get; set; }
     public Color BackgroundColor { get; set; } = Color.Transparent;
-    public float Padding { get; set; } = 4;
+    //public float Padding { get; set; } = 4;
 
     public SolidColorRectangle(ControlBase element) {
       Element = element;

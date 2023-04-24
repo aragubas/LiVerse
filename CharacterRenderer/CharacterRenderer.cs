@@ -5,9 +5,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
-namespace LiVerse.CharacterRenderer
-{
-    public class CharacterRenderer : ControlBase {
+namespace LiVerse.CharacterRenderer {
+  public class CharacterRenderer : ControlBase {
     public CharacterSpriteState CurrentSpriteState = CharacterSpriteState.Idle;
     public CharacterState State = new();
     public List<IAnimator> Animators { get; set; } = new();
@@ -27,20 +26,36 @@ namespace LiVerse.CharacterRenderer
 
     Texture2D? CurrentSprite {
       get {
+        if (CharacterStore.CurrentCharacter == null) return null;
+
         if (!State.IsSpeaking && !State.IsBlinking) {
-          return CharacterStore.CurrentCharacter?.CurrentSpriteCollection?.Idle;
-        }
-
-        else if (!State.IsSpeaking && State.IsBlinking) {
-          return CharacterStore.CurrentCharacter?.CurrentSpriteCollection?.IdleBlink;
-        }
-
-        else if (State.IsSpeaking && !State.IsBlinking) {
-          return CharacterStore.CurrentCharacter?.CurrentSpriteCollection?.Speaking;
-        }
-
-        else {
-          return CharacterStore.CurrentCharacter?.CurrentSpriteCollection?.SpeakingBlink;
+          Texture2D? sprite = CharacterStore.CurrentCharacter?.CurrentSpriteCollection?.Idle;
+          if (sprite == null) {
+            Texture2D? defaultSprite = CharacterStore.CurrentCharacter.LoadedSpriteCollections["default"].SpriteCollection.Idle;
+            return defaultSprite == null ? null : defaultSprite;
+          }
+          return sprite;
+        } else if (!State.IsSpeaking && State.IsBlinking) {
+          Texture2D? sprite = CharacterStore.CurrentCharacter?.CurrentSpriteCollection?.IdleBlink;
+          if (sprite == null) {
+            Texture2D? defaultSprite = CharacterStore.CurrentCharacter.LoadedSpriteCollections["default"].SpriteCollection.IdleBlink;
+            return defaultSprite == null ? null : defaultSprite;
+          }
+          return sprite;
+        } else if (State.IsSpeaking && !State.IsBlinking) {
+          Texture2D? sprite = CharacterStore.CurrentCharacter?.CurrentSpriteCollection?.Speaking;
+          if (sprite == null) {
+            Texture2D? defaultSprite = CharacterStore.CurrentCharacter.LoadedSpriteCollections["default"].SpriteCollection.Speaking;
+            return defaultSprite == null ? null : defaultSprite;
+          }
+          return sprite;
+        } else {
+          Texture2D? sprite = CharacterStore.CurrentCharacter?.CurrentSpriteCollection?.SpeakingBlink;
+          if (sprite == null) {
+            Texture2D? defaultSprite = CharacterStore.CurrentCharacter.LoadedSpriteCollections["default"].SpriteCollection.SpeakingBlink;
+            return defaultSprite == null ? null : defaultSprite;
+          }
+          return sprite;
         }
       }
     }
@@ -78,7 +93,7 @@ namespace LiVerse.CharacterRenderer
         }
 
         Vector2 animatorsAccumulator = Vector2.Zero;
-        foreach(IAnimator animator in Animators) {
+        foreach (IAnimator animator in Animators) {
           animatorsAccumulator += animator.Update(State, deltaTime);
         }
 
@@ -100,8 +115,7 @@ namespace LiVerse.CharacterRenderer
           State.IsBlinking = false;
           blinkingPeriod = 0;
 
-        }
-        else if (blinkingPeriod > CharacterStore.CurrentCharacter.BlinkingTrigger) {
+        } else if (blinkingPeriod > CharacterStore.CurrentCharacter.BlinkingTrigger) {
           State.IsBlinking = true;
         }
 

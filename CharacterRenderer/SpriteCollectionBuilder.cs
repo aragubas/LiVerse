@@ -3,21 +3,21 @@
     /// <summary>
     /// Idle Frame Path
     /// </summary>
-    public string Idle { get; set; }
+    public string? Idle { get; set; }
     
     /// <summary>
     /// Idle Blinking Frame Path
     /// </summary>
-    public string IdleBlink { get; set; }
+    public string? IdleBlink { get; set; }
     
     /// <summary>
     /// Speaking Frame Path
     /// </summary>
-    public string Speaking { get; set; }
+    public string? Speaking { get; set; }
     
     /// <summary>
     /// Speaking Blinking Frame Path
     /// </summary>
-    public string SpeakingBlink { get; set; }
+    public string? SpeakingBlink { get; set; }
   }
 }

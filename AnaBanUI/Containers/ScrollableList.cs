@@ -29,6 +29,7 @@ namespace LiVerse.AnaBanUI.Containers {
         float lastY = 0;
 
         foreach (var element in Elements) {
+          if (!element.Visible) { continue; }
           element.Size = new Vector2(element.MinimumSize.X + element.Margin.X, element.MinimumSize.Y + element.Margin.Y);
           element.RelativePosition = new Vector2(0, lastY);
           element.AbsolutePosition = AbsolutePosition + element.RelativePosition;
@@ -41,6 +42,7 @@ namespace LiVerse.AnaBanUI.Containers {
 
         if (StretchElements) {
           foreach (var element in Elements) {
+            if (!element.Visible) { continue; }
             element.Size = new Vector2(ContentArea.X, element.Size.Y);
           }
 
@@ -54,6 +56,7 @@ namespace LiVerse.AnaBanUI.Containers {
         float lastX = 0;
 
         foreach (var element in Elements) {
+          if (!element.Visible) { continue; }
           element.Size = new Vector2(element.MinimumSize.X + element.Margin.X, element.MinimumSize.Y + element.Margin.Y);
           element.RelativePosition = new Vector2(lastX, 0);
           element.AbsolutePosition = AbsolutePosition + element.RelativePosition;
@@ -66,6 +69,7 @@ namespace LiVerse.AnaBanUI.Containers {
 
         if (StretchElements) {
           foreach (var element in Elements) {
+            if (!element.Visible) { continue; }
             element.Size = new Vector2(element.Size.X, ContentArea.Y);
           }
 

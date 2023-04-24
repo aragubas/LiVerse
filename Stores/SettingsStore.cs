@@ -6,10 +6,12 @@ namespace LiVerse.Stores {
   public static class SettingsStore {
     private struct SerializeableSettingsStore {
       public SerializeableColor WindowTransparencyColor { get; set; }
+      public bool WindowTransparencyColorIsCustom { get; set; }
     }
     private static string storeFilePath = Path.Combine(ResourceManager.DefaultStoresPath, "settings_store.json");
 
     public static Color WindowTransparencyColor { get; set; } = Color.Transparent;
+    public static bool WindowTransparencyColorIsCustom { get; set; } = false;
 
     public static void LoadDefaultValues() {
       WindowTransparencyColor = Color.Transparent;
@@ -27,6 +29,7 @@ namespace LiVerse.Stores {
         SerializeableSettingsStore serialized = JsonConvert.DeserializeObject<SerializeableSettingsStore>(jsonFile);
 
         WindowTransparencyColor = serialized.WindowTransparencyColor.ToColor();
+        WindowTransparencyColorIsCustom = serialized.WindowTransparencyColorIsCustom;
 
       } catch (Exception exception) {
         if (exception is JsonSerializationException || exception is JsonReaderException) {
@@ -44,6 +47,7 @@ namespace LiVerse.Stores {
     public static void Save() {
       SerializeableSettingsStore serializeable = new();
       serializeable.WindowTransparencyColor = new(WindowTransparencyColor);
+      serializeable.WindowTransparencyColorIsCustom = WindowTransparencyColorIsCustom;
 
       string jsonText = JsonConvert.SerializeObject(serializeable);
 

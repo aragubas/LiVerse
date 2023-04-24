@@ -9,13 +9,14 @@ namespace LiVerse.AnaBanUI.Controls {
   public enum LabelVerticalAlignment {
     Top, Center, Bottom
   }
-  
+
   /// <summary>
   /// Draws Text into Screen
   /// </summary>
   public class Label : ControlBase {
     int _fontSize = 18;
-    public int FontSize { get => _fontSize; set {
+    public int FontSize {
+      get => _fontSize; set {
         if (value == _fontSize) { return; }
         _fontSize = value;
 
@@ -42,11 +43,24 @@ namespace LiVerse.AnaBanUI.Controls {
       }
     }
 
-    public Color Color { get; set; } = Color.Black;
+    public bool _drawShadow = false;
+    public bool DrawShadow {
+      get => _drawShadow;
+      set {
+        if (value == _drawShadow) return;
+
+        _drawShadow = value;
+        reBakeFont = true;
+      }
+    }
+
+    public Color Color { get; set; } = Color.White;
+    public Color ShadowColor { get; set; } = Color.Black;
     public LabelVerticalAlignment VerticalAlignment = LabelVerticalAlignment.Center;
     public LabelHorizontalAlignment HorizontalAlignment = LabelHorizontalAlignment.Center;
     public Vector2 FontArea = Vector2.Zero;
-    SpriteFont? font; 
+    public Vector2 ShadowOffset = Vector2.One;
+    SpriteFont? font;
     bool reBakeFont = true;
     bool reMeasureText = true;
     Vector2 textPosition = Vector2.Zero;
@@ -68,7 +82,7 @@ namespace LiVerse.AnaBanUI.Controls {
       if (reMeasureText && font != null && Text != null) {
         reMeasureText = false;
         FontArea = font.MeasureString(Text);
-        MinimumSize = FontArea;
+        MinimumSize = FontArea + Margin + ShadowOffset;
       }
 
       RecalculatePosition();
@@ -76,6 +90,7 @@ namespace LiVerse.AnaBanUI.Controls {
 
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       if (font == null) { return; }
+      if (DrawShadow) spriteBatch.DrawString(font, Text, textPosition + ShadowOffset, ShadowColor);
       spriteBatch.DrawString(font, Text, textPosition, Color);
     }
 
@@ -83,42 +98,41 @@ namespace LiVerse.AnaBanUI.Controls {
       // Calculates X
       switch (HorizontalAlignment) {
         case LabelHorizontalAlignment.Center: {
-          textPosition.X = ContentArea.X / 2 - FontArea.X / 2;
-          break;
-        }
+            textPosition.X = ContentArea.X / 2 - FontArea.X / 2;
+            break;
+          }
 
         case LabelHorizontalAlignment.Left: {
-          textPosition.X = 0;
-          break;
-        }
+            textPosition.X = 0;
+            break;
+          }
 
         case LabelHorizontalAlignment.Right: {
-          textPosition.X = ContentArea.X - FontArea.X;
-          break;
-        }          
+            textPosition.X = ContentArea.X - FontArea.X;
+            break;
+          }
       }
 
       // Calculates Y
       switch (VerticalAlignment) {
         case LabelVerticalAlignment.Center: {
             textPosition.Y = ContentArea.Y / 2 - FontArea.Y / 2;
-          break;
-        }
+            break;
+          }
 
         case LabelVerticalAlignment.Top: {
-          textPosition.Y = 0;
-          break;
-        }
+            textPosition.Y = 0;
+            break;
+          }
 
         case LabelVerticalAlignment.Bottom: {
-          textPosition.Y = ContentArea.Y - FontArea.Y;
-          break;
-        }          
+            textPosition.Y = ContentArea.Y - FontArea.Y;
+            break;
+          }
       }
     }
 
-    public override void Update(double deltaTime) {
-    }
+    public override void Update(double deltaTime) { }
 
   }
 }

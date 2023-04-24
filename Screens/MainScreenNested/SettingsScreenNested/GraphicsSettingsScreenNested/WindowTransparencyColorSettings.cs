@@ -17,12 +17,16 @@ namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested.GraphicsSettings
     ScrollableList optionsList { get; }
     Label transparentBackgroudWarning { get; }
     SolidColorRectangle colorPreview;
+    DockFillContainer dockFillCustomColor;
+    Slider rSlider;
+    Slider gSlider;
+    Slider bSlider;
 
     public WindowTransparencyColorSettings() {
       optionsList = new() { ParentControl = this, Gap = 4 };
 
       DockFillContainer DockFillTransparencyType = new() { ParentControl = this, DockType = DockFillContainerDockType.Left, Gap = 6 };
-      Label backgroundTransparencyTypeTitleLabel = new("Background Transparency Type: ") { Color = Color.Black };
+      Label backgroundTransparencyTypeTitleLabel = new("Background Transparency Type:") { Color = Color.Black };
       List<ComboBoxOption> options = new();
       ComboBoxOption defaultOption = new();
 
@@ -30,7 +34,7 @@ namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested.GraphicsSettings
         defaultOption.OptionText = "Transparent";
         defaultOption.ExtraData = 0;
 
-      } else if (SettingsStore.WindowTransparencyColor == Color.Green) {
+      } else if (SettingsStore.WindowTransparencyColor == new Color(0, 255, 0, 255)) {
         defaultOption.OptionText = "Green";
         defaultOption.ExtraData = 1;
 
@@ -61,48 +65,61 @@ namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested.GraphicsSettings
 
       optionsList.Elements.Add(DockFillTransparencyType);
 
-      DockFillContainer dockFillCustomColor = new() { Gap = 8f, DockType = DockFillContainerDockType.Right };
+      dockFillCustomColor = new() { Gap = 8f, DockType = DockFillContainerDockType.Right };
       ScrollableList rgbSlidersList = new() { Gap = 4f };
 
-      DockFillContainer rSliderDockFill = new() { DockType = DockFillContainerDockType.Left };
-      Slider rSlider = new();
-      rSliderDockFill.DockElement = new Label("R: ");
+      DockFillContainer rSliderDockFill = new() { DockType = DockFillContainerDockType.Left, Gap = 4 };
+      rSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
+      rSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
+      rSliderDockFill.DockElement = new Label("R:") { Color = Color.Black };
       rSliderDockFill.FillElement = rSlider;
 
       rgbSlidersList.Elements.Add(rSliderDockFill);
 
-      DockFillContainer gSliderDockFill = new() { DockType = DockFillContainerDockType.Left };
-      Slider gSlider = new();
-      gSliderDockFill.DockElement = new Label("G: ");
+      DockFillContainer gSliderDockFill = new() { DockType = DockFillContainerDockType.Left, Gap = 2 };
+      gSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
+      gSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
+      gSliderDockFill.DockElement = new Label("G:") { Color = Color.Black };
       gSliderDockFill.FillElement = gSlider;
 
       rgbSlidersList.Elements.Add(gSliderDockFill);
 
-      DockFillContainer bSliderDockFill = new() { DockType = DockFillContainerDockType.Left };
-      Slider bSlider = new();
-      bSliderDockFill.DockElement = new Label("B: ");
+      DockFillContainer bSliderDockFill = new() { DockType = DockFillContainerDockType.Left, Gap = 3 };
+      bSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
+      bSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
+      bSliderDockFill.DockElement = new Label("B:") { Color = Color.Black };
       bSliderDockFill.FillElement = bSlider;
 
       rgbSlidersList.Elements.Add(bSliderDockFill);
 
       DockFillContainer colorPreviewDockFill = new() { Gap = 4f };
 
-      colorPreview = new() { BackgroundColor = Color.Magenta };
+      colorPreview = new(new Label("Preview", 24) { Margin = new Vector2(8), Color = Color.White, DrawShadow = true, ShadowColor = Color.Black }) { BackgroundColor = Color.Magenta };
 
-      colorPreviewDockFill.DockElement = new Label("Color Preview:");
-      colorPreviewDockFill.FillElement = colorPreview;
+      //colorPreviewDockFill.DockElement = ;
+      //colorPreviewDockFill.FillElement = colorPreview;
 
-      dockFillCustomColor.DockElement = colorPreviewDockFill;
+      dockFillCustomColor.DockElement = colorPreview;
       dockFillCustomColor.FillElement = rgbSlidersList;
 
       optionsList.Elements.Add(dockFillCustomColor);
 
-      transparentBackgroudWarning = new Label("For transparent background to work you will need to use GameCapture on OBS\nor any capture method that supports the alpha channel") { HorizontalAlignment = LabelHorizontalAlignment.Left };
+      transparentBackgroudWarning = new Label("To use transparent background you will need to capture the window with alpha.\nin OBS you can use GameCapture for that, by enabling the alpha channel") { HorizontalAlignment = LabelHorizontalAlignment.Left, Color = Color.Black };
       optionsList.Elements.Add(transparentBackgroudWarning);
+
+      //customColorPreview = SettingsStore.WindowTransparencyColor;
+
+      // Load default values for the RGB sliders
+      rSlider.CurrentValue = SettingsStore.WindowTransparencyColor.R;
+      gSlider.CurrentValue = SettingsStore.WindowTransparencyColor.G;
+      bSlider.CurrentValue = SettingsStore.WindowTransparencyColor.B;
     }
 
     private void BackgroundTransparencyOptionsComboBox_SelectedOptionChanged(ComboBoxOption obj) {
       if (obj.ExtraData is int selectionNumber) {
+        dockFillCustomColor.Visible = false;
+        SettingsStore.WindowTransparencyColorIsCustom = false;
+
         switch (selectionNumber) {
           case 0: { // Transparent
               SettingsStore.WindowTransparencyColor = Color.Transparent;
@@ -125,16 +142,31 @@ namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested.GraphicsSettings
             }
 
           default: { // Invalid/Custom Color
+              SettingsStore.WindowTransparencyColorIsCustom = true;
+              SettingsStore.WindowTransparencyColor = Color.FromNonPremultiplied(0, 255, 0, 255);
+              rSlider.CurrentValue = SettingsStore.WindowTransparencyColor.R;
+              gSlider.CurrentValue = SettingsStore.WindowTransparencyColor.G;
+              bSlider.CurrentValue = SettingsStore.WindowTransparencyColor.B;
               break;
             }
         }
       }
     }
 
+    void RGBSlidersChanged() {
+      SettingsStore.WindowTransparencyColor = Color.FromNonPremultiplied((int)rSlider.CurrentValue, (int)gSlider.CurrentValue, (int)bSlider.CurrentValue, 255);
+    }
+
     public override void UpdateUI(double deltaTime) {
       FillElement(optionsList);
 
-      transparentBackgroudWarning.Visible = SettingsStore.WindowTransparencyColor == Color.Transparent;
+      transparentBackgroudWarning.Visible = SettingsStore.WindowTransparencyColor == Color.Transparent && SettingsStore.WindowTransparencyColorIsCustom == false;
+
+      dockFillCustomColor.Visible = SettingsStore.WindowTransparencyColorIsCustom;
+
+      if (dockFillCustomColor.Visible) {
+        colorPreview.BackgroundColor = SettingsStore.WindowTransparencyColor;
+      }
     }
 
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {

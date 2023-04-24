@@ -7,7 +7,7 @@ namespace LiVerse.AnaBanUI.Controls {
   public class Slider : ControlBase {
     public float MaximumValue { get; set; } = 100;
     public float CurrentValue { get; set; } = 50;
-    public bool RaiseOnValueChangedEveryGrabFrame = true;
+    public bool RaiseOnValueChangedEveryGrabFrame = false;
     public event Action<float>? OnValueChanged;
 
     float ratio = 0;
@@ -41,8 +41,11 @@ namespace LiVerse.AnaBanUI.Controls {
       spriteBatch.FillRectangle(new RectangleF(1, (Size.Y / 2) / 2 + 1, Size.X * ratio, Size.Y / 2 - 2), levelColor);
 
       // Draw Level Detail
-      spriteBatch.FillRectangle(new RectangleF(ratio * Size.X - 3, 0, 6, Size.Y), sliderGrabbed ? grabberActiveBackgroundColor : grabberBackgroundColor);
-      spriteBatch.DrawRectangle(new RectangleF(ratio * Size.X - 3, 0, 6, Size.Y), sliderGrabbed ? grabberActiveBorderColor : grabberBorderColor);
+      float levelX = ratio * Size.X;
+      if (levelX > Size.X - 6) levelX = Size.X - 6;
+
+      spriteBatch.FillRectangle(new RectangleF(levelX, 0, 6, Size.Y), sliderGrabbed ? grabberActiveBackgroundColor : grabberBackgroundColor);
+      spriteBatch.DrawRectangle(new RectangleF(levelX, 0, 6, Size.Y), sliderGrabbed ? grabberActiveBorderColor : grabberBorderColor);
     }
 
     void RaiseValueChanged() {
@@ -57,7 +60,7 @@ namespace LiVerse.AnaBanUI.Controls {
         sliderGrabbed = AbsoluteArea.Intersects(pointerEvent.DownRect);
 
         if (sliderGrabbed) {
-          float mouseRelativePos = pointerEvent.PositionRect.X - AbsolutePosition.X;
+          float mouseRelativePos = pointerEvent.PositionRect.X - 3 - AbsolutePosition.X;
 
           CurrentValue = Math.Clamp(mouseRelativePos / Size.X, 0, 1) * MaximumValue;
 

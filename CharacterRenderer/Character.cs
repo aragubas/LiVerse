@@ -5,17 +5,13 @@
     public string CurrentExpression  { get => _currentExpression; }
     public SpriteCollection? CurrentSpriteCollection { 
       get {
-        if (LoadedSpriteCollection.TryGetValue(_currentExpression, out SpriteCollection collection)) {
-          return collection;
-        }
-
-        return null;
-      } 
+        return LoadedSpriteCollections.TryGetValue(_currentExpression, out Expression expression) ? expression.SpriteCollection : null;
+      }
     }
 
     public double BlinkingTrigger { get; set; } = 5;
     public double BlinkingTriggerEnd { get; set; } = 5.15;
-    public Dictionary<string, SpriteCollection> LoadedSpriteCollection { get; } = new();
+    public Dictionary<string, Expression> LoadedSpriteCollections { get; } = new();
 
     public Character(string name, List<ExpressionBuilder> expressions) {
       Name = name;
@@ -23,17 +19,18 @@
     }
 
     public void BuildCharacterExpressions(List<ExpressionBuilder> expressions) {
-      LoadedSpriteCollection.Clear();
-      
-      foreach(var expression in expressions) {
-        SpriteCollection spriteCollection = new(expression.SpriteCollectionBuilder);
+      LoadedSpriteCollections.Clear();
 
-        LoadedSpriteCollection.Add(expression.Name, spriteCollection);
+      foreach(var expression in expressions) {
+        string expressionName = expression.Name.Trim();
+        Expression newExpression = new(expressionName, new SpriteCollection(expression.SpriteCollectionBuilder));
+
+        LoadedSpriteCollections.Add(expression.Name, newExpression);
       }
     }
 
     public bool SetExpression(string expressionName) {
-      if (LoadedSpriteCollection.ContainsKey(expressionName)) {
+      if (LoadedSpriteCollections.ContainsKey(expressionName)) {
         _currentExpression = expressionName;
         return true;
       }

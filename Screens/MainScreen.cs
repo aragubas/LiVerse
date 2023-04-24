@@ -8,6 +8,7 @@ using LiVerse.Stores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Screens;
 
 namespace LiVerse.Screens {
   public class MainScreen : ScreenBase {
@@ -20,9 +21,11 @@ namespace LiVerse.Screens {
     DockFillContainer centerSplit;
     DockFillContainer centerCharacterSplit;
     CharacterRenderer.CharacterRenderer characterRenderer;
-    ScrollableList expressionsList;
     Label characterNameLabel;
+
+    // Panel Components
     AudioCaptureDevicePanel audioCaptureDevicePanel;
+    CharacterExpressionsPanel characterExpressionsPanel;
 
     bool characterFullView = false;
 
@@ -31,8 +34,6 @@ namespace LiVerse.Screens {
 
       HeaderBar = new() { DockType = DockFillContainerDockType.Left };
       centerSplit = new() { DockType = DockFillContainerDockType.Left };
-      // Create CharacterRenderer
-      characterRenderer = new();
 
       characterNameLabel = new("{character_name}", 21) { Color = Color.Black };
       Button settingsButton = new("Settings");
@@ -41,14 +42,15 @@ namespace LiVerse.Screens {
       HeaderBar.DockElement = settingsButton;
       HeaderBar.FillElement = characterNameLabel;
 
+      // Create CharacterRenderer
+      characterRenderer = new();
+
       centerCharacterSplit = new() { DockType = DockFillContainerDockType.Bottom, Margin = new(6) };
       centerCharacterSplit.FillElement = characterRenderer;
-      expressionsList = new() { ListDirection = ScrollableListDirection.Horizontal, Gap = 6 };
 
-      expressionsList.Elements.Add(new Label("Test Label 1"));
-      expressionsList.Elements.Add(new Label("Test Label 2"));
+      characterExpressionsPanel = new();
 
-      centerCharacterSplit.DockElement = expressionsList;
+      centerCharacterSplit.DockElement = characterExpressionsPanel;
 
       audioCaptureDevicePanel = new();
 
@@ -72,10 +74,11 @@ namespace LiVerse.Screens {
       settingsScreen = new();
       settingsButton.Click += settingsScreen.ToggleUILayer;
       UIRoot.UILayers.Add(WindowRoot);
-      settingsScreen.ToggleUILayer();
+      //settingsScreen.ToggleUILayer();
 
       // TODO: Remove hardcoded paths
-      CharacterStore.CurrentCharacter = new Character("Aragubas", new() { new ExpressionBuilder() {
+      CharacterStore.CurrentCharacter = new Character("Aragubas", new() {
+        new ExpressionBuilder() {
           Name = "default",
           SpriteCollectionBuilder = new() {
           Idle = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Fechada.png",
@@ -83,7 +86,21 @@ namespace LiVerse.Screens {
           Speaking = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Aberta.png",
           SpeakingBlink = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Aberta.png"
         }
-      }});
+      }, new ExpressionBuilder() {
+          Name = "GRRR",
+          SpriteCollectionBuilder = new() {
+          Idle = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas GRRR Boca Fechada.png",
+          Speaking = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas GRRR Boca Aberta.png",
+        }
+      }, new ExpressionBuilder() {
+          Name = "Triste",
+          SpriteCollectionBuilder = new() {
+          Idle = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Triste Boca Fechada.png",
+          Speaking = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Triste Boca Aberta.png",
+        }
+      },
+
+      });
 
     }
 
@@ -120,7 +137,7 @@ namespace LiVerse.Screens {
       } else { characterNameLabel.Text = "No character selected"; }
 
       HeaderBar.Visible = !characterFullView;
-      expressionsList.Visible = !characterFullView;
+      if (centerCharacterSplit.DockElement != null) centerCharacterSplit.DockElement.Visible = !characterFullView;
       centerCharacterSplit.Margin = !characterFullView ? Vector2.One * 6 : Vector2.Zero;
       if (centerSplit.DockElement != null) centerSplit.DockElement.Visible = !characterFullView;
     }

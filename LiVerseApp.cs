@@ -33,6 +33,8 @@ namespace LiVerse
     protected override void OnExiting(object sender, EventArgs args) {
       Console.WriteLine("Goodbye!");
       screenManager.DetachScreen();
+
+      SettingsStore.Save();
     }
 
     protected override void Initialize() {
