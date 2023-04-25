@@ -50,9 +50,9 @@ namespace LiVerse {
       Directory.CreateDirectory(DefaultStoresPath);
 
       // Check if OpenSans font exists
-      string openSansFontPath = Path.Combine(DefaultContentPath, "Fonts", "OpenSans.ttf");
+      string openSansFontPath = Path.Combine(DefaultContentPath, "Fonts", "NotoSans.ttf");
       if (!File.Exists(openSansFontPath)) {
-        throw new FileNotFoundException("Could not find default font \"OpenSans.ttf\".");
+        throw new FileNotFoundException("Could not find default font \"NotoSans.ttf\".");
       }      
     }
 

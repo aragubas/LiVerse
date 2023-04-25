@@ -26,6 +26,7 @@ namespace LiVerse.Screens {
     // Panel Components
     AudioCaptureDevicePanel audioCaptureDevicePanel;
     CharacterExpressionsPanel characterExpressionsPanel;
+    NewCharacterExpressionScreen newCharacterExpressionScreen;
 
     bool characterFullView = false;
 
@@ -75,6 +76,9 @@ namespace LiVerse.Screens {
       settingsButton.Click += settingsScreen.ToggleUILayer;
       UIRoot.UILayers.Add(WindowRoot);
       //settingsScreen.ToggleUILayer();
+
+      newCharacterExpressionScreen = new();
+      //newCharacterExpressionScreen.ToggleUILayer();
 
       // TODO: Remove hardcoded paths
       CharacterStore.CurrentCharacter = new Character("Aragubas", new() {
@@ -138,7 +142,7 @@ namespace LiVerse.Screens {
 
       HeaderBar.Visible = !characterFullView;
       if (centerCharacterSplit.DockElement != null) centerCharacterSplit.DockElement.Visible = !characterFullView;
-      centerCharacterSplit.Margin = !characterFullView ? Vector2.One * 6 : Vector2.Zero;
+      //centerCharacterSplit.Margin = !characterFullView ? Vector2.One * 6 : Vector2.Zero;
       if (centerSplit.DockElement != null) centerSplit.DockElement.Visible = !characterFullView;
     }
 

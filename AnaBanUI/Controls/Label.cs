@@ -34,7 +34,7 @@ namespace LiVerse.AnaBanUI.Controls {
         reMeasureText = true;
       }
     }
-    public string _fontName = "OpenSans";
+    public string _fontName = "NotoSans";
     public string FontName {
       get => _fontName; set {
         if (value == _fontName) { return; }
@@ -65,7 +65,7 @@ namespace LiVerse.AnaBanUI.Controls {
     bool reMeasureText = true;
     Vector2 textPosition = Vector2.Zero;
 
-    public Label(string text, int fontSize = 18, string fontName = "OpenSans") {
+    public Label(string text, int fontSize = 18, string fontName = "NotoSans") {
       Text = text;
       FontSize = fontSize;
       FontName = fontName;

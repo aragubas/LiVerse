@@ -83,7 +83,7 @@ namespace LiVerse.Screens.MainScreenNested {
     }
 
     public SettingsScreen() {
-      UIRootLayer = new UILayer() { BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) } };
+      UIRootLayer = new() { BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) } };
 
       DockFillContainer dockFill = new() { Margin = new Vector2(48), DockType = DockFillContainerDockType.Left };
       DockFillContainer titleDockFill = new() { DockType = DockFillContainerDockType.Right };

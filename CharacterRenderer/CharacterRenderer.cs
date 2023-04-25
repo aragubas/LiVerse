@@ -81,15 +81,15 @@ namespace LiVerse.CharacterRenderer {
         //  textureSize.X = (int)Size.X;
         //}
 
-        texturePosition.X = (int)Size.X / 2 - textureSize.X / 2;
-        texturePosition.Y = (int)Size.Y / 2 - textureSize.Y / 2;
+        texturePosition.X = (int)ContentArea.X / 2 - textureSize.X / 2;
+        texturePosition.Y = (int)ContentArea.Y / 2 - textureSize.Y / 2;
 
         if (textureSize.Y > Size.Y) {
-          textureSize.Y = (int)Size.Y;
-          textureSize.X = (int)Size.Y;
+          textureSize.Y = (int)ContentArea.Y;
+          textureSize.X = (int)ContentArea.Y;
 
           texturePosition.Y = 0;
-          texturePosition.X = (int)Size.X / 2 - textureSize.X / 2;
+          texturePosition.X = (int)ContentArea.X / 2 - textureSize.X / 2;
         }
 
         Vector2 animatorsAccumulator = Vector2.Zero;
