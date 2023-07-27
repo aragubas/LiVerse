@@ -76,35 +76,35 @@ namespace LiVerse.Screens {
       settingsButton.Click += settingsScreen.ToggleUILayer;
       UIRoot.UILayers.Add(WindowRoot);
       //settingsScreen.ToggleUILayer();
-
+      
       newCharacterExpressionScreen = new();
       //newCharacterExpressionScreen.ToggleUILayer();
 
       // TODO: Remove hardcoded paths
-      CharacterStore.CurrentCharacter = new Character("Aragubas", new() {
-        new ExpressionBuilder() {
-          Name = "default",
-          SpriteCollectionBuilder = new() {
-          Idle = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Fechada.png",
-          IdleBlink = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Fechada.png",
-          Speaking = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Aberta.png",
-          SpeakingBlink = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Aberta.png"
-        }
-      }, new ExpressionBuilder() {
-          Name = "GRRR",
-          SpriteCollectionBuilder = new() {
-          Idle = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas GRRR Boca Fechada.png",
-          Speaking = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas GRRR Boca Aberta.png",
-        }
-      }, new ExpressionBuilder() {
-          Name = "Triste",
-          SpriteCollectionBuilder = new() {
-          Idle = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Triste Boca Fechada.png",
-          Speaking = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Triste Boca Aberta.png",
-        }
-      },
+      //CharacterStore.CurrentCharacter = new Character("Aragubas", new() {
+      //  new ExpressionBuilder() {
+      //    Name = "default",
+      //    SpriteCollectionBuilder = new() {
+      //    Idle = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Fechada.png",
+      //    IdleBlink = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Fechada.png",
+      //    Speaking = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Aberta.png",
+      //    SpeakingBlink = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Aberta.png"
+      //  }
+      //}, new ExpressionBuilder() {
+      //    Name = "GRRR",
+      //    SpriteCollectionBuilder = new() {
+      //    Idle = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas GRRR Boca Fechada.png",
+      //    Speaking = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas GRRR Boca Aberta.png",
+      //  }
+      //}, new ExpressionBuilder() {
+      //    Name = "Triste",
+      //    SpriteCollectionBuilder = new() {
+      //    Idle = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Triste Boca Fechada.png",
+      //    Speaking = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Triste Boca Aberta.png",
+      //  }
+      //},
 
-      });
+      //});
 
     }
 

@@ -33,6 +33,8 @@ namespace LiVerse {
         return -1;
       }
 
+      Console.WriteLine($"{ResourceManager.AppInfo.Name} v{ResourceManager.AppInfo.Version}");
+
 #if DEBUG // Run without error handler in Debug
       using (LiVerseApp app = new LiVerseApp()) {
         app.Run();
@@ -62,21 +64,21 @@ namespace LiVerse {
       string logFilePath = Path.Join(logDirectory, $"crashlog-{DateTime.Now.ToShortDateString().Replace("/", "_")}-{DateTime.Now.ToShortTimeString().Replace(":", "-")}.txt");
       Directory.CreateDirectory(logDirectory);
 
-      string logFileData = $"HResult: {ex.HResult}\nMessage: {ex.Message}\nSource: {ex.Source}\n";
+      string logFileContents = $"HResult: {ex.HResult}\nMessage: {ex.Message}\nSource: {ex.Source}\n";
 
       if (ex.Data.Count >= 1) {
-        logFileData += "Additional Data:";
+        logFileContents += "Additional Data:";
 
         foreach (string data in ex.Data) {
-          logFileData += $"{data}\n";
+          logFileContents += $"{data}\n";
         }
       }
 
 
-      logFileData += "Stack Trace:\n" + ex.StackTrace;
+      logFileContents += "Stack Trace:\n" + ex.StackTrace;
 
       try {
-        File.WriteAllText(logFilePath, logFileData, System.Text.Encoding.UTF8);
+        File.WriteAllText(logFilePath, logFileContents, System.Text.Encoding.UTF8);
 
       }
       catch (Exception _ex) {

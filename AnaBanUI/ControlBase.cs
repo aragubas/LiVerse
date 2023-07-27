@@ -11,11 +11,11 @@ namespace LiVerse.AnaBanUI {
 
     /// A disabled control doesn't accept user input, but its still rendered if visible
     public bool Enabled { get; set; } = true;
-    /// A disabled control doesn't accept user input, but its still rendered if visible
     public bool DrawDebugLines { get; set; } = false;
     /// A invisible control is invisible and doesn't process any events
     public bool Visible { get; set; } = true;
-    /// Backing field for ElementSize
+#region Container Properties
+    /// Backing field for Size
     protected Vector2 _size { get; set; }
 
     /// <summary>
@@ -35,7 +35,6 @@ namespace LiVerse.AnaBanUI {
     }
 
     public Vector2 ContentArea { get => new Vector2(Size.X - Margin.X * 2, Size.Y - Margin.Y * 2); }
-    public Vector2 RenderOffset { get; set; } = Vector2.Zero;
     public Vector2 Margin { get; set; } = Vector2.Zero;
 
     Vector2 _minimumSize = Vector2.Zero;
@@ -65,10 +64,15 @@ namespace LiVerse.AnaBanUI {
     }
 
     public Vector2 RelativePosition { get; set; }
-    Vector2 _renderRelativePosition = Vector2.Zero;
-    public Vector2 RenderRelativePosition { get => _renderRelativePosition; }
+    
     RectangleF _abosoluteArea = RectangleF.Empty;
     public RectangleF AbsoluteArea { get => _abosoluteArea; }
+    #endregion
+
+    Vector2 _renderRelativePosition = Vector2.Zero;
+    public Vector2 RenderRelativePosition { get => _renderRelativePosition; }
+    public Vector2 RenderOffset { get; set; } = Vector2.Zero;
+    public SamplerState SamplerState { get; set; } = SamplerState.PointWrap;
 
     Viewport oldViewport;
 
@@ -128,7 +132,7 @@ namespace LiVerse.AnaBanUI {
       oldViewport = spriteBatch.GraphicsDevice.Viewport;
 
       spriteBatch.End();
-      //Vector2 additionalOffset = ParentControl == null ? Vector2.Zero : ParentControl.RenderOffset;
+      // Adds ParentControl's renderRelativePosition
       Vector2 renderOffset = RenderOffset;
       if (ParentControl != null) {
         renderOffset = RenderOffset + ParentControl._renderRelativePosition;
@@ -136,7 +140,7 @@ namespace LiVerse.AnaBanUI {
       _renderRelativePosition = renderOffset;
       spriteBatch.GraphicsDevice.Viewport = new Viewport((int)(AbsolutePosition.X + renderOffset.X), (int)(AbsolutePosition.Y + renderOffset.X), (int)Size.X, (int)Size.Y);
 
-      spriteBatch.Begin();
+      spriteBatch.Begin(samplerState: SamplerState);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

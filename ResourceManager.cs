@@ -59,11 +59,11 @@ namespace LiVerse {
     // Load Sprite From File
     public static Texture2D LoadTexture2DFromFile(string filePath, Action<byte[]> colorProcessor) {
       if (!File.Exists(filePath)) {
-        throw new FileNotFoundException($"Could not find Sprite to load. Path: {filePath}");
+        throw new FileNotFoundException($"Could not find Texture, Path: {filePath}");
       }
 
       using (FileStream fileStream = new(filePath, FileMode.Open)) {
-        Texture2D ValToReturn = Texture2D.FromStream(LiVerseApp.Graphics.GraphicsDevice, fileStream, colorProcessor);
+        Texture2D ValToReturn = Texture2D.FromStream(LiVerseApp.Graphics!.GraphicsDevice, fileStream, colorProcessor);
 
         return ValToReturn;
       }
