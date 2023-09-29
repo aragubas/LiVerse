@@ -15,6 +15,7 @@
 
     <!-- Copy Content Directory -->
     <None Include="ApplicationData/**" CopyToOutputDirectory="PreserveNewest" />
+    
   </ItemGroup>
 
 
