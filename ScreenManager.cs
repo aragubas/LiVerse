@@ -23,7 +23,7 @@ namespace LiVerse {
 
     public void DetachScreen() {
       if (CurrentScreen != null) {
-        CurrentScreen.Deattach();
+        CurrentScreen.Detach();
         CurrentScreen.Dispose();
 
         GC.Collect();
@@ -38,6 +38,6 @@ namespace LiVerse {
       CurrentScreen?.Draw(spriteBatch, deltaTime);
     }
 
-    
+
   }
 }

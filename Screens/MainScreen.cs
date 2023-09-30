@@ -10,10 +10,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Screens;
 
-namespace LiVerse.Screens
-{
-  public class MainScreen : ScreenBase
-  {
+namespace LiVerse.Screens {
+  public class MainScreen : ScreenBase {
     SettingsScreen settingsScreen { get; set; }
     UILayer WindowRoot;
 
@@ -32,8 +30,7 @@ namespace LiVerse.Screens
 
     bool characterFullView = false;
 
-    public MainScreen(ScreenManager screenManager) : base(screenManager)
-    {
+    public MainScreen(ScreenManager screenManager) : base(screenManager) {
       WindowRoot = new();
 
       HeaderBar = new() { DockType = DockFillContainerDockType.Left };
@@ -42,7 +39,7 @@ namespace LiVerse.Screens
       characterNameLabel = new("{character_name}", 21) { Color = Color.Black };
       Button settingsButton = new("Settings");
 
-      HeaderBar.BackgroundRectDrawble = new() { Color = Color.FromNonPremultiplied(249, 249, 249, 255), IsFilled = true };
+      HeaderBar.BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(249, 249, 249, 255), FillCenter = true };
       HeaderBar.DockElement = settingsButton;
       HeaderBar.FillElement = characterNameLabel;
 
@@ -111,47 +108,37 @@ namespace LiVerse.Screens
 
     }
 
-    private void MicrophoneLevelMeter_MicrophoneLevelUntriggered()
-    {
+    private void MicrophoneLevelMeter_MicrophoneLevelUntriggered() {
       characterRenderer.SetSpeaking(false);
     }
 
-    private void MicrophoneLevelMeter_MicrophoneLevelTriggered()
-    {
+    private void MicrophoneLevelMeter_MicrophoneLevelTriggered() {
       characterRenderer.SetSpeaking(true);
     }
 
 
-    public override void Deattach() { }
+    public override void Detach() { }
 
-    public override void Dispose()
-    {
+    public override void Dispose() {
       CaptureDeviceDriverStore.CaptureDeviceDriver.Dispose();
     }
 
-    public override void Draw(SpriteBatch spriteBatch, double deltaTime)
-    {
-      if (!characterFullView)
-      {
+    public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
+      if (!characterFullView) {
         spriteBatch.GraphicsDevice.Clear(Color.CornflowerBlue);
-      }
-      else
-      {
+      } else {
         spriteBatch.GraphicsDevice.Clear(SettingsStore.WindowTransparencyColor);
       }
 
       UIRoot.DrawUILayers(spriteBatch, deltaTime);
     }
 
-    public override void Update(double deltaTime)
-    {
+    public override void Update(double deltaTime) {
       // Set CharacterName Label      
-      if (CharacterStore.CurrentCharacter != null)
-      {
+      if (CharacterStore.CurrentCharacter != null) {
         characterNameLabel.Text = CharacterStore.CurrentCharacter.Name;
 
-      }
-      else { characterNameLabel.Text = "No character selected"; }
+      } else { characterNameLabel.Text = "No character selected"; }
 
       HeaderBar.Visible = !characterFullView;
       if (centerCharacterSplit.DockElement != null) centerCharacterSplit.DockElement.Visible = !characterFullView;
@@ -159,11 +146,9 @@ namespace LiVerse.Screens
       if (centerSplit.DockElement != null) centerSplit.DockElement.Visible = !characterFullView;
     }
 
-    void FullscreenViewToggle(KeyboardEvent keyboardEvent)
-    {
+    void FullscreenViewToggle(KeyboardEvent keyboardEvent) {
       // Check if toggle key has been pressed
-      if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.Escape) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.Escape))
-      {
+      if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.Escape) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.Escape)) {
         characterFullView = !characterFullView;
       }
     }

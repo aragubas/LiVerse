@@ -15,7 +15,7 @@ namespace LiVerse.AnaBanUI.Containers {
   public class DockFillContainer : ContainerBase {
     public ControlBase? DockElement { get; set; }
     public ControlBase? FillElement { get; set; }
-    public RectangleDrawable? BackgroundRectDrawble { get; set; }
+    public RectangleDrawable? BackgroundRectDrawable { get; set; }
     public float Gap { get; set; } = 0;
 
     /// <summary>
@@ -90,7 +90,7 @@ namespace LiVerse.AnaBanUI.Containers {
         DockElement.Size = new Vector2(DockElement.MinimumSize.X, ContentArea.Y);
         DockElement.RelativePosition = Vector2.Zero;
         DockElement.AbsolutePosition = AbsolutePosition + DockElement.RelativePosition;
-        
+
         FillElement.Size = new Vector2(ContentArea.X - DockElement.Size.X - Gap, ContentArea.Y);
         FillElement.RelativePosition = new Vector2(DockElement.Size.X + Gap, 0);
         FillElement.AbsolutePosition = AbsolutePosition + FillElement.RelativePosition;
@@ -127,7 +127,7 @@ namespace LiVerse.AnaBanUI.Containers {
     }
 
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
-      BackgroundRectDrawble?.Draw(spriteBatch, deltaTime, ContentArea, Vector2.Zero);
+      BackgroundRectDrawable?.Draw(spriteBatch, deltaTime, ContentArea, Vector2.Zero);
 
       DockElement?.Draw(spriteBatch, deltaTime);
       FillElement?.Draw(spriteBatch, deltaTime);

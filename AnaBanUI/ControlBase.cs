@@ -14,7 +14,7 @@ namespace LiVerse.AnaBanUI {
     public bool DrawDebugLines { get; set; } = false;
     /// A invisible control is invisible and doesn't process any events
     public bool Visible { get; set; } = true;
-#region Container Properties
+    #region Container Properties
     /// Backing field for Size
     protected Vector2 _size { get; set; }
 
@@ -34,6 +34,9 @@ namespace LiVerse.AnaBanUI {
       }
     }
 
+    /// <summary>
+    /// Total content area, <b>not</b> including margins
+    /// </summary>
     public Vector2 ContentArea { get => new Vector2(Size.X - Margin.X * 2, Size.Y - Margin.Y * 2); }
     public Vector2 Margin { get; set; } = Vector2.Zero;
 
@@ -64,7 +67,7 @@ namespace LiVerse.AnaBanUI {
     }
 
     public Vector2 RelativePosition { get; set; }
-    
+
     RectangleF _abosoluteArea = RectangleF.Empty;
     public RectangleF AbsoluteArea { get => _abosoluteArea; }
     #endregion

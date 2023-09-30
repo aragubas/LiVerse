@@ -8,7 +8,7 @@ namespace LiVerse.AnaBanUI.Containers {
   public enum ScrollableListDirection {
     Horizontal, Vertical
   }
-  
+
   public class ScrollableList : ContainerBase {
     public List<ControlBase> Elements { get; } = new();
     public RectangleDrawable? BackgroundRectDrawable { get; set; }
@@ -18,7 +18,7 @@ namespace LiVerse.AnaBanUI.Containers {
     public ScrollableListDirection ListDirection { get; set; } = ScrollableListDirection.Vertical;
 
     public ScrollableList() {
-      
+
     }
 
     void RecalculateUI() {
@@ -34,9 +34,9 @@ namespace LiVerse.AnaBanUI.Containers {
           element.RelativePosition = new Vector2(0, lastY);
           element.AbsolutePosition = AbsolutePosition + element.RelativePosition;
           element.ParentControl = this;
-          
+
           if (element.Size.X > minimumWidth) minimumWidth = element.Size.X + Margin.X;
-         
+
           lastY += element.Size.Y + Gap;
         }
 
@@ -49,9 +49,7 @@ namespace LiVerse.AnaBanUI.Containers {
         }
 
         MinimumSize = new Vector2(minimumWidth, lastY);
-      }
-
-      else if (ListDirection == ScrollableListDirection.Horizontal) {
+      } else if (ListDirection == ScrollableListDirection.Horizontal) {
         float minimumHeight = 0;
         float lastX = 0;
 
@@ -80,7 +78,7 @@ namespace LiVerse.AnaBanUI.Containers {
     }
 
     public override void UpdateUI(double deltaTime) {
-      RecalculateUI();      
+      RecalculateUI();
     }
 
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {

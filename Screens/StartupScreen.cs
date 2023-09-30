@@ -14,18 +14,18 @@ namespace LiVerse.Screens {
     Texture2D startupBannerTexture;
     double waitTimer = 0;
     double waitTime = 0.2;
-    
+
     static readonly Color clearColor = Color.FromNonPremultiplied(110, 110, 200, 255);
 
     public StartupScreen(ScreenManager screenManager) : base(screenManager) {
 #if DEBUG
-      waitTime = 0;
+      waitTime = 0.00016;
 #endif
 
       startupBannerTexture = ResourceManager.LoadTexture2DFromFile(Path.Combine(ResourceManager.DefaultContentPath, "Images", "startup_banner.png"), DefaultColorProcessors.PremultiplyAlpha);
     }
 
-    public override void Deattach() {
+    public override void Detach() {
       startupBannerTexture.Dispose();
     }
 

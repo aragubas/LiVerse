@@ -5,18 +5,22 @@ using LiVerse.Screens.MainScreenNested.SettingsScreenNested;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace LiVerse.Screens.MainScreenNested {  
-  public struct SettingsPage {
+namespace LiVerse.Screens.MainScreenNested
+{
+  public struct SettingsPage
+  {
     public string Title;
     public ControlBase SettingScreen;
   }
 
-  public struct SettingsCategory {
+  public struct SettingsCategory
+  {
     public string Title;
     public SettingsPage[] Pages;
   }
-  
-  public class SettingsScreen {
+
+  public class SettingsScreen
+  {
     public bool Active { get; set; } = true;
     UILayer UIRootLayer;
 
@@ -28,7 +32,8 @@ namespace LiVerse.Screens.MainScreenNested {
     DockFillContainer settingViewDockFill;
     Label currentPageTitle;
 
-    void LoadDefaultSettingsPages() {
+    void LoadDefaultSettingsPages()
+    {
       settingsCategories.Clear();
 
       SettingsCategory generalCategory = new();
@@ -47,23 +52,25 @@ namespace LiVerse.Screens.MainScreenNested {
       BuildSettings();
     }
 
-    void BuildSettings() {
+    void BuildSettings()
+    {
       categoriesSelectList.Elements.Clear();
 
-      bool isFirstPage = true;
-      foreach (var category in settingsCategories) {
+      foreach (var category in settingsCategories)
+      {
         Label categoryTitle = new(category.Title, 26, "Ubuntu") { Margin = new(8) };
         categoryTitle.Color = Color.Black;
 
         categoriesSelectList.Elements.Add(categoryTitle);
 
-        foreach(var page in category.Pages) {
+        foreach (var page in category.Pages)
+        {
           Button settingsPageButton = new(page.Title, buttonStyle: ButtonStyle.Selectable);
           settingsPageButton.Label.HorizontalAlignment = LabelHorizontalAlignment.Left;
           settingsPageButton.Click += new Action(() => { SelectCategory(settingsPageButton, page); });
 
-          if (settingsPageButton.Label.Text == "Graphics") {
-            isFirstPage = false;
+          if (settingsPageButton.Label.Text == "Graphics")
+          {
             SelectCategory(settingsPageButton, page);
           }
 
@@ -72,7 +79,8 @@ namespace LiVerse.Screens.MainScreenNested {
       }
     }
 
-    void SelectCategory(Button sender, SettingsPage page) {
+    void SelectCategory(Button sender, SettingsPage page)
+    {
       settingViewDockFill.FillElement = page.SettingScreen;
       settingViewDockFill.FillElement.Margin = new(8);
       currentPageTitle.Text = page.Title;
@@ -82,7 +90,8 @@ namespace LiVerse.Screens.MainScreenNested {
       lastSelectedPage = sender;
     }
 
-    public SettingsScreen() {
+    public SettingsScreen()
+    {
       UIRootLayer = new() { BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) } };
 
       DockFillContainer dockFill = new() { Margin = new Vector2(48), DockType = DockFillContainerDockType.Left };
@@ -96,10 +105,10 @@ namespace LiVerse.Screens.MainScreenNested {
       titleDockFill.FillElement = currentPageTitle;
       titleDockFill.DockElement = exitButton;
 
-      settingViewDockFill.BackgroundRectDrawble = new() { Color = Color.White };
+      settingViewDockFill.BackgroundRectDrawable = new() { Color = Color.White };
       settingViewDockFill.DockElement = titleDockFill;
 
-      dockFill.BackgroundRectDrawble = new() { Color = Color.FromNonPremultiplied(240, 240, 240, 255) };
+      dockFill.BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(240, 240, 240, 255) };
       dockFill.DockElement = categoriesSelectList;
       dockFill.FillElement = settingViewDockFill;
 
@@ -109,14 +118,18 @@ namespace LiVerse.Screens.MainScreenNested {
       LoadDefaultSettingsPages();
     }
 
-    private void UIRootLayer_KeyboardInputUpdateEvent(AnaBanUI.Events.KeyboardEvent obj) {
-      if (obj.NewKeyboardState.IsKeyUp(Keys.Escape) && obj.OldKeyboardState.IsKeyDown(Keys.Escape)) {
+    private void UIRootLayer_KeyboardInputUpdateEvent(AnaBanUI.Events.KeyboardEvent obj)
+    {
+      if (obj.NewKeyboardState.IsKeyUp(Keys.Escape) && obj.OldKeyboardState.IsKeyDown(Keys.Escape))
+      {
         ToggleUILayer();
       }
     }
 
-    public void ToggleUILayer() {
-      if (UIRoot.UILayers.Contains(UIRootLayer)) {
+    public void ToggleUILayer()
+    {
+      if (UIRoot.UILayers.Contains(UIRootLayer))
+      {
         UIRoot.UILayers.Remove(UIRootLayer);
         return;
       }

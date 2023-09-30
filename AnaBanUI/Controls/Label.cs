@@ -1,6 +1,5 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 
 namespace LiVerse.AnaBanUI.Controls {
   public enum LabelHorizontalAlignment {
@@ -60,6 +59,8 @@ namespace LiVerse.AnaBanUI.Controls {
     public LabelHorizontalAlignment HorizontalAlignment = LabelHorizontalAlignment.Center;
     public Vector2 FontArea = Vector2.Zero;
     public Vector2 ShadowOffset = Vector2.One;
+    public Vector2 TextPosition { get => textPosition; }
+    public SpriteFont Font { get => font; }
     SpriteFont? font;
     bool reBakeFont = true;
     bool reMeasureText = true;

@@ -4,8 +4,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace LiVerse.AnaBanUI {
-  public class UILayer {
+namespace LiVerse.AnaBanUI
+{
+  public class UILayer
+  {
     public ControlBase? RootElement { get; set; }
     public bool HasInputProcessing { get; set; } = true;
     public RectangleDrawable? BackgroundRectDrawable { get; set; }
@@ -15,30 +17,36 @@ namespace LiVerse.AnaBanUI {
     // States
     KeyboardState oldKeyboardState;
 
-    public UILayer() {
+    public UILayer()
+    {
       RootElement = null;
     }
 
-    public void Update(double deltaTime) {
+    public void Update(double deltaTime)
+    {
       RootElement?.Update(deltaTime);
     }
 
-    public void InputUpdate() {
-      PointerEvent latestMouseEvent = new() {
+    public void InputUpdate()
+    {
+      PointerEvent latestMouseEvent = new()
+      {
         PositionRect = UIRoot.MousePositionRectangle,
         DownRect = UIRoot.MouseDownRectangle,
         UpRect = UIRoot.MouseUpRectangle,
         Down = UIRoot.MouseDown
       };
       KeyboardState newState = Keyboard.GetState();
-      KeyboardEvent latestKeyboardEvent = new() {
+      KeyboardEvent latestKeyboardEvent = new()
+      {
         NewKeyboardState = newState,
         OldKeyboardState = oldKeyboardState
       };
 
       bool mouseEventConsumed = false;
       bool keyboardEventConsumed = false;
-      if (RootElement != null) {
+      if (RootElement != null)
+      {
         mouseEventConsumed = RootElement.InputUpdate(latestMouseEvent);
         keyboardEventConsumed = RootElement.InputUpdate(latestKeyboardEvent);
       }
@@ -49,8 +57,10 @@ namespace LiVerse.AnaBanUI {
       oldKeyboardState = Keyboard.GetState();
     }
 
-    public void Draw(SpriteBatch spriteBatch, double deltaTime) {
-      if (RootElement != null) {
+    public void Draw(SpriteBatch spriteBatch, double deltaTime)
+    {
+      if (RootElement != null)
+      {
         // Make Sure the RootElement fills the entire viewport
         Vector2 screenSize = new(spriteBatch.GraphicsDevice.Viewport.Width, spriteBatch.GraphicsDevice.Viewport.Height);
         RootElement.Size = screenSize;
@@ -60,7 +70,8 @@ namespace LiVerse.AnaBanUI {
         spriteBatch.Begin();
         BackgroundRectDrawable?.Draw(spriteBatch, deltaTime, screenSize, Vector2.Zero);
 
-        if (RootElement != null) {
+        if (RootElement != null)
+        {
           //RootElement.RenderOffset = new Vector2(10, 5);
         }
         RootElement.Draw(spriteBatch, deltaTime);

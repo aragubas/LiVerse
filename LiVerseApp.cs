@@ -6,9 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using System.Reflection;
 
-namespace LiVerse
-{
-    public class LiVerseApp : Game {
+namespace LiVerse {
+  public class LiVerseApp : Game {
     public static GraphicsDeviceManager? Graphics { get; set; }
     SpriteBatch spriteBatch;
     readonly ScreenManager screenManager;
@@ -44,12 +43,13 @@ namespace LiVerse
 #endif
 
       Window.AllowUserResizing = true;
+      Window.TextInput += OnWindowTextInput;
 
       // Creates the sprite batch
       if (Graphics == null) {
         throw new NullReferenceException("Could not create SpriteBatch, GraphicsDeviceManager is null");
       }
-      spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);        
+      spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
 
       // Load base resources
       ResourceManager.LoadBaseResources();
@@ -57,6 +57,10 @@ namespace LiVerse
       // Attach MainScreen to ScreenManager
       screenManager.AttachScreen(new StartupScreen(screenManager));
 
+    }
+
+    void OnWindowTextInput(object? sender, TextInputEventArgs args) {
+      UIRoot.UpdateWindowTextInput(args);
     }
 
     protected override void Update(GameTime gameTime) {
