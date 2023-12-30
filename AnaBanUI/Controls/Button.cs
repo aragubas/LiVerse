@@ -47,7 +47,7 @@ namespace LiVerse.AnaBanUI.Controls {
     bool wasHolding = false;
     double blinkTimer = 0;
 
-    public Button(string DefaultText, int defaultFontSize = 21, ButtonStyle buttonStyle = ButtonStyle.Default) {
+    public Button(string DefaultText, int defaultFontSize = 18, ButtonStyle buttonStyle = ButtonStyle.Default) {
       Label = new Label(DefaultText, defaultFontSize) { ParentControl = this };
       ButtonStyle = buttonStyle;
     }

@@ -34,11 +34,13 @@ namespace LiVerse.AnabanUI.Controls {
       background.Draw(spriteBatch, deltaTime, ContentArea, Vector2.Zero);
       textLabel.Draw(spriteBatch, deltaTime);
 
-      // Only draw text cursor is text size is greater than 0
+      // Only draw text cursor if text size is greater than 0
       if (Text.Length > 0) {
         Vector2 cursorOffset = textLabel.Font.MeasureString(Text.Substring(0, cursorPosition));
         Vector2 characterUnderCursor = textLabel.Font.MeasureString(Text.Substring(cursorPosition == Text.Length ? Text.Length - 1 : cursorPosition, 1));
-        spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X + cursorOffset.X + characterUnderCursor.X, textLabel.TextPosition.Y, 1, characterUnderCursor.Y), Color.Red);
+        spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X + cursorOffset.X, textLabel.TextPosition.Y, 1, characterUnderCursor.Y), Color.Red);
+      }else {
+        spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X, textLabel.TextPosition.Y, 1, textLabel.FontSize), Color.Red);
       }
     }
 
@@ -46,10 +48,27 @@ namespace LiVerse.AnabanUI.Controls {
     }
 
     void OnTextInputEventUpdate(TextInputEventArgs args) {
+      return;
+      Console.WriteLine(args.Key);
+      
+      switch (args.Key) {
+        case Keys.Back: {
+          if (Text.Length < 1 || cursorPosition == 0) { return; }
+          Text = Text.Remove(cursorPosition - 1, 1);
+          textLabel.Text = Text;
+
+          MoveCarretLeft();
+          return;
+        }
+      }
+      
       if (textLabel.Font.Characters.Contains(args.Character)) {
-        int position = cursorPosition + 1 > Text.Length ? 0 : cursorPosition + 1;
+        // Place text in current cursor position, advance carret to the right
+        int position = cursorPosition > Text.Length ? Text.Length : cursorPosition;
         Text = Text.Insert(position, args.Character.ToString());
-        if (Text.Length > 1) { cursorPosition++; }
+
+        MoveCarretRight();
+
         textLabel.Text = Text;
       }
     }
@@ -61,31 +80,28 @@ namespace LiVerse.AnabanUI.Controls {
 
     void MoveCarretRight() {
       cursorPosition++;
-      if (cursorPosition > Text.Length - 1) { cursorPosition = Text.Length - 1; }
+      if (cursorPosition > Text.Length) { cursorPosition = Text.Length; }
     }
 
-    public override bool InputUpdate(KeyboardEvent keyboardEvent) {
-
-
+    public override bool InputUpdate(KeyboardEvent keyboardEvent) {      
+      if (keyboardEvent.PressedKeys.Length >= 1) {
+        foreach (var key in keyboardEvent.PressedKeys) {
+          Console.WriteLine(key);
+        }
+      }
+      
       if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.Left) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.Left)) {
         MoveCarretLeft();
 
       } else if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.Right) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.Right)) {
         MoveCarretRight();
 
-      } else if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.Back) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.Back) && Text.Length > 0) {
-        Text = Text.Remove(cursorPosition, 1);
-        textLabel.Text = Text;
-
-        cursorPosition--;
-        if (cursorPosition < 0) { cursorPosition = 0; }
-
       } else if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.Delete) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.Delete) && Text.Length > 1) {
         Text = Text.Remove(cursorPosition + 1, 1);
         textLabel.Text = Text;
 
         cursorPosition--;
-        if (cursorPosition < 0) { cursorPosition = 0; }
+        if (cursorPosition < 0) { cursorPosition = 0; }          
 
       }
 

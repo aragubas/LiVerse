@@ -40,7 +40,8 @@ namespace LiVerse.AnaBanUI
       KeyboardEvent latestKeyboardEvent = new()
       {
         NewKeyboardState = newState,
-        OldKeyboardState = oldKeyboardState
+        OldKeyboardState = oldKeyboardState,
+        PressedKeys = newState.GetPressedKeys()
       };
 
       bool mouseEventConsumed = false;

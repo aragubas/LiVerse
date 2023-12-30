@@ -78,7 +78,7 @@ namespace LiVerse.Screens {
       //settingsScreen.ToggleUILayer();
 
       newCharacterExpressionScreen = new();
-      newCharacterExpressionScreen.ToggleUILayer();
+      //newCharacterExpressionScreen.ToggleUILayer();
 
       // TODO: Remove hardcoded paths
       //CharacterStore.CurrentCharacter = new Character("Aragubas", new() {
