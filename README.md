@@ -1,7 +1,6 @@
 # LiVerse
-<center>
-	<img src="Assets/logo.svg" width="200px" />
-</center>
+<img src="Assets/logo.svg" width="200px" />
+
 LiVerse is a extensible, hackeable PNG Tuber app for streamers/content creators
 
 LiVerse is still in active development.
