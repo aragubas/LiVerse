@@ -78,33 +78,7 @@ namespace LiVerse.Screens {
       //settingsScreen.ToggleUILayer();
 
       newCharacterExpressionScreen = new();
-      //newCharacterExpressionScreen.ToggleUILayer();
-
-      // TODO: Remove hardcoded paths
-      //CharacterStore.CurrentCharacter = new Character("Aragubas", new() {
-      //  new ExpressionBuilder() {
-      //    Name = "default",
-      //    SpriteCollectionBuilder = new() {
-      //    Idle = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Fechada.png",
-      //    IdleBlink = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Fechada.png",
-      //    Speaking = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Boca Aberta.png",
-      //    SpeakingBlink = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Piscando Boca Aberta.png"
-      //  }
-      //}, new ExpressionBuilder() {
-      //    Name = "GRRR",
-      //    SpriteCollectionBuilder = new() {
-      //    Idle = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas GRRR Boca Fechada.png",
-      //    Speaking = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas GRRR Boca Aberta.png",
-      //  }
-      //}, new ExpressionBuilder() {
-      //    Name = "Triste",
-      //    SpriteCollectionBuilder = new() {
-      //    Idle = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Triste Boca Fechada.png",
-      //    Speaking = @"C:\Users\Ceira\Downloads\Telegram Desktop\Aragubas PNGTuber\Aragubas Triste Boca Aberta.png",
-      //  }
-      //},
-
-      //});
+      newCharacterExpressionScreen.ToggleUILayer();
 
     }
 
@@ -124,13 +98,9 @@ namespace LiVerse.Screens {
     }
 
     public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
-      if (!characterFullView) {
-        spriteBatch.GraphicsDevice.Clear(Color.CornflowerBlue);
-      } else {
-        spriteBatch.GraphicsDevice.Clear(SettingsStore.WindowTransparencyColor);
-      }
+        spriteBatch.GraphicsDevice.Clear(!characterFullView ? Color.CornflowerBlue : SettingsStore.WindowTransparencyColor);
 
-      UIRoot.DrawUILayers(spriteBatch, deltaTime);
+        UIRoot.DrawUILayers(spriteBatch, deltaTime);
     }
 
     public override void Update(double deltaTime) {

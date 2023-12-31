@@ -36,7 +36,7 @@ namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested {
       DockFill.DockElement = audioInputDeviceToggleTitle;
       DockFill.FillElement = audioDevicesComboBox;
 
-      Label audioDriverNameLabel = new($"Current Audio Driver: " +
+      Label audioDriverNameLabel = new($"Audio Driver: " +
         $"{(CaptureDeviceDriverStore.CaptureDeviceDriver == null ? "None" : CaptureDeviceDriverStore.CaptureDeviceDriver.DriverName)}") {
         Color = Color.Black,
         HorizontalAlignment = LabelHorizontalAlignment.Left,

@@ -15,7 +15,7 @@ namespace LiVerse {
 
     public static SpriteFont BakeFont(string fontName, int size) {
       string fontPath = Path.Combine(DefaultContentPath, "Fonts", fontName + ".ttf");
-      if (fontPath.EndsWith(".ttf.ttf")) fontPath.Replace(".ttf.ttf", ".ttf");
+      if (fontPath.EndsWith(".ttf.ttf")) fontPath = fontPath.Replace(".ttf.ttf", ".ttf");
       
       TtfFontBakerResult fontBakeResult = TtfFontBaker.Bake(File.ReadAllBytes(fontPath),
         size, 1024, 1024, new[] {
