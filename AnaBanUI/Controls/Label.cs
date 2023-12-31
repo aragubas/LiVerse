@@ -60,7 +60,7 @@ namespace LiVerse.AnaBanUI.Controls {
     public Vector2 FontArea = Vector2.Zero;
     public Vector2 ShadowOffset = Vector2.One;
     public Vector2 TextPosition { get => textPosition; }
-    public SpriteFont Font { get => font; }
+    public SpriteFont? Font { get => font; }
     SpriteFont? font;
     bool reBakeFont = true;
     bool reMeasureText = true;

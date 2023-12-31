@@ -4,6 +4,7 @@
     <TargetFramework>net8.0-windows7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<SelfContained>true</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +17,10 @@
     <!-- Copy Content Directory -->
     <None Include="ApplicationData/**" CopyToOutputDirectory="PreserveNewest" />
     
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ExtensionMethods\" />
   </ItemGroup>
 
 

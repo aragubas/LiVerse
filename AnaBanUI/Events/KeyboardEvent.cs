@@ -6,5 +6,6 @@ namespace LiVerse.AnaBanUI.Events {
     public KeyboardState NewKeyboardState { get; set; }
     public KeyboardState OldKeyboardState { get; set; }
     public Keys[] PressedKeys { get; set; }
+
   }
 }

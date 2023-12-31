@@ -36,12 +36,13 @@ namespace LiVerse.AnaBanUI
         UpRect = UIRoot.MouseUpRectangle,
         Down = UIRoot.MouseDown
       };
-      KeyboardState newState = Keyboard.GetState();
+
+      KeyboardState newKeyboardState = Keyboard.GetState();
       KeyboardEvent latestKeyboardEvent = new()
       {
-        NewKeyboardState = newState,
+        NewKeyboardState = newKeyboardState,
         OldKeyboardState = oldKeyboardState,
-        PressedKeys = newState.GetPressedKeys()
+        PressedKeys = newKeyboardState.GetPressedKeys()
       };
 
       bool mouseEventConsumed = false;
