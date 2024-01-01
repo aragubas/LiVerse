@@ -97,17 +97,13 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
       // works in a 0.0 - 1.0 scale
       if ((level / MaximumLevel) >= TriggerLevel) {
         MicrophoneTriggerLevelTriggered?.Invoke();
-        ActivationDelay = 1;
+        ActivationDelay = 1.1; // HACK: Fixes audio swinging when active
       }
     }
 
-    public void SetDefaultDevice() => SetDevice(new MMDeviceEnumerator().GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications));    
+    public void SetDefaultDevice() => SetDevice(new MMDeviceEnumerator().GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia));    
 
     public void Update(double deltaTime) {
-      if (ActivationDelay > 0) {
-        ActivationDelay -= 1 * deltaTime;
-      }
-
       if (ActivationDelay >= ActivationDelayTrigger) {
         if (!isMicrophoneLevelTriggered) {
           isMicrophoneLevelTriggered = true;
@@ -120,6 +116,10 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
         isMicrophoneLevelTriggered = false;
 
         MicrophoneLevelUntriggered?.Invoke();
+      }
+
+      if (ActivationDelay >= 0) {
+        ActivationDelay -= 1 * deltaTime;
       }
     }
 

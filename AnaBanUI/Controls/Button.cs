@@ -57,14 +57,8 @@ namespace LiVerse.AnaBanUI.Controls {
 
       Label.Draw(spriteBatch, deltaTime);
 
-      // Restore After drawing context switch
-      //EndDraw(spriteBatch);
-      //BeginDraw(spriteBatch);
-
       if (ButtonStyle == ButtonStyle.Default) spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), currentBorderColor);
       if (ButtonStyle == ButtonStyle.Selectable) spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, new Point(2, (int)Size.Y)), currentBorderColor);
-
-      //EndDraw(spriteBatch);
     }
 
     public override bool InputUpdate(PointerEvent pointerEvent) {
@@ -92,8 +86,7 @@ namespace LiVerse.AnaBanUI.Controls {
           if (!BlinkWhenPressed) {
             Click?.Invoke();
 
-        }
-        else {
+          } else {
             isBlinking = true;
 
             currentBackgroundColor = normalBackground;
@@ -123,7 +116,7 @@ namespace LiVerse.AnaBanUI.Controls {
       } else {
         currentBackgroundColor = currentTargetBackgroundColor;
         currentBorderColor = currentTargetBorderColor;
-      }      
+      }
     }
 
     public override void Update(double deltaTime) {
@@ -144,8 +137,7 @@ namespace LiVerse.AnaBanUI.Controls {
           blinkTimer = 0;
           blinkingEnd = true;
 
-        }
-        else if (blinkTimer >= 0.05) {
+        } else if (blinkTimer >= 0.025) {
           if (!blinkingEnd) {
             currentBackgroundColor = flatHoverBackground;
             currentBorderColor = downBorder;
@@ -153,8 +145,7 @@ namespace LiVerse.AnaBanUI.Controls {
             isMouseHovering = true;
             IsSelected = true;
 
-          }
-          else {
+          } else {
             blinkingEnd = false;
             isBlinking = false;
             isMouseHovering = false;
@@ -178,8 +169,7 @@ namespace LiVerse.AnaBanUI.Controls {
           currentTargetBorderColor = selectedBorder;
           currentForegroundColor = downForeground;
 
-        }
-        else if (ButtonStyle == ButtonStyle.Selectable && !IsSelected) {
+        } else if (ButtonStyle == ButtonStyle.Selectable && !IsSelected) {
           currentTargetBorderColor = unSelectedBorder;
         }
       }

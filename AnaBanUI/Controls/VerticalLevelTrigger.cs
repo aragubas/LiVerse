@@ -21,11 +21,10 @@ namespace LiVerse.AnaBanUI.Controls {
 
     // Colors
     // Will be moved to a proper theme file soon
-    static readonly Color backgroundColor = Color.FromNonPremultiplied(66, 100, 234, 100);
+    static readonly Color backgroundColor = Color.FromNonPremultiplied(66, 100, 234, 127);
     static readonly Color borderColor = Color.FromNonPremultiplied(50, 118, 234, 255);
     static readonly Color levelMeterColor = Color.FromNonPremultiplied(50, 150, 248, 255);
-    static readonly Color levelMeterDetailColor = Color.FromNonPremultiplied(50, 118, 234, 255);
-    static readonly Color peakMeterColor = Color.FromNonPremultiplied(255, 219, 230, 150);
+    static readonly Color peakMeterColor = Color.FromNonPremultiplied(0, 94, 188, 127);
     static readonly Color triggerMeterColor = Color.FromNonPremultiplied(5, 96, 150, 255);
     static readonly Color triggerActiveMeterColor = Color.FromNonPremultiplied(96, 15, 160, 255);
     static readonly Color triggerGrabbedMeterColor = Color.FromNonPremultiplied(196, 115, 260, 255);
@@ -67,10 +66,16 @@ namespace LiVerse.AnaBanUI.Controls {
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, Size), backgroundColor);
 
-      // Draw Level
+      // Draw Lines
+      int spacing = 12;
+      for (int y = 0; y < Size.Y / spacing; y++) {
+        spriteBatch.FillRectangle(new RectangleF(0, y * spacing, Size.X, 1), borderColor);
+      }
+
+      // Draw level
       spriteBatch.FillRectangle(new RectangleF(0, Size.Y - (Size.Y * ratio), Size.X, Size.Y * ratio), levelMeterColor);
-      // Draw Level Detail
-      spriteBatch.FillRectangle(new RectangleF(0, Size.Y - (Size.Y * ratio), Size.X, 1), levelMeterDetailColor);
+      // Draw level tip
+      spriteBatch.FillRectangle(new RectangleF(0, Size.Y - (Size.Y * ratio), Size.X, 1), borderColor);
 
       // Draw Peak
       if (ShowPeaks) {

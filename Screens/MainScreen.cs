@@ -36,7 +36,7 @@ namespace LiVerse.Screens {
       HeaderBar = new() { DockType = DockFillContainerDockType.Left };
       centerSplit = new() { DockType = DockFillContainerDockType.Left };
 
-      characterNameLabel = new("{character_name}", 21) { Color = Color.Black };
+      characterNameLabel = new("character name goes here", 20) { Color = Color.Black };
       Button settingsButton = new("Settings");
 
       HeaderBar.BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(249, 249, 249, 255), FillCenter = true };
@@ -74,12 +74,12 @@ namespace LiVerse.Screens {
       // Registers WindowRoot UILayer
       settingsScreen = new();
       settingsButton.Click += settingsScreen.ToggleUILayer;
-      UIRoot.UILayers.Add(WindowRoot);
       //settingsScreen.ToggleUILayer();
 
       newCharacterExpressionScreen = new();
       //newCharacterExpressionScreen.ToggleUILayer();
 
+      UIRoot.UILayers.Add(WindowRoot);
     }
 
     private void MicrophoneLevelMeter_MicrophoneLevelUntriggered() {
