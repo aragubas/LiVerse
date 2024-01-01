@@ -45,14 +45,17 @@ namespace LiVerse.AnabanUI.Controls {
 
       // Render text selection
       if (Text.Length > 0 && selectionActive && textLabel.Font != null) {
+        selectionFirstIndex = Math.Clamp(selectionFirstIndex, 0, Text.Length);
+        selectionLastIndex = Math.Clamp(selectionLastIndex, 0, Text.Length);
+
         Vector2 cursorOffset = textLabel.Font.MeasureString(Text.Substring(0, selectionFirstIndex));
         Vector2 cursorEndOffset = textLabel.Font.MeasureString(Text.Substring(0, selectionLastIndex));
         //Vector2 characterUnderCursor = textLabel.Font.MeasureString(Text.Substring(cursorPosition == Text.Length ? Text.Length - 1 : cursorPosition, 1));
 
-        spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X + cursorOffset.X, textLabel.TextPosition.Y, cursorEndOffset.X - cursorOffset.X, textLabel.FontSize), Color.Red);
+        spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X + cursorOffset.X, textLabel.TextPosition.Y, cursorEndOffset.X - cursorOffset.X, textLabel.FontSize), Color.Black);
       }
 
-
+      // Draw Text
       textLabel.Draw(spriteBatch, deltaTime);
 
       // Only draw text cursor if text size is greater than 0
@@ -69,7 +72,6 @@ namespace LiVerse.AnabanUI.Controls {
     public override void Update(double deltaTime) { }
 
     void OnTextInputEventUpdate(TextInputEventArgs args) {
-      Console.WriteLine(args.Key);
       switch (args.Key) {
         case Keys.Back: {
           if (Text.Length < 1 || cursorPosition == 0) { return; }
@@ -82,10 +84,17 @@ namespace LiVerse.AnabanUI.Controls {
         
         case Keys.Delete: {
           if (Text.Length < 1 || cursorPosition >= Text.Length) { return; }
+
+          if (selectionActive) {
+            Text = Text.Remove(selectionFirstIndex, Math.Abs(selectionFirstIndex - selectionLastIndex));
+            ResetSelection();
+
+            textLabel.Text = Text;
+            return;
+          }
+
           Text = Text.Remove(cursorPosition, 1);
           textLabel.Text = Text;
-
-          //MoveCursorRight();
           return;
         }
 
@@ -101,7 +110,14 @@ namespace LiVerse.AnabanUI.Controls {
 
       }
 
+      // Inserts character
       if (textLabel.Font != null && textLabel.Font.Characters.Contains(args.Character)) {
+        // If selection active, replace select with character
+        if (selectionActive) {
+          Text = Text.Remove(selectionFirstIndex, Math.Abs(selectionFirstIndex - selectionLastIndex));          
+          ResetSelection();
+        }
+        
         // Place text in current cursor position, advance carret to the right
         int position = cursorPosition > Text.Length ? Text.Length : cursorPosition;
         Text = Text.Insert(position, args.Character.ToString());
@@ -135,17 +151,79 @@ namespace LiVerse.AnabanUI.Controls {
       cursorPosition = Text.Length;
     }
 
+    void ResetSelection() {
+      selectionActive = false;
+      selectionFirstIndex = 0;
+      selectionLastIndex = 0;
+    }
+
+    void SelectLeft() {
+      if (!selectionActive) {
+        selectionActive = true;
+        selectionFirstIndex = cursorPosition;
+        selectionLastIndex = cursorPosition;
+      }
+
+      if (selectionFirstIndex < cursorPosition) {
+        selectionLastIndex = cursorPosition - 1;
+
+      } else {
+        selectionFirstIndex = cursorPosition - 1;
+      }
+
+      selectionFirstIndex = Math.Clamp(selectionFirstIndex, 0, Text.Length);
+      selectionLastIndex = Math.Clamp(selectionLastIndex, 0, Text.Length);
+
+      Console.Clear();
+      Console.WriteLine($"Cursor: {cursorPosition}");
+      Console.WriteLine($"First: {selectionFirstIndex}");
+      Console.WriteLine($"Last: {selectionLastIndex}");
+    }
+
+    void SelectRight() {
+      Console.Clear();
+      
+      if (!selectionActive) {
+        selectionActive = true;
+        selectionFirstIndex = cursorPosition;
+        selectionLastIndex = cursorPosition;
+      }
+
+      Console.WriteLine($"Before");
+      Console.WriteLine($"First: {selectionFirstIndex}");
+      Console.WriteLine($"Last: {selectionLastIndex}");
+
+      // Reverse Selection
+      if (selectionLastIndex > cursorPosition) {
+        selectionFirstIndex = cursorPosition + 1;
+      } else {
+        selectionLastIndex = cursorPosition + 1;
+      }
+
+      selectionFirstIndex = Math.Clamp(selectionFirstIndex, 0, Text.Length);
+      selectionLastIndex = Math.Clamp(selectionLastIndex, 0, Text.Length);
+
+      Console.WriteLine($"After");
+      Console.WriteLine($"Cursor: {cursorPosition}");
+      Console.WriteLine($"First: {selectionFirstIndex}");
+      Console.WriteLine($"Last: {selectionLastIndex}");
+    }
+
     public override bool InputUpdate(KeyboardEvent keyboardEvent) {
-      return false;
       if (keyboardEvent.PressedKeys.Length >= 1) {
         shiftModifier = false;
         foreach (var key in keyboardEvent.PressedKeys) {
+          // Only set if left shift or right shift keys are pressed and if
+          // shift modifier was null
           shiftModifier = (key == Keys.LeftShift || key == Keys.RightShift) && shiftModifier == false;
           
+          // Ignore left and right shift to not increase or change keyRepeat key
           if (key == Keys.LeftShift || key == Keys.RightShift) {
             continue;
           }
 
+          // Increases keyRepeatCount if current key is the same as repeatKey
+          // Otherwise, a new key has been pressed
           if (keyRepeatKey == key) {
             keyRepeatCount++;
           } else {
@@ -160,29 +238,52 @@ namespace LiVerse.AnabanUI.Controls {
         shiftModifier = false;
       }
 
-      Console.Clear();
-      Console.WriteLine($"shift: {shiftModifier}");
-      Console.WriteLine($"key: {keyRepeatKey}");
+      // Skips every 3 event frame to simulate key repeat
+      bool keyRepeatIntervalMet = (keyRepeatCount >= 25 && keyRepeatCount % 3 == 0);
 
+      if (keyboardEvent.PressedKeys.Contains(Keys.Left)) {
+        if ((keyRepeatKey == Keys.Left && keyRepeatCount == 0) || keyRepeatKey == Keys.Left && keyRepeatIntervalMet) {
+          if (shiftModifier) { SelectLeft(); } else { 
+            // Skips key if canceling selection
+            if (selectionActive) {
+              ResetSelection();
+              return true;
+            }
+            ResetSelection();
+          }
 
-      if ((keyRepeatKey == Keys.Left && keyRepeatCount == 0) || keyRepeatKey == Keys.Left && (keyRepeatCount >= 25 && keyRepeatCount % 3 == 0)) {
-        if (shiftModifier) {
-          Console.WriteLine("Shift + Left");
+          MoveCursorLeft();
         }
-        
-        MoveCursorLeft();
+      } else if (keyRepeatKey == Keys.Left) {
+        ResetKeyRepeat();
       }
 
-      else if ((keyRepeatKey == Keys.Right && keyRepeatCount == 0) || keyRepeatKey == Keys.Right && (keyRepeatCount >= 25 && keyRepeatCount % 3 == 0)) {
-        MoveCursorRight();
+      if (keyboardEvent.PressedKeys.Contains(Keys.Right)) {
+        if ((keyRepeatKey == Keys.Right && keyRepeatCount == 0) || keyRepeatKey == Keys.Right && keyRepeatIntervalMet) {
+          if (shiftModifier) { SelectRight(); } else {
+            // Skips key if canceling selection
+            if (selectionActive) {
+              ResetSelection();
+              return true;
+            }
+
+            ResetSelection();
+          }
+          
+          MoveCursorRight();          
+        }
+      } else if (keyRepeatKey == Keys.Right) {
+        ResetKeyRepeat();
       }
 
       if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.Home) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.Home)) {
         MoveCursorBeginning();
+        ResetKeyRepeat();
       }
 
       if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.End) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.End)) {
         MoveCursorEnd();
+        ResetKeyRepeat();
       }
 
       return true;

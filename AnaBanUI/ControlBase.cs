@@ -130,7 +130,6 @@ namespace LiVerse.AnaBanUI {
       EndDraw(spriteBatch);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void BeginDraw(SpriteBatch spriteBatch) {
       oldViewport = spriteBatch.GraphicsDevice.Viewport;
 
@@ -146,7 +145,6 @@ namespace LiVerse.AnaBanUI {
       spriteBatch.Begin(samplerState: SamplerState);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void EndDraw(SpriteBatch spriteBatch) {
       spriteBatch.End();
       spriteBatch.GraphicsDevice.Viewport = oldViewport;

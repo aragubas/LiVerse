@@ -97,7 +97,7 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
       // works in a 0.0 - 1.0 scale
       if ((level / MaximumLevel) >= TriggerLevel) {
         MicrophoneTriggerLevelTriggered?.Invoke();
-        ActivationDelay = 1.1; // HACK: Fixes audio swinging when active
+        ActivationDelay = 1.1; // HACK: Fixes level swinging when active
       }
     }
 

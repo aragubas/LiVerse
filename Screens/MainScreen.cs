@@ -71,15 +71,16 @@ namespace LiVerse.Screens {
 
       WindowRoot.KeyboardInputUpdateEvent += FullscreenViewToggle;
 
-      // Registers WindowRoot UILayer
+      // Adds WindowRoot UILayer
+      UIRoot.UILayers.Add(WindowRoot);
+
       settingsScreen = new();
       settingsButton.Click += settingsScreen.ToggleUILayer;
       //settingsScreen.ToggleUILayer();
 
       newCharacterExpressionScreen = new();
-      //newCharacterExpressionScreen.ToggleUILayer();
+      newCharacterExpressionScreen.ToggleUILayer();
 
-      UIRoot.UILayers.Add(WindowRoot);
     }
 
     private void MicrophoneLevelMeter_MicrophoneLevelUntriggered() {
