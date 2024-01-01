@@ -279,13 +279,51 @@ namespace LiVerse.AnabanUI.Controls {
       }
 
       if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.Home) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.Home)) {
-        MoveCursorBeginning();
         ResetKeyRepeat();
+
+        if (shiftModifier) {
+          selectionActive = true;
+
+          // If the cursor is at the left end of the text
+          // don't move the first and last indexes
+          // Avoids canceling the selection if the user presses
+          // Shift + Home again
+          if (cursorPosition != 0) {
+            selectionFirstIndex = 0;
+            selectionLastIndex = cursorPosition;
+          }
+
+        } else {
+          if (selectionActive) {
+            ResetSelection();
+          }
+        }
+
+        MoveCursorBeginning();
       }
 
       if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.End) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.End)) {
-        MoveCursorEnd();
         ResetKeyRepeat();
+
+        if (shiftModifier) {
+          selectionActive = true;
+          
+          // If the cursor is at the right end of the text
+          // don't move the first and last indexes
+          // Avoids canceling the selection if the user presses
+          // Shift + End again
+          if (cursorPosition != Text.Length) {
+            selectionFirstIndex = cursorPosition;
+            selectionLastIndex = Text.Length;
+          }
+
+        } else {
+          if (selectionActive) {
+            ResetSelection();
+          }
+        }
+
+        MoveCursorEnd();
       }
 
       return true;
