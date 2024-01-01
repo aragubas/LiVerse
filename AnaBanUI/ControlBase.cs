@@ -134,6 +134,7 @@ namespace LiVerse.AnaBanUI {
       oldViewport = spriteBatch.GraphicsDevice.Viewport;
 
       spriteBatch.End();
+      
       // Adds ParentControl's renderRelativePosition
       Vector2 renderOffset = RenderOffset;
       if (ParentControl != null) {

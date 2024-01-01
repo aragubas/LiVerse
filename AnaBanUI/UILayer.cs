@@ -72,11 +72,7 @@ namespace LiVerse.AnaBanUI
         spriteBatch.Begin();
         BackgroundRectDrawable?.Draw(spriteBatch, deltaTime, screenSize, Vector2.Zero);
 
-        if (RootElement != null)
-        {
-          //RootElement.RenderOffset = new Vector2(10, 5);
-        }
-        RootElement.Draw(spriteBatch, deltaTime);
+        RootElement?.Draw(spriteBatch, deltaTime);
 
         spriteBatch.End();
       }

@@ -210,17 +210,53 @@ namespace LiVerse.AnabanUI.Controls {
       selectionFirstIndex = Math.Clamp(selectionFirstIndex, 0, Text.Length);
       selectionLastIndex = Math.Clamp(selectionLastIndex, 0, Text.Length);
     }
+    
+    void SelectWordOnRight() {
+
+    }
+
+    void SelectWordOnLeft() {
+      int count = 0;
+      bool firstSpaceSkipped = false;
+      for(int i = cursorPosition - 1; i > -1; i--) {
+        char currentChar = Text[i];
+
+        if (currentChar != ' ') {
+          count++;
+        } else {
+          if (i - 1 > 0 && Text[i - 1] != ' ' && !firstSpaceSkipped && count == 0) {
+            firstSpaceSkipped = true;
+            count++;
+            continue;
+          }          
+          break;
+        }
+      }
+
+      if (!selectionActive) {
+        selectionActive = true;
+        selectionFirstIndex = cursorPosition - count;
+        selectionLastIndex = cursorPosition;
+
+      } else {
+        selectionFirstIndex = cursorPosition - count;        
+      }
+
+      cursorPosition = selectionFirstIndex;
+    }
+
 
     public override bool InputUpdate(KeyboardEvent keyboardEvent) {
       if (keyboardEvent.PressedKeys.Length >= 1) {
         shiftModifier = false;
         foreach (var key in keyboardEvent.PressedKeys) {
           // Only set if left shift or right shift keys are pressed and if
-          // shift modifier was null
+          // shift modifier was null; Same for CTRL key
           shiftModifier = (key == Keys.LeftShift || key == Keys.RightShift) && shiftModifier == false;
-          
-          // Ignore left and right shift to not increase or change keyRepeat key
-          if (key == Keys.LeftShift || key == Keys.RightShift) {
+
+          // Ignore left and right shift and ctrl to not increase or change keyRepeat key
+          if (key == Keys.LeftShift || key == Keys.RightShift 
+              || key == Keys.LeftControl || key == Keys.RightControl) {
             continue;
           }
 
@@ -243,10 +279,17 @@ namespace LiVerse.AnabanUI.Controls {
       // Skips every 3 event frame to simulate key repeat
       bool keyRepeatIntervalMet = (keyRepeatCount >= 25 && keyRepeatCount % 3 == 0);
 
+      // Left Arrow Key
       if (keyboardEvent.PressedKeys.Contains(Keys.Left)) {
         if ((keyRepeatKey == Keys.Left && keyRepeatCount == 0) || keyRepeatKey == Keys.Left && keyRepeatIntervalMet) {
+          if ((keyboardEvent.NewKeyboardState.IsKeyDown(Keys.LeftShift) || keyboardEvent.NewKeyboardState.IsKeyDown(Keys.RightShift)) &&
+              (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.LeftControl) || keyboardEvent.NewKeyboardState.IsKeyDown(Keys.RightControl))) {
+            SelectWordOnLeft();
+            return true;
+          }
+
           if (shiftModifier) { SelectLeft(); } else { 
-            // Skips key if canceling selection
+            // Skips key frame if canceling selection
             if (selectionActive) {
               ResetSelection();
               return true;
@@ -260,6 +303,7 @@ namespace LiVerse.AnabanUI.Controls {
         ResetKeyRepeat();
       }
 
+      // Right Arrow Key
       if (keyboardEvent.PressedKeys.Contains(Keys.Right)) {
         if ((keyRepeatKey == Keys.Right && keyRepeatCount == 0) || keyRepeatKey == Keys.Right && keyRepeatIntervalMet) {
           if (shiftModifier) { SelectRight(); } else {
@@ -278,6 +322,7 @@ namespace LiVerse.AnabanUI.Controls {
         ResetKeyRepeat();
       }
 
+      // Home Key
       if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.Home) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.Home)) {
         ResetKeyRepeat();
 
@@ -302,6 +347,7 @@ namespace LiVerse.AnabanUI.Controls {
         MoveCursorBeginning();
       }
 
+      // End Key
       if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.End) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.End)) {
         ResetKeyRepeat();
 
