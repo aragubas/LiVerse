@@ -11,9 +11,9 @@ Creating PR's in this early stage of the project won't be that much helpful, I'l
 The current branch is not guaranteed to be buildable
 
 ### Features:
+ - Lightweight and Scupted from Scratch
+ - Libre! Free and Open Source, licensed under the Apache 2.0 License
  - Extensible via plugins (not yet)
  - Built-in documentation (not yet)
- - Lightweight, made with Monogame to ensure good performance
- - Libre! Free and Open Source, licensed under the Apache 2.0 License
 
-*2023 by Aragubas and LiVerse Contributors*
+2023 by Taiyou
