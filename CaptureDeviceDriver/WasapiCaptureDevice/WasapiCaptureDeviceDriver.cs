@@ -3,8 +3,11 @@ using NAudio.Wave;
 
 namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
   public class WasapiCaptureDeviceDriver : ICaptureDeviceDriver {
+    // Maximum value observed from tests (playing sinewave at maximum volume)
+    static readonly float s_MaximumObservedValue = 0.99998856f;
+
     public float TriggerLevel { get; set; } = 0.45f;
-    public float MaximumLevel { get; set; } = 76.1f;
+    public float MaximumLevel { get; set; } = 100f;
     public double ActivationDelay { get; set; }
     public float ActivationDelayTrigger { get; set; } = 0.65f;
 
@@ -40,7 +43,7 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
         }
       }
 
-      Console.WriteLine($"[WasapiCaptureDeviceDriver->ChangeDeviceDevice] {device.DeviceName} not found.");
+      Console.WriteLine($"[WasapiCaptureDeviceDriver::ChangeDeviceDevice] {device.DeviceName} not found.");
     }
 
     public ICaptureDeviceInfo[] GetCaptureDevices() {
@@ -70,12 +73,12 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
       CurrentWasapiCaptureDevice.StartRecording();
 
       _currentCaptureDevice = new WasapiCaptureDeviceInfo(device.DeviceFriendlyName, device.DeviceTopology.DeviceId);
-      Console.WriteLine($"[WasapiCaptureDeviceDriver->SetDevice] {device.DeviceFriendlyName}");
+      Console.WriteLine($"[WasapiCaptureDeviceDriver::SetDevice] {device.DeviceFriendlyName}");
     }
 
     private void CurrentWasapiCaptureDevice_DataAvailable(object? sender, WaveInEventArgs e) {
       var buffer = new WaveBuffer(e.Buffer);
-      
+
       double sum = 0;
       for (int i = 0; i < e.BytesRecorded / 4; i++) {
         double sample = buffer.FloatBuffer[i];
@@ -83,11 +86,16 @@ namespace LiVerse.CaptureDeviceDriver.WasapiCaptureDevice {
         sum += sample * sample;
       }
       double rms = Math.Sqrt(sum / buffer.FloatBuffer.Length);
-      double levelDB = 92.8 + 20 * Math.Log10(rms);
+      double level = 92.8 + 20 * Math.Log10(rms);
+      
+      // Converts to 0 - 100 scale
+      level = Math.Clamp(level, 0, 100) / 81 * 100;
 
-      MicrophoneVolumeLevelUpdated?.Invoke(levelDB);
+      MicrophoneVolumeLevelUpdated?.Invoke(level);
 
-      if ((levelDB / MaximumLevel) >= TriggerLevel) {
+      // Converts level to 0 - 1 scale, since TriggerLevel
+      // works in a 0.0 - 1.0 scale
+      if ((level / MaximumLevel) >= TriggerLevel) {
         MicrophoneTriggerLevelTriggered?.Invoke();
         ActivationDelay = 1;
       }

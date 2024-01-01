@@ -98,9 +98,9 @@ namespace LiVerse.Screens {
     }
 
     public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
-        spriteBatch.GraphicsDevice.Clear(!characterFullView ? Color.CornflowerBlue : SettingsStore.WindowTransparencyColor);
+      spriteBatch.GraphicsDevice.Clear(!characterFullView ? Color.CornflowerBlue : SettingsStore.WindowTransparencyColor);
 
-        UIRoot.DrawUILayers(spriteBatch, deltaTime);
+      UIRoot.DrawUILayers(spriteBatch, deltaTime);
     }
 
     public override void Update(double deltaTime) {

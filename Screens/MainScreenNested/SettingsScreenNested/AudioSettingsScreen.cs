@@ -48,7 +48,7 @@ namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested {
 
     void ChangeAudioDevice(ComboBoxOption option) {
       if (option.ExtraData == null) {
-        Console.WriteLine("[UNDEFINED BEHAVIOUR]: (0x83092) AudioSettingsScreen->ChangeAudioDevice in option->ExtraData is null");
+        Console.WriteLine("[UNDEFINED BEHAVIOUR]: (0x83092) AudioSettingsScreen::ChangeAudioDevice in option::ExtraData is null");
         return;
       }
       CaptureDeviceDriverStore.CaptureDeviceDriver.ChangeDevice((ICaptureDeviceInfo)option.ExtraData);

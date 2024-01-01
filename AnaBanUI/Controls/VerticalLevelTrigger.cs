@@ -20,6 +20,7 @@ namespace LiVerse.AnaBanUI.Controls {
     float ratio = 0;
 
     // Colors
+    // Will be moved to a proper theme file soon
     static readonly Color backgroundColor = Color.FromNonPremultiplied(66, 100, 234, 100);
     static readonly Color borderColor = Color.FromNonPremultiplied(50, 118, 234, 255);
     static readonly Color levelMeterColor = Color.FromNonPremultiplied(50, 150, 248, 255);
@@ -44,14 +45,30 @@ namespace LiVerse.AnaBanUI.Controls {
         if (peakReset >= 3) {
           peakReset = 0;
           peakLevelTarget = CurrentValue / MaximumValue;
+          
         }
 
-        peakLevel = MathHelper.Lerp(peakLevel, peakLevelTarget, (float)(1 - Math.Pow(0.00005, deltaTime)));
+        //peakLevel = MathHelper.Lerp(peakLevel, peakLevelTarget, 0.0005f);
+        peakLevel = MathHelper.LerpPrecise(peakLevel, peakLevelTarget, (float)(1.0 - Math.Pow(0.005, deltaTime)));                  
       }
       #endregion
 
       // Calculate Level Ratio
       ratio = CurrentValue / MaximumValue;
+
+      // Makes sure the peakLevel is not behind ratio
+      if (ratio > peakLevelTarget) {
+        peakReset = 0;
+        peakLevelTarget = ratio;
+        peakLevel = ratio;
+      }
+    }
+
+    float InOutQuadBlend(float t) {
+      if (t <= 0.5f)
+        return 1.0f * t * t;
+      t -= 0.5f;
+      return 1.0f * t * (1.0f - t) + 0.5f;
     }
 
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
@@ -64,9 +81,9 @@ namespace LiVerse.AnaBanUI.Controls {
 
       // Draw Peak
       if (ShowPeaks) {
-        if (ratio > peakLevelTarget) { peakReset = 0; peakLevelTarget = ratio; peakLevel = ratio; }
-
-        spriteBatch.FillRectangle(new RectangleF(0, Size.Y - (Size.Y * peakLevel) - 1, Size.X, 2), peakMeterColor);
+        float peakY = Size.Y - (Size.Y * peakLevel) - 1;
+        peakY = Math.Clamp(peakY, 1, Size.Y - 1);
+        spriteBatch.FillRectangle(new RectangleF(0, peakY, Size.X, 2), peakMeterColor);
       }
 
       // Draw Trigger Level

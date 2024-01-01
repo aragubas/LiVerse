@@ -34,9 +34,9 @@ namespace LiVerse.Stores {
       } catch (Exception exception) {
         if (exception is JsonSerializationException || exception is JsonReaderException) {
           // File is corrupted, create a new one with default values
-          Console.WriteLine("[SettingsStore->Load] Serialization error while loading, replacing file with default values.");
+          Console.WriteLine("[SettingsStore::Load] Serialization error while loading, replacing file with default values.");
         } else {
-          Console.WriteLine("[SettingsStore->Load] Unknown error while loading, replacing file with default values.");
+          Console.WriteLine("[SettingsStore::Load] Unknown error while loading, replacing file with default values.");
         }
 
         LoadDefaultValues();
