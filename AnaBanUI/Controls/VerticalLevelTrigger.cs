@@ -64,13 +64,6 @@ namespace LiVerse.AnaBanUI.Controls {
       }
     }
 
-    float InOutQuadBlend(float t) {
-      if (t <= 0.5f)
-        return 1.0f * t * t;
-      t -= 0.5f;
-      return 1.0f * t * (1.0f - t) + 0.5f;
-    }
-
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, Size), backgroundColor);
 
