@@ -13,10 +13,10 @@ namespace LiVerse.AnabanUI.Controls {
     public string Text;
     Label textLabel;
     int cursorPosition = 0;
-    int selectionFirstIndex = 2;
-    int selectionLastIndex = 6;
+    int selectionFirstIndex = 0;
+    int selectionLastIndex = 0;
     int viewportXOffset = 0;
-    bool selectionActive = true;
+    bool selectionActive = false;
     bool shiftModifier = false;
     float keyRepeatCount = 0;
     Keys? keyRepeatKey = null;
@@ -74,7 +74,13 @@ namespace LiVerse.AnabanUI.Controls {
     void OnTextInputEventUpdate(TextInputEventArgs args) {
       switch (args.Key) {
         case Keys.Back: {
-          if (Text.Length < 1 || cursorPosition == 0) { return; }
+          if (selectionActive && Text.Length >= 1) {
+            DeleteSelection();
+            return;
+          }
+
+          if (Text.Length < 1 || cursorPosition == 0) { return; }          
+
           Text = Text.Remove(cursorPosition - 1, 1);
           textLabel.Text = Text;
 
@@ -86,10 +92,7 @@ namespace LiVerse.AnabanUI.Controls {
           if (Text.Length < 1 || cursorPosition >= Text.Length) { return; }
 
           if (selectionActive) {
-            Text = Text.Remove(selectionFirstIndex, Math.Abs(selectionFirstIndex - selectionLastIndex));
-            ResetSelection();
-
-            textLabel.Text = Text;
+            DeleteSelection();
             return;
           }
 
@@ -112,13 +115,10 @@ namespace LiVerse.AnabanUI.Controls {
 
       // Inserts character
       if (textLabel.Font != null && textLabel.Font.Characters.Contains(args.Character)) {
-        // If selection active, replace select with character
-        if (selectionActive) {
-          Text = Text.Remove(selectionFirstIndex, Math.Abs(selectionFirstIndex - selectionLastIndex));          
-          ResetSelection();
-        }
+        // If selection active, replace selection with character
+        if (selectionActive) { DeleteSelection(); }
         
-        // Place text in current cursor position, advance carret to the right
+        // Place character in current cursor position, advance carret to the right
         int position = cursorPosition > Text.Length ? Text.Length : cursorPosition;
         Text = Text.Insert(position, args.Character.ToString());
 
@@ -157,6 +157,24 @@ namespace LiVerse.AnabanUI.Controls {
       selectionLastIndex = 0;
     }
 
+    void DeleteSelection() {
+      if (!selectionActive) { return; }
+      bool deletingLeftFromRight = cursorPosition > selectionFirstIndex;
+      int count = Math.Abs(selectionFirstIndex - selectionLastIndex);
+
+      Text = Text.Remove(selectionFirstIndex, count);
+      ResetSelection();
+
+      // Move pointer if not deleting from left to right
+      if (deletingLeftFromRight) {
+        cursorPosition -= count;
+      }
+
+      cursorPosition = Math.Clamp(cursorPosition, 0, Text.Length);
+
+      textLabel.Text = Text;
+    }
+
     void SelectLeft() {
       if (!selectionActive) {
         selectionActive = true;
@@ -173,25 +191,14 @@ namespace LiVerse.AnabanUI.Controls {
 
       selectionFirstIndex = Math.Clamp(selectionFirstIndex, 0, Text.Length);
       selectionLastIndex = Math.Clamp(selectionLastIndex, 0, Text.Length);
-
-      Console.Clear();
-      Console.WriteLine($"Cursor: {cursorPosition}");
-      Console.WriteLine($"First: {selectionFirstIndex}");
-      Console.WriteLine($"Last: {selectionLastIndex}");
     }
 
     void SelectRight() {
-      Console.Clear();
-      
       if (!selectionActive) {
         selectionActive = true;
         selectionFirstIndex = cursorPosition;
         selectionLastIndex = cursorPosition;
       }
-
-      Console.WriteLine($"Before");
-      Console.WriteLine($"First: {selectionFirstIndex}");
-      Console.WriteLine($"Last: {selectionLastIndex}");
 
       // Reverse Selection
       if (selectionLastIndex > cursorPosition) {
@@ -202,11 +209,6 @@ namespace LiVerse.AnabanUI.Controls {
 
       selectionFirstIndex = Math.Clamp(selectionFirstIndex, 0, Text.Length);
       selectionLastIndex = Math.Clamp(selectionLastIndex, 0, Text.Length);
-
-      Console.WriteLine($"After");
-      Console.WriteLine($"Cursor: {cursorPosition}");
-      Console.WriteLine($"First: {selectionFirstIndex}");
-      Console.WriteLine($"Last: {selectionLastIndex}");
     }
 
     public override bool InputUpdate(KeyboardEvent keyboardEvent) {
