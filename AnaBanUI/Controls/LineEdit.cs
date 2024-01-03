@@ -212,7 +212,33 @@ namespace LiVerse.AnabanUI.Controls {
     }
     
     void SelectWordOnRight() {
+      int count = 0;
+      bool firstSpaceSkipped = false;
+      for (int i = cursorPosition; i < Text.Length; i++) {
+        char currentChar = Text[i];
 
+        if (currentChar != ' ') {
+          count++;
+        } else {
+          if (i + 1 > 0 && Text[i + 1] != ' ' && !firstSpaceSkipped && count == 0) {
+            firstSpaceSkipped = true;
+            count++;
+            continue;
+          }
+          break;
+        }
+      }
+
+      if (!selectionActive) {
+        selectionActive = true;
+        selectionFirstIndex = cursorPosition;
+        selectionLastIndex = cursorPosition + count;
+
+      } else {
+        selectionLastIndex = cursorPosition + count;
+      }
+
+      cursorPosition = selectionLastIndex;
     }
 
     void SelectWordOnLeft() {
@@ -282,6 +308,7 @@ namespace LiVerse.AnabanUI.Controls {
       // Left Arrow Key
       if (keyboardEvent.PressedKeys.Contains(Keys.Left)) {
         if ((keyRepeatKey == Keys.Left && keyRepeatCount == 0) || keyRepeatKey == Keys.Left && keyRepeatIntervalMet) {
+          // Check if Shift and Control are pressed at the same time, for both right and left
           if ((keyboardEvent.NewKeyboardState.IsKeyDown(Keys.LeftShift) || keyboardEvent.NewKeyboardState.IsKeyDown(Keys.RightShift)) &&
               (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.LeftControl) || keyboardEvent.NewKeyboardState.IsKeyDown(Keys.RightControl))) {
             SelectWordOnLeft();
@@ -306,6 +333,13 @@ namespace LiVerse.AnabanUI.Controls {
       // Right Arrow Key
       if (keyboardEvent.PressedKeys.Contains(Keys.Right)) {
         if ((keyRepeatKey == Keys.Right && keyRepeatCount == 0) || keyRepeatKey == Keys.Right && keyRepeatIntervalMet) {
+          // Check if Shift and Control are pressed at the same time, for both right and left
+          if ((keyboardEvent.NewKeyboardState.IsKeyDown(Keys.LeftShift) || keyboardEvent.NewKeyboardState.IsKeyDown(Keys.RightShift)) &&
+              (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.LeftControl) || keyboardEvent.NewKeyboardState.IsKeyDown(Keys.RightControl))) {
+            SelectWordOnRight();
+            return true;
+          }
+
           if (shiftModifier) { SelectRight(); } else {
             // Skips key if canceling selection
             if (selectionActive) {
