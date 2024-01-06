@@ -141,15 +141,15 @@ namespace LiVerse.AnaBanUI {
         renderOffset = RenderOffset + ParentControl._renderRelativePosition;
       }
       _renderRelativePosition = renderOffset;
-      spriteBatch.GraphicsDevice.Viewport = new Viewport((int)(AbsolutePosition.X + renderOffset.X), (int)(AbsolutePosition.Y + renderOffset.Y), (int)Size.X, (int)Size.Y);
+      spriteBatch.GraphicsDevice.Viewport = new Viewport((int)AbsolutePosition.X, (int)AbsolutePosition.Y, (int)Size.X, (int)Size.Y);
 
-      spriteBatch.Begin(samplerState: SamplerState);
+      spriteBatch.Begin(samplerState: SamplerState, transformMatrix: Matrix.CreateTranslation(new Vector3(renderOffset.X, renderOffset.Y, 0)));
     }
 
     public void EndDraw(SpriteBatch spriteBatch) {
       spriteBatch.End();
       spriteBatch.GraphicsDevice.Viewport = oldViewport;
-      spriteBatch.Begin();
+      spriteBatch.Begin(samplerState: SamplerState);
     }
 
     /// <summary>

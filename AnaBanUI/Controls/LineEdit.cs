@@ -12,7 +12,19 @@ namespace LiVerse.AnabanUI.Controls {
     RectangleDrawable background;
     public string Text;
     Label textLabel;
-    int cursorPosition = 0;
+    int _cursorPosition = 0;
+    int cursorPosition { 
+      get => _cursorPosition; 
+      set {
+        if (value == _cursorPosition) { return; }
+        _cursorPosition = value;
+        if (_cursorPosition > Text.Length) { _cursorPosition = Text.Length; }
+        if (_cursorPosition < 0) { _cursorPosition = 0; }
+
+        UpdateViewportOffset();
+      }
+    }
+
     int selectionFirstIndex = 0;
     int selectionLastIndex = 0;
     float viewportXOffset = 0;
@@ -62,13 +74,16 @@ namespace LiVerse.AnabanUI.Controls {
       textLabel.RenderOffset = new Vector2(viewportXOffset, textLabel.RenderOffset.Y);
       textLabel.Draw(spriteBatch, deltaTime);
 
-      // Only draw text cursor if text size is greater than 0
+      spriteBatch.End();
+      spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(new Vector3(viewportXOffset, 0, 0)));
+
+      // Only draw text cursor if text size is greater than 0 and label contains font
       if (Text.Length > 0 && textLabel.Font != null) {
         Vector2 cursorOffset = textLabel.Font.MeasureString(Text.Substring(0, cursorPosition));
         Vector2 characterUnderCursor = textLabel.Font.MeasureString(Text.Substring(cursorPosition == Text.Length ? Text.Length - 1 : cursorPosition, 1));
+
         spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X + cursorOffset.X, textLabel.TextPosition.Y, 1, characterUnderCursor.Y), Color.Red);
-        
-        viewportXOffset = cursorOffset.X;
+
       } else {
         spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X, textLabel.TextPosition.Y, 1, textLabel.FontSize), Color.Red);
       }
@@ -277,6 +292,49 @@ namespace LiVerse.AnabanUI.Controls {
       cursorPosition = selectionFirstIndex;
     }
 
+    private void UpdateViewportOffset() {
+      if (textLabel.Font != null) {
+        Vector2 textTotalSize = textLabel.Font.MeasureString(Text);
+        
+        // Entire text fits inside content area, no need to scroll
+        if (textTotalSize.X < ContentArea.X) {
+          viewportXOffset = 0;
+          return;
+        }
+        
+        Vector2 cursorOffset = textLabel.Font.MeasureString(Text.Substring(0, cursorPosition));
+        float contentAreaXTranslated = ContentArea.X + viewportXOffset;
+        float translatedCursorOffset = ContentArea.X - cursorOffset.X;
+
+        Console.Clear();
+        if (translatedCursorOffset < viewportXOffset) {
+          viewportXOffset = ContentArea.X - cursorOffset.X - (ContentArea.X / 2);
+          Console.WriteLine("More");
+        }
+
+        if (Math.Abs(viewportXOffset) > cursorOffset.X) {
+          viewportXOffset = -(cursorOffset.X - (ContentArea.X / 2));
+          Console.WriteLine("Less");
+        }
+        Console.WriteLine($"beforeProcessing; viewportXOffset: {viewportXOffset}");
+
+
+        if (viewportXOffset > 0) { viewportXOffset = 0; }
+        if (viewportXOffset < ContentArea.X - textTotalSize.X) { viewportXOffset = ContentArea.X - textTotalSize.X; }
+
+        Console.WriteLine($"viewportXOffset: {viewportXOffset}");
+        Console.WriteLine($"ContentArea: {ContentArea.X}");
+        Console.WriteLine($"cursorOffset: {cursorOffset.X}");
+        Console.WriteLine($"translatedCursorOffset: {translatedCursorOffset}");
+        Console.WriteLine($"contentAreaTranslated: {contentAreaXTranslated}");
+      } else {
+        viewportXOffset = 0;
+      }
+    }
+
+    protected override void ElementSizeChanged() {
+      UpdateViewportOffset();
+    }
 
     public override bool InputUpdate(KeyboardEvent keyboardEvent) {
       if (keyboardEvent.PressedKeys.Length >= 1) {
@@ -307,6 +365,7 @@ namespace LiVerse.AnabanUI.Controls {
         ResetKeyRepeat();
         shiftModifier = false;
       }
+
 
       // Skips every 3 event frame to simulate key repeat
       bool keyRepeatIntervalMet = (keyRepeatCount >= 25 && keyRepeatCount % 3 == 0);
