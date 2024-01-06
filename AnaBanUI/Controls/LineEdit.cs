@@ -15,7 +15,7 @@ namespace LiVerse.AnabanUI.Controls {
     int cursorPosition = 0;
     int selectionFirstIndex = 0;
     int selectionLastIndex = 0;
-    int viewportXOffset = 0;
+    float viewportXOffset = 0;
     bool selectionActive = false;
     bool shiftModifier = false;
     float keyRepeatCount = 0;
@@ -43,6 +43,9 @@ namespace LiVerse.AnabanUI.Controls {
     public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
       background.Draw(spriteBatch, deltaTime, ContentArea, Vector2.Zero);
 
+      spriteBatch.End();
+      spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(new Vector3(viewportXOffset, 0, 0)));
+
       // Render text selection
       if (Text.Length > 0 && selectionActive && textLabel.Font != null) {
         selectionFirstIndex = Math.Clamp(selectionFirstIndex, 0, Text.Length);
@@ -56,6 +59,7 @@ namespace LiVerse.AnabanUI.Controls {
       }
 
       // Draw Text
+      textLabel.RenderOffset = new Vector2(viewportXOffset, textLabel.RenderOffset.Y);
       textLabel.Draw(spriteBatch, deltaTime);
 
       // Only draw text cursor if text size is greater than 0
@@ -63,6 +67,8 @@ namespace LiVerse.AnabanUI.Controls {
         Vector2 cursorOffset = textLabel.Font.MeasureString(Text.Substring(0, cursorPosition));
         Vector2 characterUnderCursor = textLabel.Font.MeasureString(Text.Substring(cursorPosition == Text.Length ? Text.Length - 1 : cursorPosition, 1));
         spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X + cursorOffset.X, textLabel.TextPosition.Y, 1, characterUnderCursor.Y), Color.Red);
+        
+        viewportXOffset = cursorOffset.X;
       } else {
         spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X, textLabel.TextPosition.Y, 1, textLabel.FontSize), Color.Red);
       }

@@ -15,7 +15,7 @@ namespace LiVerse.Screens.MainScreenNested {
       DockFillContainer mainDockFillContainer = new() { Margin = new Vector2(40), BackgroundRectDrawable = new() { Color = Color.White } };
       Label titleLabel = new("New Expression", 28, "Ubuntu") { Color = Color.Black };
 
-      LineEdit lineEdit = new("The quick brown fox jumps over the lazy dog");
+      LineEdit lineEdit = new("The quick brown fox jumps over the lazy dog The quick brown fox jumps over the lazy dog The quick brown fox jumps over the lazy dog ");
 
       mainDockFillContainer.DockElement = titleLabel;
       mainDockFillContainer.FillElement = lineEdit;

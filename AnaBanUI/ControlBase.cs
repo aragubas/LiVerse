@@ -141,7 +141,7 @@ namespace LiVerse.AnaBanUI {
         renderOffset = RenderOffset + ParentControl._renderRelativePosition;
       }
       _renderRelativePosition = renderOffset;
-      spriteBatch.GraphicsDevice.Viewport = new Viewport((int)(AbsolutePosition.X + renderOffset.X), (int)(AbsolutePosition.Y + renderOffset.X), (int)Size.X, (int)Size.Y);
+      spriteBatch.GraphicsDevice.Viewport = new Viewport((int)(AbsolutePosition.X + renderOffset.X), (int)(AbsolutePosition.Y + renderOffset.Y), (int)Size.X, (int)Size.Y);
 
       spriteBatch.Begin(samplerState: SamplerState);
     }
