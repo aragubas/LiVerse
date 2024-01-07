@@ -2,13 +2,10 @@
 using LiVerse.AnaBanUI.Containers;
 using LiVerse.AnaBanUI.Controls;
 using LiVerse.AnaBanUI.Events;
-using LiVerse.CharacterRenderer;
 using LiVerse.Screens.MainScreenNested;
 using LiVerse.Stores;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended.Screens;
 
 namespace LiVerse.Screens;
 
@@ -46,10 +43,10 @@ public class MainScreen : ScreenBase {
     HeaderBar = new() { DockType = DockFillContainerDockDirection.Left };
     centerSplit = new() { DockType = DockFillContainerDockDirection.Left };
 
-    characterNameLabel = new("character name goes here", 20) { Color = Color.Black };
+    characterNameLabel = new("character name goes here", 20);
     Button settingsButton = new("Settings");
 
-    HeaderBar.BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(249, 249, 249, 255), FillCenter = true };
+    HeaderBar.BackgroundRectDrawable = new() { Color = ColorScheme.ForegroundLevel0, FillCenter = true };
     HeaderBar.DockElement = settingsButton;
     HeaderBar.FillElement = characterNameLabel;
 
@@ -57,7 +54,7 @@ public class MainScreen : ScreenBase {
     characterRenderer = new();
 
     // Create CenterCharacterSplit
-    centerCharacterSplit = new() { DockType = DockFillContainerDockDirection.Bottom, Margin = new(6) };
+    centerCharacterSplit = new() { DockType = DockFillContainerDockDirection.Bottom, Margin = new(8) };
     centerCharacterSplit.FillElement = characterRenderer;
 
     // Create CharacterExpressionsPanel
@@ -93,11 +90,10 @@ public class MainScreen : ScreenBase {
 
     settingsScreen = new();
     settingsButton.Click += settingsScreen.ToggleUILayer;
-    //settingsScreen.ToggleUILayer();
+    settingsScreen.ToggleUILayer();
 
     newCharacterExpressionScreen = new();
-    newCharacterExpressionScreen.ToggleUILayer();
-
+    //newCharacterExpressionScreen.ToggleUILayer();
   }
 
   private void MicrophoneLevelMeter_MicrophoneLevelUntriggered() {
@@ -116,7 +112,7 @@ public class MainScreen : ScreenBase {
   }
 
   public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
-    spriteBatch.GraphicsDevice.Clear(!characterFullView ? Color.CornflowerBlue : SettingsStore.WindowTransparencyColor);
+    spriteBatch.GraphicsDevice.Clear(!characterFullView ? ColorScheme.BackgroundLevel0 : SettingsStore.WindowTransparencyColor);
 
     UIRoot.DrawUILayers(spriteBatch, deltaTime);
   }

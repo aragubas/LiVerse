@@ -39,12 +39,12 @@ public class LineEdit : ControlBase {
   double cursorBlinkDelay = 0;
 
   // TODO: Move this to a proper theme file
-  static readonly Color s_BackgroundNormalColor = Color.FromNonPremultiplied(43, 33, 54, 255);
-  static readonly Color s_BackgroundEnabledColor = Color.FromNonPremultiplied(48, 36, 61, 255);
+  static readonly Color s_BackgroundNormalColor = ColorScheme.ControlBackground;
+  static readonly Color s_BackgroundEnabledColor = ColorScheme.ControlForegroundHover;
   static readonly Color s_ForegroundNormalColor = Color.FromNonPremultiplied(230, 230, 230, 200);
   static readonly Color s_ForegroundEnabledColor = Color.FromNonPremultiplied(250, 250, 250, 255);
-  static readonly Color s_SelectionColor = Color.FromNonPremultiplied(150, 85, 194, 255);
-  static readonly Color s_TextCursorColor = Color.FromNonPremultiplied(237, 62, 65, 255);
+  static readonly Color s_SelectionColor = ColorScheme.ControlHightlight;
+  static readonly Color s_TextCursorColor = ColorScheme.RedAccent;
   // TODO: Invert colors of TextCursor usando Blend State
   //static readonly BlendState s_CursorBlendState = new BlendState() {
   //  ColorSourceBlend = Blend.Zero,

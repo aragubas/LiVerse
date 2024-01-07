@@ -23,13 +23,20 @@ public class WindowTransparencyColorSettings : ControlBase {
   Slider bSlider;
 
   public WindowTransparencyColorSettings() {
-    optionsList = new() { ParentControl = this, Gap = 4 };
+    optionsList = new() { 
+      ParentControl = this, 
+      Gap = 8 
+    };
 
-    DockFillContainer DockFillTransparencyType = new() { ParentControl = this, DockType = DockFillContainerDockDirection.Left, Gap = 6 };
-    Label backgroundTransparencyTypeTitleLabel = new("Background Transparency Type:") { Color = Color.Black };
+    DockFillContainer DockFillTransparencyType = new() { 
+      ParentControl = this, 
+      DockType = DockFillContainerDockDirection.Left, 
+      Gap = 8
+    };
+    Label backgroundTransparencyTypeTitleLabel = new("Background Transparency Type:");
     List<ComboBoxOption> options = new();
     ComboBoxOption defaultOption = new();
-
+    
     if (SettingsStore.WindowTransparencyColor == Color.Transparent) {
       defaultOption.OptionText = "Transparent";
       defaultOption.ExtraData = 0;
@@ -65,49 +72,53 @@ public class WindowTransparencyColorSettings : ControlBase {
 
     optionsList.Elements.Add(DockFillTransparencyType);
 
-    dockFillCustomColor = new() { Gap = 8f, DockType = DockFillContainerDockDirection.Right };
-    ScrollableList rgbSlidersList = new() { Gap = 4f };
+    dockFillCustomColor = new() { 
+      Gap = 8f, 
+      DockType = DockFillContainerDockDirection.Right 
+    };
+    ScrollableList rgbSlidersList = new() { Gap = 8f };
 
-    DockFillContainer rSliderDockFill = new() { DockType = DockFillContainerDockDirection.Left, Gap = 4 };
+    DockFillContainer rSliderDockFill = new() { DockType = DockFillContainerDockDirection.Left, Gap = 8 };
     rSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     rSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
-    rSliderDockFill.DockElement = new Label("R:") { Color = Color.Black };
+    rSliderDockFill.DockElement = new Label("R:");
     rSliderDockFill.FillElement = rSlider;
 
     rgbSlidersList.Elements.Add(rSliderDockFill);
 
-    DockFillContainer gSliderDockFill = new() { DockType = DockFillContainerDockDirection.Left, Gap = 2 };
+    DockFillContainer gSliderDockFill = new() { DockType = DockFillContainerDockDirection.Left, Gap = 8 };
     gSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     gSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
-    gSliderDockFill.DockElement = new Label("G:") { Color = Color.Black };
+    gSliderDockFill.DockElement = new Label("G:");
     gSliderDockFill.FillElement = gSlider;
 
     rgbSlidersList.Elements.Add(gSliderDockFill);
 
-    DockFillContainer bSliderDockFill = new() { DockType = DockFillContainerDockDirection.Left, Gap = 3 };
+    DockFillContainer bSliderDockFill = new() { DockType = DockFillContainerDockDirection.Left, Gap = 8 };
     bSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     bSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
-    bSliderDockFill.DockElement = new Label("B:") { Color = Color.Black };
+    bSliderDockFill.DockElement = new Label("B:");
     bSliderDockFill.FillElement = bSlider;
 
     rgbSlidersList.Elements.Add(bSliderDockFill);
 
-    DockFillContainer colorPreviewDockFill = new() { Gap = 4f };
+    DockFillContainer colorPreviewDockFill = new() { Gap = 8f };
 
-    colorPreview = new(new Label("Preview", 24) { Margin = new Vector2(8), Color = Color.White, DrawShadow = true, ShadowColor = Color.Black }) { BackgroundColor = Color.Magenta };
-
-    //colorPreviewDockFill.DockElement = ;
-    //colorPreviewDockFill.FillElement = colorPreview;
+    colorPreview = new(
+      new Label("Preview", 24) { 
+        Margin = new Vector2(8), 
+        Color = Color.White, 
+        DrawShadow = true, 
+        ShadowColor = Color.Black 
+      }) { BackgroundColor = Color.Magenta };
 
     dockFillCustomColor.DockElement = colorPreview;
     dockFillCustomColor.FillElement = rgbSlidersList;
 
     optionsList.Elements.Add(dockFillCustomColor);
 
-    transparentBackgroudWarning = new Label("To use transparent background you will need to capture the window with alpha.\nin OBS you can use GameCapture for that, by enabling the alpha channel") { HorizontalAlignment = LabelHorizontalAlignment.Left, Color = Color.Black };
+    transparentBackgroudWarning = new Label("To use transparent background you will need to capture the window with alpha.\nin OBS you can use GameCapture for that, by enabling the alpha channel") { HorizontalAlignment = LabelHorizontalAlignment.Left };
     optionsList.Elements.Add(transparentBackgroudWarning);
-
-    //customColorPreview = SettingsStore.WindowTransparencyColor;
 
     // Load default values for the RGB sliders
     rSlider.CurrentValue = SettingsStore.WindowTransparencyColor.R;

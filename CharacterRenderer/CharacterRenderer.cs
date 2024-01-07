@@ -3,7 +3,6 @@ using LiVerse.CharacterRenderer.BuiltInAnimators;
 using LiVerse.Stores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 
 namespace LiVerse.CharacterRenderer; 
 public class CharacterRenderer : ControlBase {

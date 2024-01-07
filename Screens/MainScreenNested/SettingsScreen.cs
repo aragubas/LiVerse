@@ -7,20 +7,17 @@ using Microsoft.Xna.Framework.Input;
 
 namespace LiVerse.Screens.MainScreenNested;
 
-public struct SettingsPage
-{
+public struct SettingsPage {
   public string Title;
   public ControlBase SettingScreen;
 }
 
-public struct SettingsCategory
-{
+public struct SettingsCategory {
   public string Title;
   public SettingsPage[] Pages;
 }
 
-public class SettingsScreen
-{
+public class SettingsScreen {
   public bool Active { get; set; } = true;
   UILayer UIRootLayer;
 
@@ -32,8 +29,47 @@ public class SettingsScreen
   DockFillContainer settingViewDockFill;
   Label currentPageTitle;
 
-  void LoadDefaultSettingsPages()
-  {
+  public SettingsScreen() {
+    UIRootLayer = new() { BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) } };
+
+    DockFillContainer dockFill = new() {
+      Margin = new Vector2(48),
+      DockType = DockFillContainerDockDirection.Left
+    };
+    DockFillContainer titleDockFill = new() {
+      DockType = DockFillContainerDockDirection.Right
+    };
+
+    Button exitButton = new(" X ");
+    exitButton.Click += ToggleUILayer;
+
+    categoriesSelectList = new() { Gap = 2 };
+    settingViewDockFill = new();
+    currentPageTitle = new Label("No page selected", 28, "Ubuntu") {
+      Color = ColorScheme.TextNormal
+    };
+
+    titleDockFill.FillElement = currentPageTitle;
+    titleDockFill.DockElement = exitButton;
+
+    settingViewDockFill.BackgroundRectDrawable = new() {
+      Color = ColorScheme.ForegroundLevel0
+    };
+    settingViewDockFill.DockElement = titleDockFill;
+
+    dockFill.BackgroundRectDrawable = new() {
+      Color = ColorScheme.ForegroundLevel1
+    };
+    dockFill.DockElement = categoriesSelectList;
+    dockFill.FillElement = settingViewDockFill;
+
+    UIRootLayer.RootElement = dockFill;
+    UIRootLayer.KeyboardInputUpdateEvent += UIRootLayer_KeyboardInputUpdateEvent;
+
+    LoadDefaultSettingsPages();
+  }
+
+  void LoadDefaultSettingsPages() {
     settingsCategories.Clear();
 
     SettingsCategory generalCategory = new();
@@ -52,25 +88,23 @@ public class SettingsScreen
     BuildSettings();
   }
 
-  void BuildSettings()
-  {
+  void BuildSettings() {
     categoriesSelectList.Elements.Clear();
 
-    foreach (var category in settingsCategories)
-    {
-      Label categoryTitle = new(category.Title, 26, "Ubuntu") { Margin = new(8) };
-      categoryTitle.Color = Color.Black;
+    foreach (var category in settingsCategories) {
+      Label categoryTitle = new(category.Title, 26, "Ubuntu") {
+        Margin = new(8)
+      };
 
       categoriesSelectList.Elements.Add(categoryTitle);
 
-      foreach (var page in category.Pages)
-      {
+      foreach (var page in category.Pages) {
         Button settingsPageButton = new(page.Title, buttonStyle: ButtonStyle.Selectable);
         settingsPageButton.Label.HorizontalAlignment = LabelHorizontalAlignment.Left;
         settingsPageButton.Click += new Action(() => { SelectCategory(settingsPageButton, page); });
 
-        if (settingsPageButton.Label.Text == "Graphics")
-        {
+        // Select Graphics category as the default
+        if (settingsPageButton.Label.Text == "Graphics") {
           SelectCategory(settingsPageButton, page);
         }
 
@@ -79,8 +113,7 @@ public class SettingsScreen
     }
   }
 
-  void SelectCategory(Button sender, SettingsPage page)
-  {
+  void SelectCategory(Button sender, SettingsPage page) {
     settingViewDockFill.FillElement = page.SettingScreen;
     settingViewDockFill.FillElement.Margin = new(8);
     currentPageTitle.Text = page.Title;
@@ -90,46 +123,14 @@ public class SettingsScreen
     lastSelectedPage = sender;
   }
 
-  public SettingsScreen()
-  {
-    UIRootLayer = new() { BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) } };
-
-    DockFillContainer dockFill = new() { Margin = new Vector2(48), DockType = DockFillContainerDockDirection.Left };
-    DockFillContainer titleDockFill = new() { DockType = DockFillContainerDockDirection.Right };
-    Button exitButton = new(" X ");
-    exitButton.Click += ToggleUILayer;
-    categoriesSelectList = new() { Gap = 2 };
-    settingViewDockFill = new();
-    currentPageTitle = new Label("No page selected", 28, "Ubuntu") { Color = Color.Black };
-
-    titleDockFill.FillElement = currentPageTitle;
-    titleDockFill.DockElement = exitButton;
-
-    settingViewDockFill.BackgroundRectDrawable = new() { Color = Color.White };
-    settingViewDockFill.DockElement = titleDockFill;
-
-    dockFill.BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(240, 240, 240, 255) };
-    dockFill.DockElement = categoriesSelectList;
-    dockFill.FillElement = settingViewDockFill;
-
-    UIRootLayer.RootElement = dockFill;
-    UIRootLayer.KeyboardInputUpdateEvent += UIRootLayer_KeyboardInputUpdateEvent;
-
-    LoadDefaultSettingsPages();
-  }
-
-  private void UIRootLayer_KeyboardInputUpdateEvent(AnaBanUI.Events.KeyboardEvent obj)
-  {
-    if (obj.NewKeyboardState.IsKeyUp(Keys.Escape) && obj.OldKeyboardState.IsKeyDown(Keys.Escape))
-    {
+  private void UIRootLayer_KeyboardInputUpdateEvent(AnaBanUI.Events.KeyboardEvent obj) {
+    if (obj.NewKeyboardState.IsKeyUp(Keys.Escape) && obj.OldKeyboardState.IsKeyDown(Keys.Escape)) {
       ToggleUILayer();
     }
   }
 
-  public void ToggleUILayer()
-  {
-    if (UIRoot.UILayers.Contains(UIRootLayer))
-    {
+  public void ToggleUILayer() {
+    if (UIRoot.UILayers.Contains(UIRootLayer)) {
       UIRoot.UILayers.Remove(UIRootLayer);
       return;
     }

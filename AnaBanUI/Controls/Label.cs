@@ -53,7 +53,7 @@ public class Label : ControlBase {
     }
   }
 
-  public Color Color { get; set; } = Color.White;
+  public Color Color { get; set; } = ColorScheme.TextNormal;
   public Color ShadowColor { get; set; } = Color.Black;
   public LabelVerticalAlignment VerticalAlignment = LabelVerticalAlignment.Center;
   public LabelHorizontalAlignment HorizontalAlignment = LabelHorizontalAlignment.Center;

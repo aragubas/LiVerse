@@ -1,4 +1,5 @@
-﻿using LiVerse.AnaBanUI.Events;
+﻿using LiVerse.AnaBanUI;
+using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -19,9 +20,9 @@ public class Button : ControlBase {
   public Vector2 LabelPadding { get; set; } = new(10, 2);
 
   // Background Colors
-  static readonly Color normalBackground = Color.FromNonPremultiplied(48, 36, 61, 255);
-  static readonly Color hoverBackground = Color.FromNonPremultiplied(57, 43, 72, 255);
-  static readonly Color downBackground = Color.FromNonPremultiplied(43, 33, 54, 255);
+  static readonly Color normalBackground = ColorScheme.ControlBackground;
+  static readonly Color hoverBackground = ColorScheme.ControlForegroundHover;
+  static readonly Color downBackground = ColorScheme.ControlForegroundActive;
   static readonly Color selectedBackground = Color.FromNonPremultiplied(197, 215, 230, 255);
   static readonly Color flatHoverBackground = Color.FromNonPremultiplied(25, 126, 251, 255);
   Color currentTargetBackgroundColor = normalBackground;
@@ -50,8 +51,7 @@ public class Button : ControlBase {
 
   public Button(string DefaultText, int defaultFontSize = 18, ButtonStyle buttonStyle = ButtonStyle.Default) {
     Label = new Label(DefaultText, defaultFontSize) { 
-      ParentControl = this,
-      Color = Color.White
+      ParentControl = this
     };
     ButtonStyle = buttonStyle;
   }

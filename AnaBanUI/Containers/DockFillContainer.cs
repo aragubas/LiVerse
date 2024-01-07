@@ -19,7 +19,7 @@ public class DockFillContainer : ContainerBase {
   public float Gap { get; set; } = 0;
 
   /// <summary>
-  /// The location that the dock element will be placed
+  /// Where the dock element will be placed
   /// </summary>
   public DockFillContainerDockDirection DockType { get; set; }
 

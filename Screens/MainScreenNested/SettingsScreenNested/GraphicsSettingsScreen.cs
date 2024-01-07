@@ -13,7 +13,10 @@ public class GraphicsSettingsScreen : ControlBase {
   ScrollableList ScrollableList { get; }
 
   public GraphicsSettingsScreen() {
-    ScrollableList = new() { ParentControl = this, Gap = 6 };
+    ScrollableList = new() { 
+      ParentControl = this, 
+      Gap = 8 
+    };
 
     ScrollableList.Elements.Add(new WindowTransparencyColorSettings());
   }

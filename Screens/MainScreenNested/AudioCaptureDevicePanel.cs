@@ -10,10 +10,10 @@ using Newtonsoft.Json.Linq;
 namespace LiVerse.Screens.MainScreenNested; 
 public class AudioCaptureDevicePanel : ControlBase {
   // Static ReadOnly Fields
-  static readonly Color speakingIndicatorColor = Color.FromNonPremultiplied(8, 7, 5, 50);
-  static readonly Color speakingIndicatorActiveColor = Color.FromNonPremultiplied(230, 50, 75, 255);
-  static readonly Color speakingIndicatorLabelColor = Color.FromNonPremultiplied(255, 255, 255, 50);
-  static readonly Color speakingIndicatorActiveLabelColor = Color.FromNonPremultiplied(255, 255, 255, 255);
+  static readonly Color speakingIndicatorColor = ColorScheme.ControlBackgroundDisabled;
+  static readonly Color speakingIndicatorActiveColor = ColorScheme.RedAccent;
+  static readonly Color speakingIndicatorLabelColor = ColorScheme.TextDisabled;
+  static readonly Color speakingIndicatorActiveLabelColor = ColorScheme.TextActive;
 
   VerticalLevelTrigger micLevelTrigger;
   VerticalLevelTrigger levelDelayTrigger;
@@ -25,8 +25,8 @@ public class AudioCaptureDevicePanel : ControlBase {
     micLevelTrigger = new() { ShowPeaks = true, MaximumValue = 84 };
     levelDelayTrigger = new() { MaximumValue = 1 };
 
-    SideBySideContainer sideBySide = new() { Gap = 4f };
-    sideFillContainer = new() { DockType = DockFillContainerDockDirection.Bottom, Margin = new(6), Gap = 6, FillElement = sideBySide };
+    SideBySideContainer sideBySide = new() { Gap = 8f };
+    sideFillContainer = new() { DockType = DockFillContainerDockDirection.Bottom, Margin = new(8), Gap = 8, FillElement = sideBySide };
 
     sideBySide.Elements.Add(micLevelTrigger);
     sideBySide.Elements.Add(levelDelayTrigger);

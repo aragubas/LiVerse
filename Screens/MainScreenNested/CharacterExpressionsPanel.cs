@@ -4,11 +4,6 @@ using LiVerse.AnaBanUI.Controls;
 using LiVerse.AnaBanUI.Events;
 using LiVerse.Stores;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LiVerse.Screens.MainScreenNested; 
 public class CharacterExpressionsPanel : ControlBase {
@@ -19,7 +14,7 @@ public class CharacterExpressionsPanel : ControlBase {
 
   public CharacterExpressionsPanel() {
     optionsDockFill = new() { DockType = DockFillContainerDockDirection.Left, Gap = 8 };
-    expressionsList = new() { StretchElements = false, ListDirection = ScrollableListDirection.Horizontal, Gap = 4f };
+    expressionsList = new() { StretchElements = false, ListDirection = ScrollableListDirection.Horizontal, Gap = 8f };
 
     optionsDockFill.FillElement = expressionsList;
 

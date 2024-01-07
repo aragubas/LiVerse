@@ -14,10 +14,17 @@ public class AudioSettingsScreen : ControlBase {
   DockFillContainer DockFill { get; }
 
   public AudioSettingsScreen() {
-    ScrollableList = new() { ParentControl = this, Gap = 6 };
+    ScrollableList = new() { 
+      ParentControl = this, 
+      Gap = 8 
+    };
 
-    DockFill = new() { ParentControl = this, DockType = DockFillContainerDockDirection.Left, Gap = 6 };
-    Label audioInputDeviceToggleTitle = new("Input Device: ") { Color = Color.Black };
+    DockFill = new() { 
+      ParentControl = this, 
+      DockType = DockFillContainerDockDirection.Left, 
+      Gap = 8
+    };
+    Label audioInputDeviceToggleTitle = new("Input Device: ");
     List<ComboBoxOption> options = new();
 
     foreach (var captureDevice in CaptureDeviceDriverStore.CaptureDeviceDriver.GetCaptureDevices()) {
@@ -38,7 +45,6 @@ public class AudioSettingsScreen : ControlBase {
 
     Label audioDriverNameLabel = new($"Audio Driver: " +
       $"{(CaptureDeviceDriverStore.CaptureDeviceDriver == null ? "None" : CaptureDeviceDriverStore.CaptureDeviceDriver.DriverName)}") {
-      Color = Color.Black,
       HorizontalAlignment = LabelHorizontalAlignment.Left,
     };
 
