@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace LiVerse.AnaBanUI.Containers; 
-public enum DockFillContainerDockType {
+public enum DockFillContainerDockDirection {
   Top, Right, Bottom, Left
 }
 public enum DockFillContainerFillElementScalingStyle {
@@ -21,10 +21,10 @@ public class DockFillContainer : ContainerBase {
   /// <summary>
   /// The location that the dock element will be placed
   /// </summary>
-  public DockFillContainerDockType DockType { get; set; }
+  public DockFillContainerDockDirection DockType { get; set; }
 
   public DockFillContainer(ControlBase? dockElement = null, ControlBase? fillElement = null) {
-    DockType = DockFillContainerDockType.Top;
+    DockType = DockFillContainerDockDirection.Top;
 
     DockElement = dockElement;
     FillElement = fillElement;
@@ -52,7 +52,7 @@ public class DockFillContainer : ContainerBase {
       return;
     }
 
-    if (DockType == DockFillContainerDockType.Top) {
+    if (DockType == DockFillContainerDockDirection.Top) {
       DockElement.Size = new Vector2(ContentArea.X, DockElement.MinimumSize.Y); // Set element height to minimum size
       DockElement.RelativePosition = Vector2.Zero;
       DockElement.AbsolutePosition = AbsolutePosition;
@@ -70,7 +70,7 @@ public class DockFillContainer : ContainerBase {
       MinimumSize = new Vector2(minimumWidth, DockElement.MinimumSize.Y + FillElement.MinimumSize.Y + Gap);
     }
 
-    if (DockType == DockFillContainerDockType.Bottom) {
+    if (DockType == DockFillContainerDockDirection.Bottom) {
       FillElement.Size = new Vector2(ContentArea.X, ContentArea.Y - DockElement.Size.Y - Gap);
       FillElement.RelativePosition = Vector2.Zero;
       FillElement.AbsolutePosition = AbsolutePosition + FillElement.RelativePosition;
@@ -86,7 +86,7 @@ public class DockFillContainer : ContainerBase {
       MinimumSize = new Vector2(minimumWidth, FillElement.MinimumSize.Y + Margin.Y * 2 + DockElement.MinimumSize.Y + Margin.Y * 2 + Gap);
     }
 
-    if (DockType == DockFillContainerDockType.Left) {
+    if (DockType == DockFillContainerDockDirection.Left) {
       DockElement.Size = new Vector2(DockElement.MinimumSize.X, ContentArea.Y);
       DockElement.RelativePosition = Vector2.Zero;
       DockElement.AbsolutePosition = AbsolutePosition + DockElement.RelativePosition;
@@ -102,7 +102,7 @@ public class DockFillContainer : ContainerBase {
       MinimumSize = new Vector2(DockElement.MinimumSize.X + FillElement.MinimumSize.X, minimumHeight + Margin.Y);
     }
 
-    if (DockType == DockFillContainerDockType.Right) {
+    if (DockType == DockFillContainerDockDirection.Right) {
       FillElement.Size = new Vector2(ContentArea.X - DockElement.Size.X - Gap, ContentArea.Y);
       FillElement.RelativePosition = Vector2.Zero;
       FillElement.AbsolutePosition = AbsolutePosition + FillElement.RelativePosition;

@@ -94,8 +94,8 @@ public class SettingsScreen
   {
     UIRootLayer = new() { BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) } };
 
-    DockFillContainer dockFill = new() { Margin = new Vector2(48), DockType = DockFillContainerDockType.Left };
-    DockFillContainer titleDockFill = new() { DockType = DockFillContainerDockType.Right };
+    DockFillContainer dockFill = new() { Margin = new Vector2(48), DockType = DockFillContainerDockDirection.Left };
+    DockFillContainer titleDockFill = new() { DockType = DockFillContainerDockDirection.Right };
     Button exitButton = new(" X ");
     exitButton.Click += ToggleUILayer;
     categoriesSelectList = new() { Gap = 2 };

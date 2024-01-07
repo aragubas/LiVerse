@@ -25,7 +25,7 @@ public class WindowTransparencyColorSettings : ControlBase {
   public WindowTransparencyColorSettings() {
     optionsList = new() { ParentControl = this, Gap = 4 };
 
-    DockFillContainer DockFillTransparencyType = new() { ParentControl = this, DockType = DockFillContainerDockType.Left, Gap = 6 };
+    DockFillContainer DockFillTransparencyType = new() { ParentControl = this, DockType = DockFillContainerDockDirection.Left, Gap = 6 };
     Label backgroundTransparencyTypeTitleLabel = new("Background Transparency Type:") { Color = Color.Black };
     List<ComboBoxOption> options = new();
     ComboBoxOption defaultOption = new();
@@ -65,10 +65,10 @@ public class WindowTransparencyColorSettings : ControlBase {
 
     optionsList.Elements.Add(DockFillTransparencyType);
 
-    dockFillCustomColor = new() { Gap = 8f, DockType = DockFillContainerDockType.Right };
+    dockFillCustomColor = new() { Gap = 8f, DockType = DockFillContainerDockDirection.Right };
     ScrollableList rgbSlidersList = new() { Gap = 4f };
 
-    DockFillContainer rSliderDockFill = new() { DockType = DockFillContainerDockType.Left, Gap = 4 };
+    DockFillContainer rSliderDockFill = new() { DockType = DockFillContainerDockDirection.Left, Gap = 4 };
     rSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     rSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
     rSliderDockFill.DockElement = new Label("R:") { Color = Color.Black };
@@ -76,7 +76,7 @@ public class WindowTransparencyColorSettings : ControlBase {
 
     rgbSlidersList.Elements.Add(rSliderDockFill);
 
-    DockFillContainer gSliderDockFill = new() { DockType = DockFillContainerDockType.Left, Gap = 2 };
+    DockFillContainer gSliderDockFill = new() { DockType = DockFillContainerDockDirection.Left, Gap = 2 };
     gSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     gSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
     gSliderDockFill.DockElement = new Label("G:") { Color = Color.Black };
@@ -84,7 +84,7 @@ public class WindowTransparencyColorSettings : ControlBase {
 
     rgbSlidersList.Elements.Add(gSliderDockFill);
 
-    DockFillContainer bSliderDockFill = new() { DockType = DockFillContainerDockType.Left, Gap = 3 };
+    DockFillContainer bSliderDockFill = new() { DockType = DockFillContainerDockDirection.Left, Gap = 3 };
     bSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     bSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
     bSliderDockFill.DockElement = new Label("B:") { Color = Color.Black };

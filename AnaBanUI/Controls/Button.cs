@@ -14,28 +14,29 @@ public class Button : ControlBase {
   public Label Label;
   public bool IsSelected;
   public bool BlinkWhenPressed { get; set; } = false;
+  public bool BordersEnabled { get; set; } = false;
   public ButtonStyle ButtonStyle = ButtonStyle.Default;
   public Vector2 LabelPadding { get; set; } = new(10, 2);
 
   // Background Colors
-  static readonly Color normalBackground = Color.FromNonPremultiplied(228, 227, 230, 255);
-  static readonly Color hoverBackground = Color.FromNonPremultiplied(220, 245, 255, 255);
-  static readonly Color downBackground = Color.FromNonPremultiplied(200, 220, 235, 255);
+  static readonly Color normalBackground = Color.FromNonPremultiplied(48, 36, 61, 255);
+  static readonly Color hoverBackground = Color.FromNonPremultiplied(57, 43, 72, 255);
+  static readonly Color downBackground = Color.FromNonPremultiplied(43, 33, 54, 255);
   static readonly Color selectedBackground = Color.FromNonPremultiplied(197, 215, 230, 255);
   static readonly Color flatHoverBackground = Color.FromNonPremultiplied(25, 126, 251, 255);
   Color currentTargetBackgroundColor = normalBackground;
   Color currentBackgroundColor = normalBackground;
 
   // Foreground Colors
-  static readonly Color normalForeground = Color.FromNonPremultiplied(20, 20, 40, 255);
+  static readonly Color normalForeground = Color.FromNonPremultiplied(230, 230, 230, 255);
   static readonly Color flatHoverForeground = Color.FromNonPremultiplied(255, 255, 255, 255);
-  static readonly Color downForeground = Color.FromNonPremultiplied(0, 0, 0, 255);
+  static readonly Color downForeground = Color.FromNonPremultiplied(255, 255, 255, 255);
   Color currentForegroundColor = normalForeground;
 
   // Border Colors
-  static readonly Color normalBorder = Color.FromNonPremultiplied(10, 100, 200, 255);
-  static readonly Color hoverBorder = Color.FromNonPremultiplied(20, 135, 225, 255);
-  static readonly Color downBorder = Color.FromNonPremultiplied(30, 80, 160, 255);
+  static readonly Color normalBorder = Color.FromNonPremultiplied(10, 100, 200, 50);
+  static readonly Color hoverBorder = Color.FromNonPremultiplied(20, 135, 225, 50);
+  static readonly Color downBorder = Color.FromNonPremultiplied(30, 80, 160, 50);
   static readonly Color unSelectedBorder = Color.FromNonPremultiplied(0, 0, 0, 0);
   static readonly Color selectedBorder = Color.FromNonPremultiplied(30, 145, 235, 255);
   Color currentTargetBorderColor = normalBorder;
@@ -48,7 +49,10 @@ public class Button : ControlBase {
   double blinkTimer = 0;
 
   public Button(string DefaultText, int defaultFontSize = 18, ButtonStyle buttonStyle = ButtonStyle.Default) {
-    Label = new Label(DefaultText, defaultFontSize) { ParentControl = this };
+    Label = new Label(DefaultText, defaultFontSize) { 
+      ParentControl = this,
+      Color = Color.White
+    };
     ButtonStyle = buttonStyle;
   }
 
@@ -57,23 +61,27 @@ public class Button : ControlBase {
 
     Label.Draw(spriteBatch, deltaTime);
 
-    if (ButtonStyle == ButtonStyle.Default) spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), currentBorderColor);
-    if (ButtonStyle == ButtonStyle.Selectable) spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, new Point(2, (int)Size.Y)), currentBorderColor);
+    if (BordersEnabled) {
+      if (ButtonStyle == ButtonStyle.Default) spriteBatch.DrawRectangle(new RectangleF(Vector2.Zero, Size), currentBorderColor);
+      if (ButtonStyle == ButtonStyle.Selectable) spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, new Point(2, (int)Size.Y)), currentBorderColor);
+    }
   }
 
   public override bool InputUpdate(PointerEvent pointerEvent) {
-    if (Enabled && Visible && !isBlinking) {
+    if (Enabled && !isBlinking) {
       isMouseHovering = pointerEvent.PositionRect.Intersects(AbsoluteArea);
 
       if (isMouseHovering && !pointerEvent.Down) {
         currentTargetBackgroundColor = ButtonStyle != ButtonStyle.Flat ? hoverBackground : flatHoverBackground;
         currentForegroundColor = ButtonStyle != ButtonStyle.Flat ? normalForeground : flatHoverForeground;
-        if (ButtonStyle != ButtonStyle.Selectable) currentTargetBorderColor = hoverBorder;
+        if (ButtonStyle != ButtonStyle.Selectable && BordersEnabled) {
+          currentTargetBorderColor = hoverBorder;
+        }
       } else { wasHolding = false; }
 
       if (pointerEvent.DownRect.Intersects(AbsoluteArea)) {
         currentTargetBackgroundColor = ButtonStyle != ButtonStyle.Flat ? downBackground : normalBackground;
-        currentTargetBorderColor = downBorder;
+        if (BordersEnabled) currentTargetBorderColor = downBorder;
         currentForegroundColor = ButtonStyle != ButtonStyle.Flat ? downForeground : normalForeground;
         wasHolding = true;
 
@@ -111,11 +119,15 @@ public class Button : ControlBase {
     // Interpolate
     if (ButtonStyle != ButtonStyle.Flat) {
       currentBackgroundColor = Color.Lerp(currentBackgroundColor, currentTargetBackgroundColor, (float)(1 - Math.Pow(0.00025, deltaTime)));
-      currentBorderColor = Color.Lerp(currentBorderColor, currentTargetBorderColor, (float)(1 - Math.Pow(0.000025, deltaTime)));
+      if (BordersEnabled) {
+        currentBorderColor = Color.Lerp(currentBorderColor, currentTargetBorderColor, (float)(1 - Math.Pow(0.000025, deltaTime)));
+      }
 
     } else {
       currentBackgroundColor = currentTargetBackgroundColor;
-      currentBorderColor = currentTargetBorderColor;
+      if (BordersEnabled) {
+        currentBorderColor = currentTargetBorderColor;
+      }
     }
   }
 
@@ -159,17 +171,21 @@ public class Button : ControlBase {
     }
 
     // Update Default Style
-    if (Enabled && Visible && !isBlinking) {
+    if (Enabled && !isBlinking) {
       currentForegroundColor = normalForeground;
       currentTargetBackgroundColor = normalBackground;
-      currentTargetBorderColor = normalBorder;
+      if (BordersEnabled) {
+        currentTargetBorderColor = normalBorder;
+      }
 
       if (ButtonStyle == ButtonStyle.Selectable && IsSelected) {
         currentTargetBackgroundColor = selectedBackground;
-        currentTargetBorderColor = selectedBorder;
+        if (BordersEnabled) {
+          currentTargetBorderColor = selectedBorder;
+        }
         currentForegroundColor = downForeground;
 
-      } else if (ButtonStyle == ButtonStyle.Selectable && !IsSelected) {
+      } else if (ButtonStyle == ButtonStyle.Selectable && !IsSelected && BordersEnabled) {
         currentTargetBorderColor = unSelectedBorder;
       }
     }

@@ -78,15 +78,6 @@ public class LineEdit : ControlBase {
       if (cursorBlinkDelay >= 0.5) {
         cursorVisible = !cursorVisible;
         cursorBlinkDelay = 0;
-        
-        // Make text cursor grow a lil bit
-        if (cursorVisible) {
-          TextCursorWidth += 10 * (float)deltaTime;
-
-          if (TextCursorWidth > 2.1) {
-            TextCursorWidth = 1;
-          }
-        }
       }
     } else {
       ResetCursorBlink();
@@ -142,7 +133,6 @@ public class LineEdit : ControlBase {
   void ResetCursorBlink() {
     cursorBlinkDelay = 0;
     cursorVisible = true;
-    TextCursorWidth = 1;
   }
 
   public override bool InputUpdate(PointerEvent pointerEvent) {

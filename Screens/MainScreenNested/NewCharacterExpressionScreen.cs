@@ -14,7 +14,7 @@ public class NewCharacterExpressionScreen {
 
     DockFillContainer mainDockFillContainer = new() { Margin = new Vector2(40), BackgroundRectDrawable = new() { Color = Color.White } };
     DockFillContainer titleDockFill = new() {
-      DockType = DockFillContainerDockType.Right
+      DockType = DockFillContainerDockDirection.Right
     };
 
     Label titleLabel = new("New Expression", 28, "Ubuntu") { Color = Color.Black };

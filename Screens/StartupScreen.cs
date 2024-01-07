@@ -13,13 +13,14 @@ public class StartupScreen : ScreenBase {
   public UILayer? WindowRoot => null;
   Texture2D startupBannerTexture;
   double waitTimer = 0;
-  double waitTime = 0.2;
+  double waitTime = 0.016;
 
-  static readonly Color clearColor = Color.FromNonPremultiplied(110, 110, 200, 255);
+  static readonly Color clearColor = Color.FromNonPremultiplied(110, 62, 143, 255);
 
   public StartupScreen(ScreenManager screenManager) : base(screenManager) {
 #if DEBUG
-    waitTime = 0.00016;
+    // Only shows for 1 frame
+    waitTime = 0.000000000016;
 #endif
 
     startupBannerTexture = ResourceManager.LoadTexture2DFromFile(Path.Combine(ResourceManager.DefaultContentPath, "Images", "startup_banner.png"), DefaultColorProcessors.PremultiplyAlpha);

@@ -43,8 +43,8 @@ public class MainScreen : ScreenBase {
     
     WindowRoot = new();
 
-    HeaderBar = new() { DockType = DockFillContainerDockType.Left };
-    centerSplit = new() { DockType = DockFillContainerDockType.Left };
+    HeaderBar = new() { DockType = DockFillContainerDockDirection.Left };
+    centerSplit = new() { DockType = DockFillContainerDockDirection.Left };
 
     characterNameLabel = new("character name goes here", 20) { Color = Color.Black };
     Button settingsButton = new("Settings");
@@ -57,7 +57,7 @@ public class MainScreen : ScreenBase {
     characterRenderer = new();
 
     // Create CenterCharacterSplit
-    centerCharacterSplit = new() { DockType = DockFillContainerDockType.Bottom, Margin = new(6) };
+    centerCharacterSplit = new() { DockType = DockFillContainerDockDirection.Bottom, Margin = new(6) };
     centerCharacterSplit.FillElement = characterRenderer;
 
     // Create CharacterExpressionsPanel
