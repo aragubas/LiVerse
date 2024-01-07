@@ -31,6 +31,15 @@ namespace LiVerse.Screens {
     bool characterFullView = false;
 
     public MainScreen(ScreenManager screenManager) : base(screenManager) {
+      // Layout
+      // MainFillContainer
+      //   dock: HeaderBar
+      //   fill: CenterSplit
+      //          dock: AudioCaptureDevicePanel
+      //          fill: CenterCharacterSplit
+      //                  dock: CharacterExpressionsPanel
+      //                  fill: CharacterRenderer
+      
       WindowRoot = new();
 
       HeaderBar = new() { DockType = DockFillContainerDockType.Left };
@@ -46,15 +55,22 @@ namespace LiVerse.Screens {
       // Create CharacterRenderer
       characterRenderer = new();
 
+      // Create CenterCharacterSplit
       centerCharacterSplit = new() { DockType = DockFillContainerDockType.Bottom, Margin = new(6) };
       centerCharacterSplit.FillElement = characterRenderer;
 
+      // Create CharacterExpressionsPanel
       characterExpressionsPanel = new();
+      characterExpressionsPanel.OnNewExpressionButtonPressed += () => {
+        newCharacterExpressionScreen?.ToggleUILayer();
+      };
 
       centerCharacterSplit.DockElement = characterExpressionsPanel;
 
+      // Create AudioCaptureDevice Panel
       audioCaptureDevicePanel = new();
 
+      // Assign panels to CenterSplit
       centerSplit.DockElement = audioCaptureDevicePanel;
       centerSplit.FillElement = centerCharacterSplit;
 

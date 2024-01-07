@@ -13,11 +13,20 @@ namespace LiVerse.Screens.MainScreenNested {
       UIRootLayer = new() { BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) } };
 
       DockFillContainer mainDockFillContainer = new() { Margin = new Vector2(40), BackgroundRectDrawable = new() { Color = Color.White } };
+      DockFillContainer titleDockFill = new() {
+        DockType = DockFillContainerDockType.Right
+      };
+
       Label titleLabel = new("New Expression", 28, "Ubuntu") { Color = Color.Black };
+      Button closeButton = new("X");
+      closeButton.Click += ToggleUILayer;
+
+      titleDockFill.DockElement = closeButton;
+      titleDockFill.FillElement = titleLabel;
 
       LineEdit lineEdit = new("Each word in this sentance is different so it's easier to track whatever the textbox is advancing the text properly and stuff bwah");
 
-      mainDockFillContainer.DockElement = titleLabel;
+      mainDockFillContainer.DockElement = titleDockFill;
       mainDockFillContainer.FillElement = lineEdit;
 
       UIRootLayer.RootElement = mainDockFillContainer;
