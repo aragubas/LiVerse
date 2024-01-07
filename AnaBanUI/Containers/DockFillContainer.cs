@@ -32,23 +32,23 @@ namespace LiVerse.AnaBanUI.Containers {
 
     void RecalculateUI() {
       // Fill Dock Element if its the only one set
-      if (FillElement == null && DockElement != null) { FillElement(DockElement); return; }
+      if (FillElement == null && DockElement != null) { FillControl(DockElement); return; }
 
       // Fill Fill Element if its the only one set
-      if (FillElement != null && DockElement == null) { FillElement(FillElement); return; }
+      if (FillElement != null && DockElement == null) { FillControl(FillElement); return; }
 
       // Check if there's nothing to calculate
       if (FillElement == null || DockElement == null) { return; }
 
       // Fill Fill Element if the Dock Element is invisible
       if (!DockElement.Visible) {
-        FillElement(FillElement);
+        FillControl(FillElement);
         return;
       }
 
       // Fill Dock Element if the Fill Element is invisible
       if (!FillElement.Visible) {
-        FillElement(DockElement);
+        FillControl(DockElement);
         return;
       }
 
@@ -126,7 +126,7 @@ namespace LiVerse.AnaBanUI.Containers {
       RecalculateUI();
     }
 
-    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
       BackgroundRectDrawable?.Draw(spriteBatch, deltaTime, ContentArea, Vector2.Zero);
 
       DockElement?.Draw(spriteBatch, deltaTime);

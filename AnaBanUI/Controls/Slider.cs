@@ -33,7 +33,7 @@ namespace LiVerse.AnaBanUI.Controls {
       ratio = CurrentValue / MaximumValue;
     }
 
-    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
       spriteBatch.FillRectangle(new RectangleF(0, (Size.Y / 2) / 2, Size.X, Size.Y / 2), backgroundColor);
       spriteBatch.DrawRectangle(new RectangleF(0, (Size.Y / 2) / 2, Size.X, Size.Y / 2), borderColor);
 

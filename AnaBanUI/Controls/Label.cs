@@ -89,7 +89,7 @@ namespace LiVerse.AnaBanUI.Controls {
       RecalculatePosition();
     }
 
-    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
       if (font == null) { return; }
       if (DrawShadow) spriteBatch.DrawString(font, Text, textPosition + ShadowOffset, ShadowColor);
       spriteBatch.DrawString(font, Text, textPosition, Color);

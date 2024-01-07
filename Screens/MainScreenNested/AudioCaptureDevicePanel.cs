@@ -62,10 +62,10 @@ namespace LiVerse.Screens.MainScreenNested {
     }
 
     public override void UpdateUI(double deltaTime) {
-      FillElement(sideFillContainer);
+      FillControl(sideFillContainer);
     }
 
-    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
       sideFillContainer.Draw(spriteBatch, deltaTime);
     }
 

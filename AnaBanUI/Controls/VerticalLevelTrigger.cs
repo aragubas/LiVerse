@@ -63,7 +63,7 @@ namespace LiVerse.AnaBanUI.Controls {
       }
     }
 
-    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
       spriteBatch.FillRectangle(new RectangleF(Vector2.Zero, Size), backgroundColor);
 
       // Draw Lines

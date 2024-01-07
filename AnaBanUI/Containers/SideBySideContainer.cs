@@ -70,7 +70,7 @@ namespace LiVerse.AnaBanUI.Containers {
       RecalculateUI();
     }
 
-    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
       
 
       // Draw Elements

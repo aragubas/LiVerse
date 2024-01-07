@@ -19,10 +19,10 @@ namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested {
     }
 
     public override void UpdateUI(double deltaTime) {
-      FillElement(ScrollableList);
+      FillControl(ScrollableList);
     }
 
-    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
       ScrollableList.Draw(spriteBatch, deltaTime);
     }
 

@@ -158,7 +158,7 @@ namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested.GraphicsSettings
     }
 
     public override void UpdateUI(double deltaTime) {
-      FillElement(optionsList);
+      FillControl(optionsList);
 
       transparentBackgroudWarning.Visible = SettingsStore.WindowTransparencyColor == Color.Transparent && SettingsStore.WindowTransparencyColorIsCustom == false;
 
@@ -169,7 +169,7 @@ namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested.GraphicsSettings
       }
     }
 
-    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
       optionsList.Draw(spriteBatch, deltaTime);
     }
 

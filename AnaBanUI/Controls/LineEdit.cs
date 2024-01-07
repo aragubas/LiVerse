@@ -11,6 +11,7 @@ namespace LiVerse.AnabanUI.Controls {
   public class LineEdit : ControlBase {
     RectangleDrawable background;
     public string Text;
+    public float TextCursorWidth { get; set; } = 1;
     Label textLabel;
     int _cursorPosition = 0;
     int cursorPosition { 
@@ -27,16 +28,33 @@ namespace LiVerse.AnabanUI.Controls {
 
     int selectionFirstIndex = 0;
     int selectionLastIndex = 0;
+
     float viewportXOffset = 0;
     bool selectionActive = false;
+    bool InputActive = true;
     bool shiftModifier = false;
     float keyRepeatCount = 0;
     Keys? keyRepeatKey = null;
+    bool cursorVisible = false;
+    double cursorBlinkDelay = 0;
+
+    // TODO: Move this to a proper theme file
+    static readonly Color s_BackgroundNormalColor = Color.FromNonPremultiplied(43, 33, 54, 255);
+    static readonly Color s_BackgroundEnabledColor = Color.FromNonPremultiplied(48, 36, 61, 255);
+    static readonly Color s_ForegroundNormalColor = Color.FromNonPremultiplied(230, 230, 230, 200);
+    static readonly Color s_ForegroundEnabledColor = Color.FromNonPremultiplied(250, 250, 250, 255);
+    static readonly Color s_SelectionColor = Color.FromNonPremultiplied(150, 85, 194, 255);
+    static readonly Color s_TextCursorColor = Color.Red;
+    // TODO: Invert colors of TextCursor usando Blend State
+    //static readonly BlendState s_CursorBlendState = new BlendState() {
+    //  ColorSourceBlend = Blend.Zero,
+    //  ColorDestinationBlend = Blend.InverseDestinationColor
+    //};
 
     public LineEdit(string text = "") {
       background = new() {
         FillCenter = true,
-        Color = Color.Blue
+        Color = s_BackgroundNormalColor
       };
       Text = text;
       textLabel = new(text) {
@@ -49,11 +67,34 @@ namespace LiVerse.AnabanUI.Controls {
 
 
     public override void UpdateUI(double deltaTime) {
-      FillElement(textLabel);
+      FillControl(textLabel);
+
+      background.Color = InputActive ? s_BackgroundEnabledColor : s_BackgroundNormalColor;
+      textLabel.Color = InputActive ? s_ForegroundEnabledColor : s_ForegroundNormalColor;
+
+      if (InputActive && Enabled) {
+        cursorBlinkDelay += 1 * deltaTime;
+
+        if (cursorBlinkDelay >= 0.5) {
+          cursorVisible = !cursorVisible;
+          cursorBlinkDelay = 0;
+          
+          // Make text cursor grow a lil bit
+          if (cursorVisible) {
+            TextCursorWidth += 10 * (float)deltaTime;
+
+            if (TextCursorWidth > 2.1) {
+              TextCursorWidth = 1;
+            }
+          }
+        }
+      } else {
+        ResetCursorBlink();
+      }
     }
 
-    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
-      background.Draw(spriteBatch, deltaTime, ContentArea, Vector2.Zero);
+    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
+      background.Draw(spriteBatch, deltaTime, ContentArea);
 
       spriteBatch.End();
       spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(new Vector3(viewportXOffset, 0, 0)));
@@ -65,34 +106,52 @@ namespace LiVerse.AnabanUI.Controls {
 
         Vector2 cursorOffset = textLabel.Font.MeasureString(Text.Substring(0, selectionFirstIndex));
         Vector2 cursorEndOffset = textLabel.Font.MeasureString(Text.Substring(0, selectionLastIndex));
-        //Vector2 characterUnderCursor = textLabel.Font.MeasureString(Text.Substring(cursorPosition == Text.Length ? Text.Length - 1 : cursorPosition, 1));
 
-        spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X + cursorOffset.X, textLabel.TextPosition.Y, cursorEndOffset.X - cursorOffset.X, textLabel.FontSize), Color.Black);
+        spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X + cursorOffset.X, textLabel.TextPosition.Y, cursorEndOffset.X - cursorOffset.X, textLabel.FontSize), s_SelectionColor);
       }
 
       // Draw Text
       textLabel.RenderOffset = new Vector2(viewportXOffset, textLabel.RenderOffset.Y);
       textLabel.Draw(spriteBatch, deltaTime);
 
+      // Draw text cursor
+      // TODO: Invert colors of text cursor
       spriteBatch.End();
       spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(new Vector3(viewportXOffset, 0, 0)));
 
       // Only draw text cursor if text size is greater than 0 and label contains font
-      if (Text.Length > 0 && textLabel.Font != null) {
-        Vector2 cursorOffset = textLabel.Font.MeasureString(Text.Substring(0, cursorPosition));
-        Vector2 characterUnderCursor = textLabel.Font.MeasureString(Text.Substring(cursorPosition == Text.Length ? Text.Length - 1 : cursorPosition, 1));
-
-        spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X + cursorOffset.X, textLabel.TextPosition.Y, 1, characterUnderCursor.Y), Color.Red);
-
-      } else {
-        spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X, textLabel.TextPosition.Y, 1, textLabel.FontSize), Color.Red);
+      if (cursorVisible) {
+        if (Text.Length > 0 && textLabel.Font != null) {
+          Vector2 cursorOffset = textLabel.Font.MeasureString(Text.Substring(0, cursorPosition));
+          Vector2 characterUnderCursor = textLabel.Font.MeasureString(Text.Substring(cursorPosition == Text.Length ? Text.Length - 1 : cursorPosition, 1));
+        
+          spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X + cursorOffset.X, textLabel.TextPosition.Y, TextCursorWidth, characterUnderCursor.Y), s_TextCursorColor);
+        } else {
+          spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X, textLabel.TextPosition.Y, TextCursorWidth, textLabel.FontSize), s_TextCursorColor);
+        }
       }
 
     }
 
-    public override void Update(double deltaTime) { }
+    public override void Update(double deltaTime) {
+      Enabled = true;
+    }
+
+    void ResetCursorBlink() {
+      cursorBlinkDelay = 0;
+      cursorVisible = true;
+      TextCursorWidth = 1;
+    }
+
+    public override bool InputUpdate(PointerEvent pointerEvent) {
+      InputActive = AbsoluteArea.Contains(pointerEvent.PositionRect.Position);
+
+      return InputActive;
+    }
 
     void OnTextInputEventUpdate(TextInputEventArgs args) {
+      if (!InputActive) { return; }
+
       switch (args.Key) {
         case Keys.Back: {
           if (selectionActive && Text.Length >= 1) {
@@ -119,6 +178,7 @@ namespace LiVerse.AnabanUI.Controls {
 
           Text = Text.Remove(cursorPosition, 1);
           textLabel.Text = Text;
+          UpdateViewportOffset();
           return;
         }
 
@@ -152,11 +212,13 @@ namespace LiVerse.AnabanUI.Controls {
     void MoveCursorLeft() {
       cursorPosition--;
       if (cursorPosition < 0) { cursorPosition = 0; }
+      ResetCursorBlink();
     }
 
     void MoveCursorRight() {
       cursorPosition++;
       if (cursorPosition > Text.Length) { cursorPosition = Text.Length; }
+      ResetCursorBlink();
     }
 
     void ResetKeyRepeat() {
@@ -166,10 +228,12 @@ namespace LiVerse.AnabanUI.Controls {
 
     void MoveCursorBeginning() {
       cursorPosition = 0;
+      ResetCursorBlink();
     }
 
     void MoveCursorEnd() {
       cursorPosition = Text.Length;
+      ResetCursorBlink();
     }
 
     void ResetSelection() {
@@ -194,6 +258,7 @@ namespace LiVerse.AnabanUI.Controls {
       cursorPosition = Math.Clamp(cursorPosition, 0, Text.Length);
 
       textLabel.Text = Text;
+      ResetCursorBlink();
     }
 
     void SelectLeft() {
@@ -212,6 +277,7 @@ namespace LiVerse.AnabanUI.Controls {
 
       selectionFirstIndex = Math.Clamp(selectionFirstIndex, 0, Text.Length);
       selectionLastIndex = Math.Clamp(selectionLastIndex, 0, Text.Length);
+      ResetCursorBlink();
     }
 
     void SelectRight() {
@@ -230,6 +296,7 @@ namespace LiVerse.AnabanUI.Controls {
 
       selectionFirstIndex = Math.Clamp(selectionFirstIndex, 0, Text.Length);
       selectionLastIndex = Math.Clamp(selectionLastIndex, 0, Text.Length);
+      ResetCursorBlink();
     }
     
     void SelectWordOnRight() {
@@ -260,6 +327,7 @@ namespace LiVerse.AnabanUI.Controls {
       }
 
       cursorPosition = selectionLastIndex;
+      ResetCursorBlink();
     }
 
     void SelectWordOnLeft() {
@@ -290,6 +358,7 @@ namespace LiVerse.AnabanUI.Controls {
       }
 
       cursorPosition = selectionFirstIndex;
+      ResetCursorBlink();
     }
 
     private void UpdateViewportOffset() {
@@ -306,27 +375,18 @@ namespace LiVerse.AnabanUI.Controls {
         float contentAreaXTranslated = ContentArea.X + viewportXOffset;
         float translatedCursorOffset = ContentArea.X - cursorOffset.X;
 
-        Console.Clear();
         if (translatedCursorOffset < viewportXOffset) {
           viewportXOffset = ContentArea.X - cursorOffset.X - (ContentArea.X / 2);
-          Console.WriteLine("More");
         }
 
         if (Math.Abs(viewportXOffset) > cursorOffset.X) {
           viewportXOffset = -(cursorOffset.X - (ContentArea.X / 2));
-          Console.WriteLine("Less");
         }
-        Console.WriteLine($"beforeProcessing; viewportXOffset: {viewportXOffset}");
 
 
         if (viewportXOffset > 0) { viewportXOffset = 0; }
-        if (viewportXOffset < ContentArea.X - textTotalSize.X) { viewportXOffset = ContentArea.X - textTotalSize.X; }
+        if (viewportXOffset < ContentArea.X - (textTotalSize.X + TextCursorWidth)) { viewportXOffset = ContentArea.X - (textTotalSize.X + TextCursorWidth); }
 
-        Console.WriteLine($"viewportXOffset: {viewportXOffset}");
-        Console.WriteLine($"ContentArea: {ContentArea.X}");
-        Console.WriteLine($"cursorOffset: {cursorOffset.X}");
-        Console.WriteLine($"translatedCursorOffset: {translatedCursorOffset}");
-        Console.WriteLine($"contentAreaTranslated: {contentAreaXTranslated}");
       } else {
         viewportXOffset = 0;
       }
@@ -337,6 +397,9 @@ namespace LiVerse.AnabanUI.Controls {
     }
 
     public override bool InputUpdate(KeyboardEvent keyboardEvent) {
+      if (!InputActive) { return false; }
+
+
       if (keyboardEvent.PressedKeys.Length >= 1) {
         shiftModifier = false;
         foreach (var key in keyboardEvent.PressedKeys) {

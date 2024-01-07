@@ -16,5 +16,9 @@ namespace LiVerse.AnaBanUI.Drawables {
 
       spriteBatch.DrawRectangle(new RectangleF(position, area), Color, BorderThickness);
     }
+
+    public void Draw(SpriteBatch spriteBatch, double deltaTime, Vector2 area) {
+      Draw(spriteBatch, deltaTime, area, Vector2.Zero);
+    }
   }
 }

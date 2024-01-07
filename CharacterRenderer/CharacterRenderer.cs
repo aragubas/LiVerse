@@ -60,7 +60,7 @@ namespace LiVerse.CharacterRenderer {
       }
     }
 
-    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
       CalculatePosition(deltaTime);
 
       // Render current state

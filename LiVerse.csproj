@@ -20,7 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AnaBanUI\NewFolder\NewFolder\" />
+    <Compile Remove="AnaBanUI\NewFolder\**" />
+    <EmbeddedResource Remove="AnaBanUI\NewFolder\**" />
+    <None Remove="AnaBanUI\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="ExtensionMethods\" />
   </ItemGroup>
 

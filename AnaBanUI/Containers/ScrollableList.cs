@@ -81,7 +81,7 @@ namespace LiVerse.AnaBanUI.Containers {
       RecalculateUI();
     }
 
-    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
       if (BackgroundRectDrawable != null) BackgroundRectDrawable.Draw(spriteBatch, deltaTime, ContentArea, Vector2.Zero);
 
       // Draw Elements

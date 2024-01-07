@@ -37,7 +37,7 @@ namespace LiVerse.AnaBanUI.Controls.ComboBox {
       ScrollableList.AbsolutePosition = ComboBoxRectangle.Position;
     }
 
-    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
       ScrollableList.Draw(spriteBatch, deltaTime);
     }
 

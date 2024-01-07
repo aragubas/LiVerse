@@ -1,18 +1,23 @@
-using LiVerse.AnaBanUI.Containers;
 using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using System.Runtime.CompilerServices;
 
 namespace LiVerse.AnaBanUI {
   public abstract class ControlBase {
     public ControlBase? ParentControl { get; set; }
 
-    /// A disabled control doesn't accept user input, but its still rendered if visible
-    public bool Enabled { get; set; } = true;
+    /// <summary>
+    /// A disabled control doesn't accept user input, but its still rendered if visible <br>Returns false if control is not visible</br>
+    /// </summary>
+    bool _enabled = true;
+    public bool Enabled {
+      get => Visible ? _enabled : false;
+      set { _enabled = value; }
+    }
     public bool DrawDebugLines { get; set; } = false;
-    /// A invisible control is invisible and doesn't process any events
+    
+    /// If invisible, no event processing will take place and control will be disabled
     public bool Visible { get; set; } = true;
     #region Container Properties
     /// Backing field for Size
@@ -94,26 +99,26 @@ namespace LiVerse.AnaBanUI {
     public virtual void UpdateUI(double deltaTime) { }
 
     /// <summary>
-    /// Method called when the UIRoot decides this element should receive/process pointer events
+    /// Method called when the UIRoot decides this element should process pointer events
     /// </summary>
-    /// <returns>True if the event should be blocked</returns>
+    /// <returns>True if the event should be blocked, False if the event should bubble up the tree</returns>
     public virtual bool InputUpdate(PointerEvent pointerEvent) { return false; }
 
     /// <summary>
-    /// Method called when the UIRoot decides this element should receive/process keyboard events
+    /// Method called when the UIRoot decides this element should process keyboard events
     /// </summary>
-    /// <returns>True if the event should be blocked</returns>
+    /// <returns>True if the event should be blocked, False if the event should bubble up the tree</returns>
     public virtual bool InputUpdate(KeyboardEvent keyboardEvent) { return false; }
 
     /// <summary>
-    /// Creates a virtual viewport, calls <seealso cref="DrawElement"/> and restores old viewport
+    /// Creates a virtual viewport, calls <seealso cref="DrawControl"/> and restores old viewport after finishing drawing
     /// </summary>
     public virtual void Draw(SpriteBatch spriteBatch, double deltaTime) {
       if (!Visible) { return; }
 
       BeginDraw(spriteBatch);
       UpdateUI(deltaTime);
-      DrawElement(spriteBatch, deltaTime);
+      DrawControl(spriteBatch, deltaTime);
 
       if (DrawDebugLines) {
         if (Margin != Vector2.Zero) {
@@ -153,9 +158,9 @@ namespace LiVerse.AnaBanUI {
     }
 
     /// <summary>
-    /// Make a element use all this control's space and also sets this as the elements parent control
+    /// Make another control fill all of this control's space <br>also changes the target control's parent to this</br>
     /// </summary>
-    internal void FillElement(ControlBase element, bool overrideMinimumSize = true) {
+    internal void FillControl(ControlBase element, bool overrideMinimumSize = true) {
       element.Size = ContentArea;
       element.RelativePosition = RelativePosition;
       element.AbsolutePosition = AbsolutePosition;
@@ -165,8 +170,8 @@ namespace LiVerse.AnaBanUI {
     }
 
     /// <summary>
-    /// Draws the element without transformation
+    /// Draws the control without transformation
     /// </summary>
-    public abstract void DrawElement(SpriteBatch spriteBatch, double deltaTime);
+    public abstract void DrawControl(SpriteBatch spriteBatch, double deltaTime);
   }
 }

@@ -57,11 +57,11 @@ namespace LiVerse.AnaBanUI.Controls {
     }
 
     public override void UpdateUI(double deltaTime) {
-      FillElement(ToggleButton);
+      FillControl(ToggleButton);
       if (boxOverlayContainer != null) boxOverlayContainer.ComboBoxRectangle = new(AbsolutePosition, ContentArea);
     }
 
-    public override void DrawElement(SpriteBatch spriteBatch, double deltaTime) {
+    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
       ToggleButton.Draw(spriteBatch, deltaTime);
     }
 
