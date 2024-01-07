@@ -44,7 +44,7 @@ namespace LiVerse.AnabanUI.Controls {
     static readonly Color s_ForegroundNormalColor = Color.FromNonPremultiplied(230, 230, 230, 200);
     static readonly Color s_ForegroundEnabledColor = Color.FromNonPremultiplied(250, 250, 250, 255);
     static readonly Color s_SelectionColor = Color.FromNonPremultiplied(150, 85, 194, 255);
-    static readonly Color s_TextCursorColor = Color.Red;
+    static readonly Color s_TextCursorColor = Color.FromNonPremultiplied(237, 62, 65, 255);
     // TODO: Invert colors of TextCursor usando Blend State
     //static readonly BlendState s_CursorBlendState = new BlendState() {
     //  ColorSourceBlend = Blend.Zero,
@@ -169,7 +169,7 @@ namespace LiVerse.AnabanUI.Controls {
         }
         
         case Keys.Delete: {
-          if (Text.Length < 1 || cursorPosition >= Text.Length) { return; }
+          if (Text.Length < 1 || cursorPosition > Text.Length) { return; }
 
           if (selectionActive) {
             DeleteSelection();
