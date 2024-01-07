@@ -127,7 +127,9 @@ namespace LiVerse.AnabanUI.Controls {
         
           spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X + cursorOffset.X, textLabel.TextPosition.Y, TextCursorWidth, characterUnderCursor.Y), s_TextCursorColor);
         } else {
-          spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X, textLabel.TextPosition.Y, TextCursorWidth, textLabel.FontSize), s_TextCursorColor);
+          // Draws cursor when text is empty
+          
+          spriteBatch.FillRectangle(new RectangleF(textLabel.TextPosition.X, textLabel.TextPosition.Y - textLabel.FontSize / 2, TextCursorWidth, textLabel.FontSize), s_TextCursorColor);
         }
       }
 
