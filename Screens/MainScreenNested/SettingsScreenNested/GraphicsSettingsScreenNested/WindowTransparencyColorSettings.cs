@@ -12,177 +12,176 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested.GraphicsSettingsScreenNested {
-  public class WindowTransparencyColorSettings : ControlBase {
-    ScrollableList optionsList { get; }
-    Label transparentBackgroudWarning { get; }
-    SolidColorRectangle colorPreview;
-    DockFillContainer dockFillCustomColor;
-    Slider rSlider;
-    Slider gSlider;
-    Slider bSlider;
+namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested.GraphicsSettingsScreenNested; 
+public class WindowTransparencyColorSettings : ControlBase {
+  ScrollableList optionsList { get; }
+  Label transparentBackgroudWarning { get; }
+  SolidColorRectangle colorPreview;
+  DockFillContainer dockFillCustomColor;
+  Slider rSlider;
+  Slider gSlider;
+  Slider bSlider;
 
-    public WindowTransparencyColorSettings() {
-      optionsList = new() { ParentControl = this, Gap = 4 };
+  public WindowTransparencyColorSettings() {
+    optionsList = new() { ParentControl = this, Gap = 4 };
 
-      DockFillContainer DockFillTransparencyType = new() { ParentControl = this, DockType = DockFillContainerDockType.Left, Gap = 6 };
-      Label backgroundTransparencyTypeTitleLabel = new("Background Transparency Type:") { Color = Color.Black };
-      List<ComboBoxOption> options = new();
-      ComboBoxOption defaultOption = new();
+    DockFillContainer DockFillTransparencyType = new() { ParentControl = this, DockType = DockFillContainerDockType.Left, Gap = 6 };
+    Label backgroundTransparencyTypeTitleLabel = new("Background Transparency Type:") { Color = Color.Black };
+    List<ComboBoxOption> options = new();
+    ComboBoxOption defaultOption = new();
 
-      if (SettingsStore.WindowTransparencyColor == Color.Transparent) {
-        defaultOption.OptionText = "Transparent";
-        defaultOption.ExtraData = 0;
+    if (SettingsStore.WindowTransparencyColor == Color.Transparent) {
+      defaultOption.OptionText = "Transparent";
+      defaultOption.ExtraData = 0;
 
-      } else if (SettingsStore.WindowTransparencyColor == new Color(0, 255, 0, 255)) {
-        defaultOption.OptionText = "Green";
-        defaultOption.ExtraData = 1;
+    } else if (SettingsStore.WindowTransparencyColor == new Color(0, 255, 0, 255)) {
+      defaultOption.OptionText = "Green";
+      defaultOption.ExtraData = 1;
 
-      } else if (SettingsStore.WindowTransparencyColor == Color.Blue) {
-        defaultOption.OptionText = "Blue";
-        defaultOption.ExtraData = 2;
+    } else if (SettingsStore.WindowTransparencyColor == Color.Blue) {
+      defaultOption.OptionText = "Blue";
+      defaultOption.ExtraData = 2;
 
-      } else if (SettingsStore.WindowTransparencyColor == Color.Magenta) {
-        defaultOption.OptionText = "Magenta";
-        defaultOption.ExtraData = 3;
+    } else if (SettingsStore.WindowTransparencyColor == Color.Magenta) {
+      defaultOption.OptionText = "Magenta";
+      defaultOption.ExtraData = 3;
 
-      } else {
-        defaultOption.OptionText = "Custom Color";
-        defaultOption.ExtraData = -1;
-      }
-
-      options.Add(new ComboBoxOption("Transparent", 0));
-      options.Add(new ComboBoxOption("Green", 1));
-      options.Add(new ComboBoxOption("Blue", 2));
-      options.Add(new ComboBoxOption("Magenta", 3));
-      options.Add(new ComboBoxOption("Custom Color", -1));
-
-      ComboBoxControl backgroundTransparencyOptionsComboBox = new(defaultOption, options);
-      backgroundTransparencyOptionsComboBox.SelectedOptionChanged += BackgroundTransparencyOptionsComboBox_SelectedOptionChanged; ;
-
-      DockFillTransparencyType.DockElement = backgroundTransparencyTypeTitleLabel;
-      DockFillTransparencyType.FillElement = backgroundTransparencyOptionsComboBox;
-
-      optionsList.Elements.Add(DockFillTransparencyType);
-
-      dockFillCustomColor = new() { Gap = 8f, DockType = DockFillContainerDockType.Right };
-      ScrollableList rgbSlidersList = new() { Gap = 4f };
-
-      DockFillContainer rSliderDockFill = new() { DockType = DockFillContainerDockType.Left, Gap = 4 };
-      rSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
-      rSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
-      rSliderDockFill.DockElement = new Label("R:") { Color = Color.Black };
-      rSliderDockFill.FillElement = rSlider;
-
-      rgbSlidersList.Elements.Add(rSliderDockFill);
-
-      DockFillContainer gSliderDockFill = new() { DockType = DockFillContainerDockType.Left, Gap = 2 };
-      gSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
-      gSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
-      gSliderDockFill.DockElement = new Label("G:") { Color = Color.Black };
-      gSliderDockFill.FillElement = gSlider;
-
-      rgbSlidersList.Elements.Add(gSliderDockFill);
-
-      DockFillContainer bSliderDockFill = new() { DockType = DockFillContainerDockType.Left, Gap = 3 };
-      bSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
-      bSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
-      bSliderDockFill.DockElement = new Label("B:") { Color = Color.Black };
-      bSliderDockFill.FillElement = bSlider;
-
-      rgbSlidersList.Elements.Add(bSliderDockFill);
-
-      DockFillContainer colorPreviewDockFill = new() { Gap = 4f };
-
-      colorPreview = new(new Label("Preview", 24) { Margin = new Vector2(8), Color = Color.White, DrawShadow = true, ShadowColor = Color.Black }) { BackgroundColor = Color.Magenta };
-
-      //colorPreviewDockFill.DockElement = ;
-      //colorPreviewDockFill.FillElement = colorPreview;
-
-      dockFillCustomColor.DockElement = colorPreview;
-      dockFillCustomColor.FillElement = rgbSlidersList;
-
-      optionsList.Elements.Add(dockFillCustomColor);
-
-      transparentBackgroudWarning = new Label("To use transparent background you will need to capture the window with alpha.\nin OBS you can use GameCapture for that, by enabling the alpha channel") { HorizontalAlignment = LabelHorizontalAlignment.Left, Color = Color.Black };
-      optionsList.Elements.Add(transparentBackgroudWarning);
-
-      //customColorPreview = SettingsStore.WindowTransparencyColor;
-
-      // Load default values for the RGB sliders
-      rSlider.CurrentValue = SettingsStore.WindowTransparencyColor.R;
-      gSlider.CurrentValue = SettingsStore.WindowTransparencyColor.G;
-      bSlider.CurrentValue = SettingsStore.WindowTransparencyColor.B;
+    } else {
+      defaultOption.OptionText = "Custom Color";
+      defaultOption.ExtraData = -1;
     }
 
-    private void BackgroundTransparencyOptionsComboBox_SelectedOptionChanged(ComboBoxOption obj) {
-      if (obj.ExtraData is int selectionNumber) {
-        dockFillCustomColor.Visible = false;
-        SettingsStore.WindowTransparencyColorIsCustom = false;
+    options.Add(new ComboBoxOption("Transparent", 0));
+    options.Add(new ComboBoxOption("Green", 1));
+    options.Add(new ComboBoxOption("Blue", 2));
+    options.Add(new ComboBoxOption("Magenta", 3));
+    options.Add(new ComboBoxOption("Custom Color", -1));
 
-        switch (selectionNumber) {
-          case 0: { // Transparent
-              SettingsStore.WindowTransparencyColor = Color.Transparent;
-              break;
-            }
+    ComboBoxControl backgroundTransparencyOptionsComboBox = new(defaultOption, options);
+    backgroundTransparencyOptionsComboBox.SelectedOptionChanged += BackgroundTransparencyOptionsComboBox_SelectedOptionChanged; ;
 
-          case 1: { // Green
-              SettingsStore.WindowTransparencyColor = Color.FromNonPremultiplied(0, 255, 0, 255);
-              break;
-            }
+    DockFillTransparencyType.DockElement = backgroundTransparencyTypeTitleLabel;
+    DockFillTransparencyType.FillElement = backgroundTransparencyOptionsComboBox;
 
-          case 2: { // Blue
-              SettingsStore.WindowTransparencyColor = Color.FromNonPremultiplied(0, 0, 255, 255);
-              break;
-            }
+    optionsList.Elements.Add(DockFillTransparencyType);
 
-          case 3: { // Magenta
-              SettingsStore.WindowTransparencyColor = Color.FromNonPremultiplied(255, 0, 255, 255);
-              break;
-            }
+    dockFillCustomColor = new() { Gap = 8f, DockType = DockFillContainerDockType.Right };
+    ScrollableList rgbSlidersList = new() { Gap = 4f };
 
-          default: { // Invalid/Custom Color
-              SettingsStore.WindowTransparencyColorIsCustom = true;
-              SettingsStore.WindowTransparencyColor = Color.FromNonPremultiplied(0, 255, 0, 255);
-              rSlider.CurrentValue = SettingsStore.WindowTransparencyColor.R;
-              gSlider.CurrentValue = SettingsStore.WindowTransparencyColor.G;
-              bSlider.CurrentValue = SettingsStore.WindowTransparencyColor.B;
-              break;
-            }
-        }
-      }
-    }
+    DockFillContainer rSliderDockFill = new() { DockType = DockFillContainerDockType.Left, Gap = 4 };
+    rSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
+    rSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
+    rSliderDockFill.DockElement = new Label("R:") { Color = Color.Black };
+    rSliderDockFill.FillElement = rSlider;
 
-    void RGBSlidersChanged() {
-      SettingsStore.WindowTransparencyColor = Color.FromNonPremultiplied((int)rSlider.CurrentValue, (int)gSlider.CurrentValue, (int)bSlider.CurrentValue, 255);
-    }
+    rgbSlidersList.Elements.Add(rSliderDockFill);
 
-    public override void UpdateUI(double deltaTime) {
-      FillControl(optionsList);
+    DockFillContainer gSliderDockFill = new() { DockType = DockFillContainerDockType.Left, Gap = 2 };
+    gSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
+    gSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
+    gSliderDockFill.DockElement = new Label("G:") { Color = Color.Black };
+    gSliderDockFill.FillElement = gSlider;
 
-      transparentBackgroudWarning.Visible = SettingsStore.WindowTransparencyColor == Color.Transparent && SettingsStore.WindowTransparencyColorIsCustom == false;
+    rgbSlidersList.Elements.Add(gSliderDockFill);
 
-      dockFillCustomColor.Visible = SettingsStore.WindowTransparencyColorIsCustom;
+    DockFillContainer bSliderDockFill = new() { DockType = DockFillContainerDockType.Left, Gap = 3 };
+    bSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
+    bSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
+    bSliderDockFill.DockElement = new Label("B:") { Color = Color.Black };
+    bSliderDockFill.FillElement = bSlider;
 
-      if (dockFillCustomColor.Visible) {
-        colorPreview.BackgroundColor = SettingsStore.WindowTransparencyColor;
+    rgbSlidersList.Elements.Add(bSliderDockFill);
+
+    DockFillContainer colorPreviewDockFill = new() { Gap = 4f };
+
+    colorPreview = new(new Label("Preview", 24) { Margin = new Vector2(8), Color = Color.White, DrawShadow = true, ShadowColor = Color.Black }) { BackgroundColor = Color.Magenta };
+
+    //colorPreviewDockFill.DockElement = ;
+    //colorPreviewDockFill.FillElement = colorPreview;
+
+    dockFillCustomColor.DockElement = colorPreview;
+    dockFillCustomColor.FillElement = rgbSlidersList;
+
+    optionsList.Elements.Add(dockFillCustomColor);
+
+    transparentBackgroudWarning = new Label("To use transparent background you will need to capture the window with alpha.\nin OBS you can use GameCapture for that, by enabling the alpha channel") { HorizontalAlignment = LabelHorizontalAlignment.Left, Color = Color.Black };
+    optionsList.Elements.Add(transparentBackgroudWarning);
+
+    //customColorPreview = SettingsStore.WindowTransparencyColor;
+
+    // Load default values for the RGB sliders
+    rSlider.CurrentValue = SettingsStore.WindowTransparencyColor.R;
+    gSlider.CurrentValue = SettingsStore.WindowTransparencyColor.G;
+    bSlider.CurrentValue = SettingsStore.WindowTransparencyColor.B;
+  }
+
+  private void BackgroundTransparencyOptionsComboBox_SelectedOptionChanged(ComboBoxOption obj) {
+    if (obj.ExtraData is int selectionNumber) {
+      dockFillCustomColor.Visible = false;
+      SettingsStore.WindowTransparencyColorIsCustom = false;
+
+      switch (selectionNumber) {
+        case 0: { // Transparent
+            SettingsStore.WindowTransparencyColor = Color.Transparent;
+            break;
+          }
+
+        case 1: { // Green
+            SettingsStore.WindowTransparencyColor = Color.FromNonPremultiplied(0, 255, 0, 255);
+            break;
+          }
+
+        case 2: { // Blue
+            SettingsStore.WindowTransparencyColor = Color.FromNonPremultiplied(0, 0, 255, 255);
+            break;
+          }
+
+        case 3: { // Magenta
+            SettingsStore.WindowTransparencyColor = Color.FromNonPremultiplied(255, 0, 255, 255);
+            break;
+          }
+
+        default: { // Invalid/Custom Color
+            SettingsStore.WindowTransparencyColorIsCustom = true;
+            SettingsStore.WindowTransparencyColor = Color.FromNonPremultiplied(0, 255, 0, 255);
+            rSlider.CurrentValue = SettingsStore.WindowTransparencyColor.R;
+            gSlider.CurrentValue = SettingsStore.WindowTransparencyColor.G;
+            bSlider.CurrentValue = SettingsStore.WindowTransparencyColor.B;
+            break;
+          }
       }
     }
+  }
 
-    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
-      optionsList.Draw(spriteBatch, deltaTime);
-    }
+  void RGBSlidersChanged() {
+    SettingsStore.WindowTransparencyColor = Color.FromNonPremultiplied((int)rSlider.CurrentValue, (int)gSlider.CurrentValue, (int)bSlider.CurrentValue, 255);
+  }
 
-    public override bool InputUpdate(PointerEvent pointerEvent) {
-      return optionsList.InputUpdate(pointerEvent);
-    }
+  public override void UpdateUI(double deltaTime) {
+    FillControl(optionsList);
 
-    public override bool InputUpdate(KeyboardEvent keyboardEvent) {
-      return optionsList.InputUpdate(keyboardEvent);
-    }
+    transparentBackgroudWarning.Visible = SettingsStore.WindowTransparencyColor == Color.Transparent && SettingsStore.WindowTransparencyColorIsCustom == false;
 
-    public override void Update(double deltaTime) {
-      optionsList.Update(deltaTime);
+    dockFillCustomColor.Visible = SettingsStore.WindowTransparencyColorIsCustom;
+
+    if (dockFillCustomColor.Visible) {
+      colorPreview.BackgroundColor = SettingsStore.WindowTransparencyColor;
     }
+  }
+
+  public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
+    optionsList.Draw(spriteBatch, deltaTime);
+  }
+
+  public override bool InputUpdate(PointerEvent pointerEvent) {
+    return optionsList.InputUpdate(pointerEvent);
+  }
+
+  public override bool InputUpdate(KeyboardEvent keyboardEvent) {
+    return optionsList.InputUpdate(keyboardEvent);
+  }
+
+  public override void Update(double deltaTime) {
+    optionsList.Update(deltaTime);
   }
 }

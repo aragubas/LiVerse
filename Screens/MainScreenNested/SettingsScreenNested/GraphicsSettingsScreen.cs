@@ -8,30 +8,29 @@ using LiVerse.Stores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested {
-  public class GraphicsSettingsScreen : ControlBase {
-    ScrollableList ScrollableList { get; }
+namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested; 
+public class GraphicsSettingsScreen : ControlBase {
+  ScrollableList ScrollableList { get; }
 
-    public GraphicsSettingsScreen() {
-      ScrollableList = new() { ParentControl = this, Gap = 6 };
+  public GraphicsSettingsScreen() {
+    ScrollableList = new() { ParentControl = this, Gap = 6 };
 
-      ScrollableList.Elements.Add(new WindowTransparencyColorSettings());
-    }
+    ScrollableList.Elements.Add(new WindowTransparencyColorSettings());
+  }
 
-    public override void UpdateUI(double deltaTime) {
-      FillControl(ScrollableList);
-    }
+  public override void UpdateUI(double deltaTime) {
+    FillControl(ScrollableList);
+  }
 
-    public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
-      ScrollableList.Draw(spriteBatch, deltaTime);
-    }
+  public override void DrawControl(SpriteBatch spriteBatch, double deltaTime) {
+    ScrollableList.Draw(spriteBatch, deltaTime);
+  }
 
-    public override bool InputUpdate(PointerEvent pointerEvent) {
-      return ScrollableList.InputUpdate(pointerEvent);
-    }
+  public override bool InputUpdate(PointerEvent pointerEvent) {
+    return ScrollableList.InputUpdate(pointerEvent);
+  }
 
-    public override void Update(double deltaTime) {
-      ScrollableList.Update(deltaTime);
-    }
+  public override void Update(double deltaTime) {
+    ScrollableList.Update(deltaTime);
   }
 }

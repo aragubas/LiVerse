@@ -4,79 +4,78 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace LiVerse.AnaBanUI
+namespace LiVerse.AnaBanUI;
+
+public class UILayer
 {
-  public class UILayer
+  public ControlBase? RootElement { get; set; }
+  public bool HasInputProcessing { get; set; } = true;
+  public RectangleDrawable? BackgroundRectDrawable { get; set; }
+  public event Action<KeyboardEvent>? KeyboardInputUpdateEvent;
+  public event Action<PointerEvent>? PointerInputUpdateEvent;
+
+  // States
+  KeyboardState oldKeyboardState;
+
+  public UILayer()
   {
-    public ControlBase? RootElement { get; set; }
-    public bool HasInputProcessing { get; set; } = true;
-    public RectangleDrawable? BackgroundRectDrawable { get; set; }
-    public event Action<KeyboardEvent>? KeyboardInputUpdateEvent;
-    public event Action<PointerEvent>? PointerInputUpdateEvent;
+    RootElement = null;
+  }
 
-    // States
-    KeyboardState oldKeyboardState;
+  public void Update(double deltaTime)
+  {
+    RootElement?.Update(deltaTime);
+  }
 
-    public UILayer()
+  public void InputUpdate()
+  {
+    PointerEvent latestMouseEvent = new()
     {
-      RootElement = null;
+      PositionRect = UIRoot.MousePositionRectangle,
+      DownRect = UIRoot.MouseDownRectangle,
+      UpRect = UIRoot.MouseUpRectangle,
+      Down = UIRoot.MouseDown
+    };
+
+    KeyboardState newKeyboardState = Keyboard.GetState();
+    KeyboardEvent latestKeyboardEvent = new()
+    {
+      NewKeyboardState = newKeyboardState,
+      OldKeyboardState = oldKeyboardState,
+      PressedKeys = newKeyboardState.GetPressedKeys()
+    };
+
+    bool mouseEventConsumed = false;
+    bool keyboardEventConsumed = false;
+    if (RootElement != null)
+    {
+      mouseEventConsumed = RootElement.InputUpdate(latestMouseEvent);
+      keyboardEventConsumed = RootElement.InputUpdate(latestKeyboardEvent);
     }
 
-    public void Update(double deltaTime)
+    if (!keyboardEventConsumed) KeyboardInputUpdateEvent?.Invoke(latestKeyboardEvent);
+    if (!mouseEventConsumed) PointerInputUpdateEvent?.Invoke(latestMouseEvent);
+
+    oldKeyboardState = Keyboard.GetState();
+  }
+
+  public void Draw(SpriteBatch spriteBatch, double deltaTime)
+  {
+    if (RootElement != null)
     {
-      RootElement?.Update(deltaTime);
+      // Make Sure the RootElement fills the entire viewport
+      Vector2 screenSize = new(spriteBatch.GraphicsDevice.Viewport.Width, spriteBatch.GraphicsDevice.Viewport.Height);
+      RootElement.Size = screenSize;
+      RootElement.MaximumSize = screenSize;
+      RootElement.AbsolutePosition = Vector2.Zero;
+
+      spriteBatch.Begin();
+      BackgroundRectDrawable?.Draw(spriteBatch, deltaTime, screenSize, Vector2.Zero);
+
+      RootElement?.Draw(spriteBatch, deltaTime);
+
+      spriteBatch.End();
     }
 
-    public void InputUpdate()
-    {
-      PointerEvent latestMouseEvent = new()
-      {
-        PositionRect = UIRoot.MousePositionRectangle,
-        DownRect = UIRoot.MouseDownRectangle,
-        UpRect = UIRoot.MouseUpRectangle,
-        Down = UIRoot.MouseDown
-      };
-
-      KeyboardState newKeyboardState = Keyboard.GetState();
-      KeyboardEvent latestKeyboardEvent = new()
-      {
-        NewKeyboardState = newKeyboardState,
-        OldKeyboardState = oldKeyboardState,
-        PressedKeys = newKeyboardState.GetPressedKeys()
-      };
-
-      bool mouseEventConsumed = false;
-      bool keyboardEventConsumed = false;
-      if (RootElement != null)
-      {
-        mouseEventConsumed = RootElement.InputUpdate(latestMouseEvent);
-        keyboardEventConsumed = RootElement.InputUpdate(latestKeyboardEvent);
-      }
-
-      if (!keyboardEventConsumed) KeyboardInputUpdateEvent?.Invoke(latestKeyboardEvent);
-      if (!mouseEventConsumed) PointerInputUpdateEvent?.Invoke(latestMouseEvent);
-
-      oldKeyboardState = Keyboard.GetState();
-    }
-
-    public void Draw(SpriteBatch spriteBatch, double deltaTime)
-    {
-      if (RootElement != null)
-      {
-        // Make Sure the RootElement fills the entire viewport
-        Vector2 screenSize = new(spriteBatch.GraphicsDevice.Viewport.Width, spriteBatch.GraphicsDevice.Viewport.Height);
-        RootElement.Size = screenSize;
-        RootElement.MaximumSize = screenSize;
-        RootElement.AbsolutePosition = Vector2.Zero;
-
-        spriteBatch.Begin();
-        BackgroundRectDrawable?.Draw(spriteBatch, deltaTime, screenSize, Vector2.Zero);
-
-        RootElement?.Draw(spriteBatch, deltaTime);
-
-        spriteBatch.End();
-      }
-
-    }
   }
 }

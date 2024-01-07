@@ -2,8 +2,7 @@
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 
-namespace LiVerse.AnaBanUI.Containers {
-  public abstract class ContainerBase : ControlBase {    
+namespace LiVerse.AnaBanUI.Containers; 
+public abstract class ContainerBase : ControlBase {    
 
-  }
 }

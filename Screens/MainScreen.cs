@@ -10,135 +10,135 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Screens;
 
-namespace LiVerse.Screens {
-  public class MainScreen : ScreenBase {
-    SettingsScreen settingsScreen { get; set; }
-    UILayer WindowRoot;
+namespace LiVerse.Screens;
 
-    // MainUI Members
-    DockFillContainer mainFillContainer = new();
-    DockFillContainer HeaderBar;
-    DockFillContainer centerSplit;
-    DockFillContainer centerCharacterSplit;
-    CharacterRenderer.CharacterRenderer characterRenderer;
-    Label characterNameLabel;
+public class MainScreen : ScreenBase {
+  SettingsScreen settingsScreen { get; set; }
+  UILayer WindowRoot;
 
-    // Panel Components
-    AudioCaptureDevicePanel audioCaptureDevicePanel;
-    CharacterExpressionsPanel characterExpressionsPanel;
-    NewCharacterExpressionScreen newCharacterExpressionScreen;
+  // MainUI Members
+  DockFillContainer mainFillContainer = new();
+  DockFillContainer HeaderBar;
+  DockFillContainer centerSplit;
+  DockFillContainer centerCharacterSplit;
+  CharacterRenderer.CharacterRenderer characterRenderer;
+  Label characterNameLabel;
 
-    bool characterFullView = false;
+  // Panel Components
+  AudioCaptureDevicePanel audioCaptureDevicePanel;
+  CharacterExpressionsPanel characterExpressionsPanel;
+  NewCharacterExpressionScreen newCharacterExpressionScreen;
 
-    public MainScreen(ScreenManager screenManager) : base(screenManager) {
-      // Layout
-      // MainFillContainer
-      //   dock: HeaderBar
-      //   fill: CenterSplit
-      //          dock: AudioCaptureDevicePanel
-      //          fill: CenterCharacterSplit
-      //                  dock: CharacterExpressionsPanel
-      //                  fill: CharacterRenderer
-      
-      WindowRoot = new();
+  bool characterFullView = false;
 
-      HeaderBar = new() { DockType = DockFillContainerDockType.Left };
-      centerSplit = new() { DockType = DockFillContainerDockType.Left };
+  public MainScreen(ScreenManager screenManager) : base(screenManager) {
+    // Layout
+    // MainFillContainer
+    //   dock: HeaderBar
+    //   fill: CenterSplit
+    //          dock: AudioCaptureDevicePanel
+    //          fill: CenterCharacterSplit
+    //                  dock: CharacterExpressionsPanel
+    //                  fill: CharacterRenderer
+    
+    WindowRoot = new();
 
-      characterNameLabel = new("character name goes here", 20) { Color = Color.Black };
-      Button settingsButton = new("Settings");
+    HeaderBar = new() { DockType = DockFillContainerDockType.Left };
+    centerSplit = new() { DockType = DockFillContainerDockType.Left };
 
-      HeaderBar.BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(249, 249, 249, 255), FillCenter = true };
-      HeaderBar.DockElement = settingsButton;
-      HeaderBar.FillElement = characterNameLabel;
+    characterNameLabel = new("character name goes here", 20) { Color = Color.Black };
+    Button settingsButton = new("Settings");
 
-      // Create CharacterRenderer
-      characterRenderer = new();
+    HeaderBar.BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(249, 249, 249, 255), FillCenter = true };
+    HeaderBar.DockElement = settingsButton;
+    HeaderBar.FillElement = characterNameLabel;
 
-      // Create CenterCharacterSplit
-      centerCharacterSplit = new() { DockType = DockFillContainerDockType.Bottom, Margin = new(6) };
-      centerCharacterSplit.FillElement = characterRenderer;
+    // Create CharacterRenderer
+    characterRenderer = new();
 
-      // Create CharacterExpressionsPanel
-      characterExpressionsPanel = new();
-      characterExpressionsPanel.OnNewExpressionButtonPressed += () => {
-        newCharacterExpressionScreen?.ToggleUILayer();
-      };
+    // Create CenterCharacterSplit
+    centerCharacterSplit = new() { DockType = DockFillContainerDockType.Bottom, Margin = new(6) };
+    centerCharacterSplit.FillElement = characterRenderer;
 
-      centerCharacterSplit.DockElement = characterExpressionsPanel;
+    // Create CharacterExpressionsPanel
+    characterExpressionsPanel = new();
+    characterExpressionsPanel.OnNewExpressionButtonPressed += () => {
+      newCharacterExpressionScreen?.ToggleUILayer();
+    };
 
-      // Create AudioCaptureDevice Panel
-      audioCaptureDevicePanel = new();
+    centerCharacterSplit.DockElement = characterExpressionsPanel;
 
-      // Assign panels to CenterSplit
-      centerSplit.DockElement = audioCaptureDevicePanel;
-      centerSplit.FillElement = centerCharacterSplit;
+    // Create AudioCaptureDevice Panel
+    audioCaptureDevicePanel = new();
 
-      mainFillContainer.DockElement = HeaderBar;
-      mainFillContainer.FillElement = centerSplit;
+    // Assign panels to CenterSplit
+    centerSplit.DockElement = audioCaptureDevicePanel;
+    centerSplit.FillElement = centerCharacterSplit;
 
-      WindowRoot.RootElement = mainFillContainer;
+    mainFillContainer.DockElement = HeaderBar;
+    mainFillContainer.FillElement = centerSplit;
 
-      CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneLevelTriggered += MicrophoneLevelMeter_MicrophoneLevelTriggered;
-      CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneLevelUntriggered += MicrophoneLevelMeter_MicrophoneLevelUntriggered;
+    WindowRoot.RootElement = mainFillContainer;
 
-      CaptureDeviceDriverStore.CaptureDeviceDriver.Initialize();
-      CaptureDeviceDriverStore.CaptureDeviceDriver.SetDefaultDevice();
+    CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneLevelTriggered += MicrophoneLevelMeter_MicrophoneLevelTriggered;
+    CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneLevelUntriggered += MicrophoneLevelMeter_MicrophoneLevelUntriggered;
 
-      WindowRoot.KeyboardInputUpdateEvent += FullscreenViewToggle;
+    CaptureDeviceDriverStore.CaptureDeviceDriver.Initialize();
+    CaptureDeviceDriverStore.CaptureDeviceDriver.SetDefaultDevice();
 
-      // Adds WindowRoot UILayer
-      UIRoot.UILayers.Add(WindowRoot);
+    WindowRoot.KeyboardInputUpdateEvent += FullscreenViewToggle;
 
-      settingsScreen = new();
-      settingsButton.Click += settingsScreen.ToggleUILayer;
-      //settingsScreen.ToggleUILayer();
+    // Adds WindowRoot UILayer
+    UIRoot.UILayers.Add(WindowRoot);
 
-      newCharacterExpressionScreen = new();
-      newCharacterExpressionScreen.ToggleUILayer();
+    settingsScreen = new();
+    settingsButton.Click += settingsScreen.ToggleUILayer;
+    //settingsScreen.ToggleUILayer();
 
-    }
-
-    private void MicrophoneLevelMeter_MicrophoneLevelUntriggered() {
-      characterRenderer.SetSpeaking(false);
-    }
-
-    private void MicrophoneLevelMeter_MicrophoneLevelTriggered() {
-      characterRenderer.SetSpeaking(true);
-    }
-
-
-    public override void Detach() { }
-
-    public override void Dispose() {
-      CaptureDeviceDriverStore.CaptureDeviceDriver.Dispose();
-    }
-
-    public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
-      spriteBatch.GraphicsDevice.Clear(!characterFullView ? Color.CornflowerBlue : SettingsStore.WindowTransparencyColor);
-
-      UIRoot.DrawUILayers(spriteBatch, deltaTime);
-    }
-
-    public override void Update(double deltaTime) {
-      // Set CharacterName Label      
-      if (CharacterStore.CurrentCharacter != null) {
-        characterNameLabel.Text = CharacterStore.CurrentCharacter.Name;
-
-      } else { characterNameLabel.Text = "No character selected"; }
-
-      HeaderBar.Visible = !characterFullView;
-      if (centerCharacterSplit.DockElement != null) centerCharacterSplit.DockElement.Visible = !characterFullView;
-      //centerCharacterSplit.Margin = !characterFullView ? Vector2.One * 6 : Vector2.Zero;
-      if (centerSplit.DockElement != null) centerSplit.DockElement.Visible = !characterFullView;
-    }
-
-    void FullscreenViewToggle(KeyboardEvent keyboardEvent) {
-      // Check if toggle key has been pressed
-      if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.Escape) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.Escape)) {
-        characterFullView = !characterFullView;
-      }
-    }
+    newCharacterExpressionScreen = new();
+    newCharacterExpressionScreen.ToggleUILayer();
 
   }
+
+  private void MicrophoneLevelMeter_MicrophoneLevelUntriggered() {
+    characterRenderer.SetSpeaking(false);
+  }
+
+  private void MicrophoneLevelMeter_MicrophoneLevelTriggered() {
+    characterRenderer.SetSpeaking(true);
+  }
+
+
+  public override void Detach() { }
+
+  public override void Dispose() {
+    CaptureDeviceDriverStore.CaptureDeviceDriver.Dispose();
+  }
+
+  public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
+    spriteBatch.GraphicsDevice.Clear(!characterFullView ? Color.CornflowerBlue : SettingsStore.WindowTransparencyColor);
+
+    UIRoot.DrawUILayers(spriteBatch, deltaTime);
+  }
+
+  public override void Update(double deltaTime) {
+    // Set CharacterName Label      
+    if (CharacterStore.CurrentCharacter != null) {
+      characterNameLabel.Text = CharacterStore.CurrentCharacter.Name;
+
+    } else { characterNameLabel.Text = "No character selected"; }
+
+    HeaderBar.Visible = !characterFullView;
+    if (centerCharacterSplit.DockElement != null) centerCharacterSplit.DockElement.Visible = !characterFullView;
+    //centerCharacterSplit.Margin = !characterFullView ? Vector2.One * 6 : Vector2.Zero;
+    if (centerSplit.DockElement != null) centerSplit.DockElement.Visible = !characterFullView;
+  }
+
+  void FullscreenViewToggle(KeyboardEvent keyboardEvent) {
+    // Check if toggle key has been pressed
+    if (keyboardEvent.NewKeyboardState.IsKeyDown(Keys.Escape) && keyboardEvent.OldKeyboardState.IsKeyUp(Keys.Escape)) {
+      characterFullView = !characterFullView;
+    }
+  }
+
 }

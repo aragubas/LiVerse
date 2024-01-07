@@ -5,136 +5,135 @@ using LiVerse.Screens.MainScreenNested.SettingsScreenNested;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace LiVerse.Screens.MainScreenNested
+namespace LiVerse.Screens.MainScreenNested;
+
+public struct SettingsPage
 {
-  public struct SettingsPage
+  public string Title;
+  public ControlBase SettingScreen;
+}
+
+public struct SettingsCategory
+{
+  public string Title;
+  public SettingsPage[] Pages;
+}
+
+public class SettingsScreen
+{
+  public bool Active { get; set; } = true;
+  UILayer UIRootLayer;
+
+  List<SettingsCategory> settingsCategories { get; } = new();
+  Button? lastSelectedPage;
+
+  // UI Elements
+  ScrollableList categoriesSelectList;
+  DockFillContainer settingViewDockFill;
+  Label currentPageTitle;
+
+  void LoadDefaultSettingsPages()
   {
-    public string Title;
-    public ControlBase SettingScreen;
+    settingsCategories.Clear();
+
+    SettingsCategory generalCategory = new();
+    List<SettingsPage> generalCategoryPages = new();
+    SettingsPage audioSettingsPage = new() { Title = "Audio", SettingScreen = new AudioSettingsScreen() };
+    SettingsPage graphicsSettingsPage = new() { Title = "Graphics", SettingScreen = new GraphicsSettingsScreen() };
+
+    generalCategoryPages.Add(audioSettingsPage);
+    generalCategoryPages.Add(graphicsSettingsPage);
+
+    generalCategory.Title = "General";
+    generalCategory.Pages = generalCategoryPages.ToArray();
+
+    settingsCategories.Add(generalCategory);
+
+    BuildSettings();
   }
 
-  public struct SettingsCategory
+  void BuildSettings()
   {
-    public string Title;
-    public SettingsPage[] Pages;
-  }
+    categoriesSelectList.Elements.Clear();
 
-  public class SettingsScreen
-  {
-    public bool Active { get; set; } = true;
-    UILayer UIRootLayer;
-
-    List<SettingsCategory> settingsCategories { get; } = new();
-    Button? lastSelectedPage;
-
-    // UI Elements
-    ScrollableList categoriesSelectList;
-    DockFillContainer settingViewDockFill;
-    Label currentPageTitle;
-
-    void LoadDefaultSettingsPages()
+    foreach (var category in settingsCategories)
     {
-      settingsCategories.Clear();
+      Label categoryTitle = new(category.Title, 26, "Ubuntu") { Margin = new(8) };
+      categoryTitle.Color = Color.Black;
 
-      SettingsCategory generalCategory = new();
-      List<SettingsPage> generalCategoryPages = new();
-      SettingsPage audioSettingsPage = new() { Title = "Audio", SettingScreen = new AudioSettingsScreen() };
-      SettingsPage graphicsSettingsPage = new() { Title = "Graphics", SettingScreen = new GraphicsSettingsScreen() };
+      categoriesSelectList.Elements.Add(categoryTitle);
 
-      generalCategoryPages.Add(audioSettingsPage);
-      generalCategoryPages.Add(graphicsSettingsPage);
-
-      generalCategory.Title = "General";
-      generalCategory.Pages = generalCategoryPages.ToArray();
-
-      settingsCategories.Add(generalCategory);
-
-      BuildSettings();
-    }
-
-    void BuildSettings()
-    {
-      categoriesSelectList.Elements.Clear();
-
-      foreach (var category in settingsCategories)
+      foreach (var page in category.Pages)
       {
-        Label categoryTitle = new(category.Title, 26, "Ubuntu") { Margin = new(8) };
-        categoryTitle.Color = Color.Black;
+        Button settingsPageButton = new(page.Title, buttonStyle: ButtonStyle.Selectable);
+        settingsPageButton.Label.HorizontalAlignment = LabelHorizontalAlignment.Left;
+        settingsPageButton.Click += new Action(() => { SelectCategory(settingsPageButton, page); });
 
-        categoriesSelectList.Elements.Add(categoryTitle);
-
-        foreach (var page in category.Pages)
+        if (settingsPageButton.Label.Text == "Graphics")
         {
-          Button settingsPageButton = new(page.Title, buttonStyle: ButtonStyle.Selectable);
-          settingsPageButton.Label.HorizontalAlignment = LabelHorizontalAlignment.Left;
-          settingsPageButton.Click += new Action(() => { SelectCategory(settingsPageButton, page); });
-
-          if (settingsPageButton.Label.Text == "Graphics")
-          {
-            SelectCategory(settingsPageButton, page);
-          }
-
-          categoriesSelectList.Elements.Add(settingsPageButton);
+          SelectCategory(settingsPageButton, page);
         }
+
+        categoriesSelectList.Elements.Add(settingsPageButton);
       }
     }
+  }
 
-    void SelectCategory(Button sender, SettingsPage page)
+  void SelectCategory(Button sender, SettingsPage page)
+  {
+    settingViewDockFill.FillElement = page.SettingScreen;
+    settingViewDockFill.FillElement.Margin = new(8);
+    currentPageTitle.Text = page.Title;
+
+    if (lastSelectedPage != null) lastSelectedPage.IsSelected = false;
+    sender.IsSelected = true;
+    lastSelectedPage = sender;
+  }
+
+  public SettingsScreen()
+  {
+    UIRootLayer = new() { BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) } };
+
+    DockFillContainer dockFill = new() { Margin = new Vector2(48), DockType = DockFillContainerDockType.Left };
+    DockFillContainer titleDockFill = new() { DockType = DockFillContainerDockType.Right };
+    Button exitButton = new(" X ");
+    exitButton.Click += ToggleUILayer;
+    categoriesSelectList = new() { Gap = 2 };
+    settingViewDockFill = new();
+    currentPageTitle = new Label("No page selected", 28, "Ubuntu") { Color = Color.Black };
+
+    titleDockFill.FillElement = currentPageTitle;
+    titleDockFill.DockElement = exitButton;
+
+    settingViewDockFill.BackgroundRectDrawable = new() { Color = Color.White };
+    settingViewDockFill.DockElement = titleDockFill;
+
+    dockFill.BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(240, 240, 240, 255) };
+    dockFill.DockElement = categoriesSelectList;
+    dockFill.FillElement = settingViewDockFill;
+
+    UIRootLayer.RootElement = dockFill;
+    UIRootLayer.KeyboardInputUpdateEvent += UIRootLayer_KeyboardInputUpdateEvent;
+
+    LoadDefaultSettingsPages();
+  }
+
+  private void UIRootLayer_KeyboardInputUpdateEvent(AnaBanUI.Events.KeyboardEvent obj)
+  {
+    if (obj.NewKeyboardState.IsKeyUp(Keys.Escape) && obj.OldKeyboardState.IsKeyDown(Keys.Escape))
     {
-      settingViewDockFill.FillElement = page.SettingScreen;
-      settingViewDockFill.FillElement.Margin = new(8);
-      currentPageTitle.Text = page.Title;
+      ToggleUILayer();
+    }
+  }
 
-      if (lastSelectedPage != null) lastSelectedPage.IsSelected = false;
-      sender.IsSelected = true;
-      lastSelectedPage = sender;
+  public void ToggleUILayer()
+  {
+    if (UIRoot.UILayers.Contains(UIRootLayer))
+    {
+      UIRoot.UILayers.Remove(UIRootLayer);
+      return;
     }
 
-    public SettingsScreen()
-    {
-      UIRootLayer = new() { BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) } };
-
-      DockFillContainer dockFill = new() { Margin = new Vector2(48), DockType = DockFillContainerDockType.Left };
-      DockFillContainer titleDockFill = new() { DockType = DockFillContainerDockType.Right };
-      Button exitButton = new(" X ");
-      exitButton.Click += ToggleUILayer;
-      categoriesSelectList = new() { Gap = 2 };
-      settingViewDockFill = new();
-      currentPageTitle = new Label("No page selected", 28, "Ubuntu") { Color = Color.Black };
-
-      titleDockFill.FillElement = currentPageTitle;
-      titleDockFill.DockElement = exitButton;
-
-      settingViewDockFill.BackgroundRectDrawable = new() { Color = Color.White };
-      settingViewDockFill.DockElement = titleDockFill;
-
-      dockFill.BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(240, 240, 240, 255) };
-      dockFill.DockElement = categoriesSelectList;
-      dockFill.FillElement = settingViewDockFill;
-
-      UIRootLayer.RootElement = dockFill;
-      UIRootLayer.KeyboardInputUpdateEvent += UIRootLayer_KeyboardInputUpdateEvent;
-
-      LoadDefaultSettingsPages();
-    }
-
-    private void UIRootLayer_KeyboardInputUpdateEvent(AnaBanUI.Events.KeyboardEvent obj)
-    {
-      if (obj.NewKeyboardState.IsKeyUp(Keys.Escape) && obj.OldKeyboardState.IsKeyDown(Keys.Escape))
-      {
-        ToggleUILayer();
-      }
-    }
-
-    public void ToggleUILayer()
-    {
-      if (UIRoot.UILayers.Contains(UIRootLayer))
-      {
-        UIRoot.UILayers.Remove(UIRootLayer);
-        return;
-      }
-
-      UIRoot.UILayers.Add(UIRootLayer);
-    }
+    UIRoot.UILayers.Add(UIRootLayer);
   }
 }

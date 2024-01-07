@@ -6,26 +6,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LiVerse.Stores {
-  public static class CaptureDeviceDriverStore {
-    public static ICaptureDeviceDriver CaptureDeviceDriver { get; set; }
+namespace LiVerse.Stores; 
+public static class CaptureDeviceDriverStore {
+  public static ICaptureDeviceDriver CaptureDeviceDriver { get; set; }
 
-    static CaptureDeviceDriverStore() {
-      CaptureDeviceDriver = new WasapiCaptureDeviceDriver();
-    }
+  static CaptureDeviceDriverStore() {
+    CaptureDeviceDriver = new WasapiCaptureDeviceDriver();
+  }
 
-    public static void Update(double deltaTime) {
-      CaptureDeviceDriver?.Update(deltaTime);
-    }
+  public static void Update(double deltaTime) {
+    CaptureDeviceDriver?.Update(deltaTime);
+  }
 
-    // Load Settings
-    public static void Load() {
+  // Load Settings
+  public static void Load() {
 
-    }
+  }
 
-    // Save Settings
-    public static void Save() {
+  // Save Settings
+  public static void Save() {
 
-    }
   }
 }
