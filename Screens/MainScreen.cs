@@ -25,6 +25,7 @@ public class MainScreen : ScreenBase {
   AudioCaptureDevicePanel audioCaptureDevicePanel;
   CharacterExpressionsPanel characterExpressionsPanel;
   NewCharacterExpressionScreen newCharacterExpressionScreen;
+  CharactersScreen charactersScreen;
 
   bool characterFullView = false;
 
@@ -40,21 +41,30 @@ public class MainScreen : ScreenBase {
     
     WindowRoot = new();
 
-    HeaderBar = new() { DockType = DockFillContainerDockDirection.Left };
-    centerSplit = new() { DockType = DockFillContainerDockDirection.Left };
+    HeaderBar = new() { DockDirection = DockDirection.Left };
+    centerSplit = new() { DockDirection = DockDirection.Left };
 
     characterNameLabel = new("character name goes here", 20);
     Button settingsButton = new("Settings");
+    Button charactersButton = new("Characters");
 
-    HeaderBar.BackgroundRectDrawable = new() { Color = ColorScheme.ForegroundLevel0, FillCenter = true };
+    DockFillContainer characterNameCharacterDock = new();
+    characterNameCharacterDock.DockDirection = DockDirection.Right;
+    characterNameCharacterDock.FillElement = characterNameLabel;
+    characterNameCharacterDock.DockElement = charactersButton;
+
+    HeaderBar.BackgroundRectDrawable = new() { 
+      Color = ColorScheme.ForegroundLevel0, 
+      FillCenter = true 
+    };
     HeaderBar.DockElement = settingsButton;
-    HeaderBar.FillElement = characterNameLabel;
+    HeaderBar.FillElement = characterNameCharacterDock;
 
     // Create CharacterRenderer
     characterRenderer = new();
 
     // Create CenterCharacterSplit
-    centerCharacterSplit = new() { DockType = DockFillContainerDockDirection.Bottom, Margin = new(8) };
+    centerCharacterSplit = new() { DockDirection = DockDirection.Bottom, Margin = new(8) };
     centerCharacterSplit.FillElement = characterRenderer;
 
     // Create CharacterExpressionsPanel
@@ -90,10 +100,15 @@ public class MainScreen : ScreenBase {
 
     settingsScreen = new();
     settingsButton.Click += settingsScreen.ToggleUILayer;
-    settingsScreen.ToggleUILayer();
+    //settingsScreen.ToggleUILayer();
 
     newCharacterExpressionScreen = new();
     //newCharacterExpressionScreen.ToggleUILayer();
+
+    charactersScreen = new();
+    charactersButton.Click += charactersScreen.ToggleUILayer;
+    charactersScreen.ToggleUILayer();
+
   }
 
   private void MicrophoneLevelMeter_MicrophoneLevelUntriggered() {

@@ -13,7 +13,7 @@ public class CharacterExpressionsPanel : ControlBase {
 
 
   public CharacterExpressionsPanel() {
-    optionsDockFill = new() { DockType = DockFillContainerDockDirection.Left, Gap = 8 };
+    optionsDockFill = new() { DockDirection = DockDirection.Left, Gap = 8 };
     expressionsList = new() { StretchElements = false, ListDirection = ScrollableListDirection.Horizontal, Gap = 8f };
 
     optionsDockFill.FillElement = expressionsList;

@@ -17,9 +17,8 @@ public struct SettingsCategory {
   public SettingsPage[] Pages;
 }
 
-public class SettingsScreen {
+public class SettingsScreen : NestedScreen {
   public bool Active { get; set; } = true;
-  UILayer UIRootLayer;
 
   List<SettingsCategory> settingsCategories { get; } = new();
   Button? lastSelectedPage;
@@ -30,14 +29,15 @@ public class SettingsScreen {
   Label currentPageTitle;
 
   public SettingsScreen() {
-    UIRootLayer = new() { BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) } };
+    // Sets Dark Background
+    RootLayer.BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) };
 
     DockFillContainer dockFill = new() {
       Margin = new Vector2(48),
-      DockType = DockFillContainerDockDirection.Left
+      DockDirection = DockDirection.Left
     };
     DockFillContainer titleDockFill = new() {
-      DockType = DockFillContainerDockDirection.Right
+      DockDirection = DockDirection.Right
     };
 
     Button exitButton = new(" X ");
@@ -63,8 +63,8 @@ public class SettingsScreen {
     dockFill.DockElement = categoriesSelectList;
     dockFill.FillElement = settingViewDockFill;
 
-    UIRootLayer.RootElement = dockFill;
-    UIRootLayer.KeyboardInputUpdateEvent += UIRootLayer_KeyboardInputUpdateEvent;
+    RootLayer.RootElement = dockFill;
+    RootLayer.KeyboardInputUpdateEvent += UIRootLayer_KeyboardInputUpdateEvent;
 
     LoadDefaultSettingsPages();
   }
@@ -130,11 +130,11 @@ public class SettingsScreen {
   }
 
   public void ToggleUILayer() {
-    if (UIRoot.UILayers.Contains(UIRootLayer)) {
-      UIRoot.UILayers.Remove(UIRootLayer);
+    if (UIRoot.UILayers.Contains(RootLayer)) {
+      UIRoot.UILayers.Remove(RootLayer);
       return;
     }
 
-    UIRoot.UILayers.Add(UIRootLayer);
+    UIRoot.UILayers.Add(RootLayer);
   }
 }

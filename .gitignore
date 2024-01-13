@@ -4,3 +4,4 @@ obj/
 omnisharp.json
 build/
 release/
+.idea/

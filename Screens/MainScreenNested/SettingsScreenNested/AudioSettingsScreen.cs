@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested; 
+
 public class AudioSettingsScreen : ControlBase {
   ScrollableList ScrollableList { get; }
   DockFillContainer DockFill { get; }
@@ -21,7 +22,7 @@ public class AudioSettingsScreen : ControlBase {
 
     DockFill = new() { 
       ParentControl = this, 
-      DockType = DockFillContainerDockDirection.Left, 
+      DockDirection = DockDirection.Left, 
       Gap = 8
     };
     Label audioInputDeviceToggleTitle = new("Input Device: ");

@@ -30,7 +30,7 @@ public class WindowTransparencyColorSettings : ControlBase {
 
     DockFillContainer DockFillTransparencyType = new() { 
       ParentControl = this, 
-      DockType = DockFillContainerDockDirection.Left, 
+      DockDirection = DockDirection.Left, 
       Gap = 8
     };
     Label backgroundTransparencyTypeTitleLabel = new("Background Transparency Type:");
@@ -74,11 +74,11 @@ public class WindowTransparencyColorSettings : ControlBase {
 
     dockFillCustomColor = new() { 
       Gap = 8f, 
-      DockType = DockFillContainerDockDirection.Right 
+      DockDirection = DockDirection.Right 
     };
     ScrollableList rgbSlidersList = new() { Gap = 8f };
 
-    DockFillContainer rSliderDockFill = new() { DockType = DockFillContainerDockDirection.Left, Gap = 8 };
+    DockFillContainer rSliderDockFill = new() { DockDirection = DockDirection.Left, Gap = 8 };
     rSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     rSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
     rSliderDockFill.DockElement = new Label("R:");
@@ -86,7 +86,7 @@ public class WindowTransparencyColorSettings : ControlBase {
 
     rgbSlidersList.Elements.Add(rSliderDockFill);
 
-    DockFillContainer gSliderDockFill = new() { DockType = DockFillContainerDockDirection.Left, Gap = 8 };
+    DockFillContainer gSliderDockFill = new() { DockDirection = DockDirection.Left, Gap = 8 };
     gSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     gSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
     gSliderDockFill.DockElement = new Label("G:");
@@ -94,7 +94,7 @@ public class WindowTransparencyColorSettings : ControlBase {
 
     rgbSlidersList.Elements.Add(gSliderDockFill);
 
-    DockFillContainer bSliderDockFill = new() { DockType = DockFillContainerDockDirection.Left, Gap = 8 };
+    DockFillContainer bSliderDockFill = new() { DockDirection = DockDirection.Left, Gap = 8 };
     bSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     bSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
     bSliderDockFill.DockElement = new Label("B:");

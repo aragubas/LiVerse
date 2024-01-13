@@ -142,6 +142,7 @@ public class Button : ControlBase {
 
     MinimumSize = Label.MinimumSize + LabelPadding;
 
+    // Handles Blinking
     if (isBlinking) {
       blinkTimer += 1 * deltaTime;
 
