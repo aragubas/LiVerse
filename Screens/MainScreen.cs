@@ -38,7 +38,7 @@ public class MainScreen : ScreenBase {
     //          fill: CenterCharacterSplit
     //                  dock: CharacterExpressionsPanel
     //                  fill: CharacterRenderer
-    
+
     WindowRoot = new();
 
     HeaderBar = new() { DockDirection = DockDirection.Left };
@@ -53,9 +53,9 @@ public class MainScreen : ScreenBase {
     characterNameCharacterDock.FillElement = characterNameLabel;
     characterNameCharacterDock.DockElement = charactersButton;
 
-    HeaderBar.BackgroundRectDrawable = new() { 
-      Color = ColorScheme.ForegroundLevel0, 
-      FillCenter = true 
+    HeaderBar.BackgroundRectDrawable = new() {
+      Color = ColorScheme.ForegroundLevel0,
+      FillCenter = true
     };
     HeaderBar.DockElement = settingsButton;
     HeaderBar.FillElement = characterNameCharacterDock;
@@ -87,11 +87,13 @@ public class MainScreen : ScreenBase {
 
     WindowRoot.RootElement = mainFillContainer;
 
-    CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneLevelTriggered += MicrophoneLevelMeter_MicrophoneLevelTriggered;
-    CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneLevelUntriggered += MicrophoneLevelMeter_MicrophoneLevelUntriggered;
+    if (CaptureDeviceDriverStore.CaptureDeviceDriver != null) {
+      CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneLevelTriggered += MicrophoneLevelMeter_MicrophoneLevelTriggered;
+      CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneLevelUntriggered += MicrophoneLevelMeter_MicrophoneLevelUntriggered;
 
-    CaptureDeviceDriverStore.CaptureDeviceDriver.Initialize();
-    CaptureDeviceDriverStore.CaptureDeviceDriver.SetDefaultDevice();
+      CaptureDeviceDriverStore.CaptureDeviceDriver.Initialize();
+      CaptureDeviceDriverStore.CaptureDeviceDriver.SetDefaultDevice();
+    }
 
     WindowRoot.KeyboardInputUpdateEvent += FullscreenViewToggle;
 
@@ -123,7 +125,9 @@ public class MainScreen : ScreenBase {
   public override void Detach() { }
 
   public override void Dispose() {
-    CaptureDeviceDriverStore.CaptureDeviceDriver.Dispose();
+    if (CaptureDeviceDriverStore.CaptureDeviceDriver != null) {
+      CaptureDeviceDriverStore.CaptureDeviceDriver.Dispose();
+    }
   }
 
   public override void Draw(SpriteBatch spriteBatch, double deltaTime) {

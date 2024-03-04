@@ -6,12 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LiVerse.Stores; 
+namespace LiVerse.Stores;
 public static class CaptureDeviceDriverStore {
-  public static ICaptureDeviceDriver CaptureDeviceDriver { get; set; }
+  public static ICaptureDeviceDriver? CaptureDeviceDriver { get; set; }
 
   static CaptureDeviceDriverStore() {
+#if WINDOWS
     CaptureDeviceDriver = new WasapiCaptureDeviceDriver();
+#else
+    CaptureDeviceDriver = null;
+#endif
   }
 
   public static void Update(double deltaTime) {

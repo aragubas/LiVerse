@@ -8,32 +8,34 @@ using LiVerse.Stores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested; 
+namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested;
 
 public class AudioSettingsScreen : ControlBase {
   ScrollableList ScrollableList { get; }
   DockFillContainer DockFill { get; }
 
   public AudioSettingsScreen() {
-    ScrollableList = new() { 
-      ParentControl = this, 
-      Gap = 8 
+    ScrollableList = new() {
+      ParentControl = this,
+      Gap = 8
     };
 
-    DockFill = new() { 
-      ParentControl = this, 
-      DockDirection = DockDirection.Left, 
+    DockFill = new() {
+      ParentControl = this,
+      DockDirection = DockDirection.Left,
       Gap = 8
     };
     Label audioInputDeviceToggleTitle = new("Input Device: ");
     List<ComboBoxOption> options = new();
 
-    foreach (var captureDevice in CaptureDeviceDriverStore.CaptureDeviceDriver.GetCaptureDevices()) {
-      options.Add(new ComboBoxOption(captureDevice.DeviceName, captureDevice));
+    if (CaptureDeviceDriverStore.CaptureDeviceDriver != null) {
+      foreach (var captureDevice in CaptureDeviceDriverStore.CaptureDeviceDriver.GetCaptureDevices()) {
+        options.Add(new ComboBoxOption(captureDevice.DeviceName, captureDevice));
+      }
     }
 
-    ComboBoxOption defaultOption = new() { OptionText = "None" };
-    if (CaptureDeviceDriverStore.CaptureDeviceDriver.CurrentCaptureDevice != null) {
+    ComboBoxOption defaultOption = new() { OptionText = "None/Unavailable" };
+    if (CaptureDeviceDriverStore.CaptureDeviceDriver != null) {
       defaultOption.OptionText = CaptureDeviceDriverStore.CaptureDeviceDriver.CurrentCaptureDevice.DeviceName;
       defaultOption.ExtraData = CaptureDeviceDriverStore.CaptureDeviceDriver.CurrentCaptureDevice.DeviceId;
     }

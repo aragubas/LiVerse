@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
 
-namespace LiVerse.Screens.MainScreenNested; 
+namespace LiVerse.Screens.MainScreenNested;
 public class AudioCaptureDevicePanel : ControlBase {
   // Static ReadOnly Fields
   static readonly Color speakingIndicatorColor = ColorScheme.ControlBackgroundDisabled;
@@ -37,14 +37,17 @@ public class AudioCaptureDevicePanel : ControlBase {
 
     sideFillContainer.DockElement = speakingIndicatorSolidColorRect;
 
-    CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneLevelTriggered += CaptureDeviceDriver_MicrophoneLevelTriggered;
-    CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneLevelUntriggered += CaptureDeviceDriver_MicrophoneLevelUntriggered;
-    CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneVolumeLevelUpdated += CaptureDeviceDriver_MicrophoneVolumeLevelUpdated;
+    if (CaptureDeviceDriverStore.CaptureDeviceDriver != null) {
+      CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneLevelTriggered += CaptureDeviceDriver_MicrophoneLevelTriggered;
+      CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneLevelUntriggered += CaptureDeviceDriver_MicrophoneLevelUntriggered;
+      CaptureDeviceDriverStore.CaptureDeviceDriver.MicrophoneVolumeLevelUpdated += CaptureDeviceDriver_MicrophoneVolumeLevelUpdated;
 
-    // Sincronize Values
-    micLevelTrigger.TriggerLevel = CaptureDeviceDriverStore.CaptureDeviceDriver.TriggerLevel;
-    micLevelTrigger.MaximumValue = CaptureDeviceDriverStore.CaptureDeviceDriver.MaximumLevel;
-    levelDelayTrigger.TriggerLevel = CaptureDeviceDriverStore.CaptureDeviceDriver.ActivationDelayTrigger;
+      // Sincronize Values
+      micLevelTrigger.TriggerLevel = CaptureDeviceDriverStore.CaptureDeviceDriver.TriggerLevel;
+      micLevelTrigger.MaximumValue = CaptureDeviceDriverStore.CaptureDeviceDriver.MaximumLevel;
+      levelDelayTrigger.TriggerLevel = CaptureDeviceDriverStore.CaptureDeviceDriver.ActivationDelayTrigger;
+    }
+
   }
 
   private void CaptureDeviceDriver_MicrophoneVolumeLevelUpdated(double obj) {
@@ -78,18 +81,25 @@ public class AudioCaptureDevicePanel : ControlBase {
   }
 
   public override void Update(double deltaTime) {
-    // Sincronize Changes
-    CaptureDeviceDriverStore.CaptureDeviceDriver.TriggerLevel = micLevelTrigger.TriggerLevel;
-    CaptureDeviceDriverStore.CaptureDeviceDriver.ActivationDelayTrigger = levelDelayTrigger.TriggerLevel;
+
+    if (CaptureDeviceDriverStore.CaptureDeviceDriver != null) {
+      // Sincronize Changes
+      CaptureDeviceDriverStore.CaptureDeviceDriver.TriggerLevel = micLevelTrigger.TriggerLevel;
+      CaptureDeviceDriverStore.CaptureDeviceDriver.ActivationDelayTrigger = levelDelayTrigger.TriggerLevel;
+    } else {
+      micLevelTrigger.CurrentValue = 0;
+    }
 
     sideFillContainer.Update(deltaTime);
 
-    // Set Values
-    levelDelayTrigger.CurrentValue = (float)CaptureDeviceDriverStore.CaptureDeviceDriver.ActivationDelay;
+    if (CaptureDeviceDriverStore.CaptureDeviceDriver != null) {
+      // Set Values
+      levelDelayTrigger.CurrentValue = (float)CaptureDeviceDriverStore.CaptureDeviceDriver.ActivationDelay;
 
-    // Sincronize Values
-    micLevelTrigger.TriggerLevel = CaptureDeviceDriverStore.CaptureDeviceDriver.TriggerLevel;
-    micLevelTrigger.MaximumValue = CaptureDeviceDriverStore.CaptureDeviceDriver.MaximumLevel;
-    levelDelayTrigger.TriggerLevel = CaptureDeviceDriverStore.CaptureDeviceDriver.ActivationDelayTrigger;
+      // Sincronize Values
+      micLevelTrigger.TriggerLevel = CaptureDeviceDriverStore.CaptureDeviceDriver.TriggerLevel;
+      micLevelTrigger.MaximumValue = CaptureDeviceDriverStore.CaptureDeviceDriver.MaximumLevel;
+      levelDelayTrigger.TriggerLevel = CaptureDeviceDriverStore.CaptureDeviceDriver.ActivationDelayTrigger;
+    }
   }
 }
