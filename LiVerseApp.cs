@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using LiVerse.AnaBanUI;
 using LiVerse.Screens;
 using LiVerse.Stores;
 using SFML.Graphics;
@@ -7,7 +8,8 @@ using SFML.Window;
 
 namespace LiVerse;
 public class LiVerseApp : IDisposable {
-  readonly ScreenManager screenManager = new();
+  readonly ScreenManager screenManager;
+  readonly UIRoot uIRoot;
   RenderWindow window;
   View mainView;
 
@@ -31,6 +33,10 @@ public class LiVerseApp : IDisposable {
     window.SetVerticalSyncEnabled(true);
 
     mainView = window.GetView();
+
+    // Set up Screens and UIRoot
+    uIRoot = new(window);
+    screenManager = new(uIRoot);
   }
 
   void OnClosed(object? sender, EventArgs args) {

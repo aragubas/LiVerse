@@ -1,10 +1,13 @@
-﻿using SFML.Graphics;
+﻿using LiVerse.AnaBanUI;
+using SFML.Graphics;
 
 namespace LiVerse;
 public class ScreenManager : Drawable {
   ScreenBase? CurrentScreen;
+  public readonly UIRoot UIRoot;
 
-  public ScreenManager() {
+  public ScreenManager(UIRoot uIRoot) {
+    UIRoot = uIRoot;
   }
 
   /// <summary>
