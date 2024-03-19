@@ -1,9 +1,7 @@
 ﻿using LiVerse.AppInfo;
-using MonoGame.Framework;
 using Newtonsoft.Json;
-using System.Text.Json;
 
-namespace LiVerse; 
+namespace LiVerse;
 public class Program {
   public static int Main(string[] arguments) {
     // Check if ApplicationData Directory Exists
@@ -47,7 +45,7 @@ public class Program {
       }
 
     } catch (Exception ex) {
-        Console.WriteLine($"Unhandled Runtime Exception Detected! HResult: {ex.HResult}\n{ex.Message}");
+        Console.WriteLine($"Unhandled Runtime Exception! HResult: {ex.HResult}\n{ex.Message}");
         Console.WriteLine(ex.StackTrace);
         LogException(ex);
 
@@ -80,8 +78,7 @@ public class Program {
     try {
       File.WriteAllText(logFilePath, logFileContents, System.Text.Encoding.UTF8);
 
-    }
-    catch (Exception _ex) {
+    } catch (Exception _ex) {
       Console.WriteLine($"Could not write log file. {_ex.Message}");
       return;
     }

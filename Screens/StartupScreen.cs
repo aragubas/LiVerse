@@ -1,21 +1,15 @@
-﻿using LiVerse.AnaBanUI;
-using LiVerse.Stores;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LiVerse.Stores;
+using SFML.Graphics;
+using SFML.System;
 
-namespace LiVerse.Screens; 
+namespace LiVerse.Screens;
 public class StartupScreen : ScreenBase {
-  public UILayer? WindowRoot => null;
-  Texture2D startupBannerTexture;
+  Texture startupBannerTexture;
   double waitTimer = 0;
   double waitTime = 0.016;
+  RectangleShape appLogo = new();
 
-  static readonly Color clearColor = Color.FromNonPremultiplied(110, 62, 143, 255);
+  static readonly Color clearColor = new Color(110, 62, 143, 255);
 
   public StartupScreen(ScreenManager screenManager) : base(screenManager) {
 #if DEBUG
@@ -23,7 +17,11 @@ public class StartupScreen : ScreenBase {
     waitTime = 0.000000000016;
 #endif
 
-    startupBannerTexture = ResourceManager.LoadTexture2DFromFile(Path.Combine(ResourceManager.DefaultContentPath, "Images", "startup_banner.png"), DefaultColorProcessors.PremultiplyAlpha);
+    startupBannerTexture = ResourceManager.LoadTextureFromFile(Path.Combine(ResourceManager.DefaultContentPath, "Images", "startup_banner.png"));
+    appLogo.Texture = startupBannerTexture;
+
+    appLogo.Size = new Vector2f(startupBannerTexture.Size.X, startupBannerTexture.Size.Y);
+    appLogo.Origin = new Vector2f(appLogo.Size.X / 2, appLogo.Size.Y / 2);
   }
 
   public override void Detach() {
@@ -32,26 +30,17 @@ public class StartupScreen : ScreenBase {
 
   public override void Dispose() { }
 
-  public override void Draw(SpriteBatch spriteBatch, double deltaTime) {
-    spriteBatch.GraphicsDevice.Clear(clearColor);
+  public override void Draw(RenderTarget target, RenderStates states) {
+    target.Clear(clearColor);
 
-    Rectangle viewRect = new Rectangle(
-      spriteBatch.GraphicsDevice.Viewport.Width / 2 - startupBannerTexture.Width / 2,
-      spriteBatch.GraphicsDevice.Viewport.Height / 2 - startupBannerTexture.Height / 2,
-      startupBannerTexture.Width,
-      startupBannerTexture.Height);
+    appLogo.Position = target.GetView().Center;
 
-    spriteBatch.Begin();
-
-    spriteBatch.Draw(startupBannerTexture, viewRect, Color.White);
-
-    spriteBatch.End();
+    target.Draw(appLogo);
   }
 
   void doStartup() {
     // Load Stores Settings
     SettingsStore.Load();
-    CharacterStore.Load();
     CaptureDeviceDriverStore.Load();
 
     MainScreen mainScreen = new(ScreenManager);

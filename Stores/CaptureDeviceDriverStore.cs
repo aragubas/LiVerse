@@ -1,10 +1,4 @@
 ﻿using LiVerse.CaptureDeviceDriver;
-using LiVerse.CaptureDeviceDriver.WasapiCaptureDevice;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LiVerse.Stores;
 public static class CaptureDeviceDriverStore {

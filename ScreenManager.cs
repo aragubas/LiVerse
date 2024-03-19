@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using SFML.Graphics;
 
-namespace LiVerse; 
-public class ScreenManager {
+namespace LiVerse;
+public class ScreenManager : Drawable {
   ScreenBase? CurrentScreen;
 
   public ScreenManager() {
@@ -34,9 +34,9 @@ public class ScreenManager {
     CurrentScreen?.Update(deltaTime);
   }
 
-  public void Draw(SpriteBatch spriteBatch, double deltaTime) {
-    CurrentScreen?.Draw(spriteBatch, deltaTime);
+  public void Draw(RenderTarget target, RenderStates states) {
+    if (CurrentScreen == null) return;
+
+    target.Draw(CurrentScreen);
   }
-
-
 }

@@ -1,6 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using SFML.Graphics;
 
-namespace LiVerse.SerializeableModels; 
+namespace LiVerse.SerializeableModels;
 public struct SerializeableColor {
   public int R;
   public int G;
@@ -22,7 +22,7 @@ public struct SerializeableColor {
   }
 
   public Color ToColor() {
-    return new Color() {R = (byte)R, G = (byte)G, B = (byte)B, A = (byte)A};
+    return new Color() { R = (byte)R, G = (byte)G, B = (byte)B, A = (byte)A };
   }
 
   public override string ToString() {

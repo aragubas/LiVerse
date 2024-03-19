@@ -1,8 +1,7 @@
-﻿using LiVerse.AnaBanUI;
-using Microsoft.Xna.Framework.Graphics;
+﻿using SFML.Graphics;
 
-namespace LiVerse; 
-public abstract class ScreenBase : IDisposable {
+namespace LiVerse;
+public abstract class ScreenBase : IDisposable, Drawable {
   protected ScreenManager ScreenManager { get; }
 
   public ScreenBase(ScreenManager screenManagerRef) {
@@ -11,7 +10,7 @@ public abstract class ScreenBase : IDisposable {
 
   public abstract void Detach();
   public abstract void Update(double deltaTime);
-  public abstract void Draw(SpriteBatch spriteBatch, double deltaTime);
+  public abstract void Draw(RenderTarget target, RenderStates states);
   public abstract void Dispose();
 
 }

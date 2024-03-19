@@ -1,8 +1,7 @@
 using LiVerse.AppInfo;
-using Microsoft.Xna.Framework.Graphics;
-using SpriteFontPlus;
+using SFML.Graphics;
 
-namespace LiVerse; 
+namespace LiVerse;
 public static class ResourceManager {
   public static string DefaultContentPath = Path.Combine(Environment.CurrentDirectory, "ApplicationData");
   public static string DefaultContentUserDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -11,37 +10,32 @@ public static class ResourceManager {
   public static Info AppInfo;
 
   //public static FontSystem GlobalFontSystem = new FontSystem();
-  public static Dictionary<string, SpriteFont> FontCache = new();
+  public static Dictionary<string, Font> FontCache = new();
 
-  public static SpriteFont BakeFont(string fontName, int size) {
+  public static Font BakeFont(string fontName) {
+    // Avoids common mistakes with Font file names
     string fontPath = Path.Combine(DefaultContentPath, "Fonts", fontName + ".ttf");
     if (fontPath.EndsWith(".ttf.ttf")) fontPath = fontPath.Replace(".ttf.ttf", ".ttf");
-    
-    TtfFontBakerResult fontBakeResult = TtfFontBaker.Bake(File.ReadAllBytes(fontPath),
-      size, 1024, 1024, new[] {
-        CharacterRange.BasicLatin,
-        CharacterRange.Latin1Supplement,
-        CharacterRange.LatinExtendedA,
-        CharacterRange.Cyrillic
-      });
 
-    return fontBakeResult.CreateSpriteFont(LiVerseApp.Graphics!.GraphicsDevice);
+    Font newFont = new(fontPath);
+
+    return newFont;
   }
 
   /// <summary>
   /// Gets font from FontCache, bake font if not found in cache
   /// </summary>
-  public static SpriteFont GetFont(string fontName, int size) {
-    string fontKey = $"{fontName}:{size}";
+  public static Font GetFont(string fontName) {
+    string fontKey = fontName.ToLower();
 
-    if (FontCache.TryGetValue(fontKey, out SpriteFont? foundValue)) {
+    if (FontCache.TryGetValue(fontKey, out Font? foundValue)) {
       return foundValue;
     }
 
-    SpriteFont bakeResult = BakeFont(fontName, size);
-    FontCache.Add(fontKey, bakeResult);
+    Font newFont = BakeFont(fontName);
+    FontCache.Add(fontKey, newFont);
 
-    return bakeResult;
+    return newFont;
   }
 
   public static void LoadBaseResources() {
@@ -53,24 +47,18 @@ public static class ResourceManager {
     string openSansFontPath = Path.Combine(DefaultContentPath, "Fonts", "NotoSans.ttf");
     if (!File.Exists(openSansFontPath)) {
       throw new FileNotFoundException("Could not find default font \"NotoSans.ttf\".");
-    }      
+    }
   }
 
-  // Load Sprite From File
-  public static Texture2D LoadTexture2DFromFile(string filePath, Action<byte[]> colorProcessor) {
+  // Load Texture From File
+  public static Texture LoadTextureFromFile(string filePath) {
     if (!File.Exists(filePath)) {
-      throw new FileNotFoundException($"Could not find Texture, Path: {filePath}");
+      throw new FileNotFoundException($"Could not find Texture. Path: {filePath}");
     }
 
-    using (FileStream fileStream = new(filePath, FileMode.Open)) {
-      Texture2D ValToReturn = Texture2D.FromStream(LiVerseApp.Graphics!.GraphicsDevice, fileStream, colorProcessor);
+    Texture newTexture = new(filePath);
 
-      return ValToReturn;
-    }
-  }
-  
-  public static Texture2D LoadTexture2DFromFile(string filePath) {
-    return LoadTexture2DFromFile(filePath, DefaultColorProcessors.ZeroTransparentPixels);
+    return newTexture;
   }
 
 }

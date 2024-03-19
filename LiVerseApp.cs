@@ -1,84 +1,96 @@
-﻿using LiVerse.AnaBanUI;
+﻿using System.Runtime.CompilerServices;
 using LiVerse.Screens;
 using LiVerse.Stores;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
-using System.Reflection;
+using SFML.Graphics;
+using SFML.System;
+using SFML.Window;
 
-namespace LiVerse; 
-public class LiVerseApp : Game {
-  public static GraphicsDeviceManager? Graphics { get; set; }
-  SpriteBatch spriteBatch;
-  readonly ScreenManager screenManager;
+namespace LiVerse;
+public class LiVerseApp : IDisposable {
+  readonly ScreenManager screenManager = new();
+  RenderWindow window;
+  View mainView;
 
-
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
   public LiVerseApp() {
-    Graphics = new GraphicsDeviceManager(this);
-    screenManager = new ScreenManager();
+    VideoMode videoMode = new() {
+      Width = 1024,
+      Height = 600
+    };
 
-    // Enables VSync
-    Graphics.SynchronizeWithVerticalRetrace = true;
-    Graphics.ApplyChanges();
+    ContextSettings contextSettings = new() {
+      AntialiasingLevel = 8
+    };
 
-    IsMouseVisible = true;
-    IsFixedTimeStep = false;
+    window = new(videoMode, "LiVerse", Styles.Resize | Styles.Close, contextSettings);
 
-    InactiveSleepTime = TimeSpan.Zero;
+    // Wire up Events
+    window.Closed += OnClosed;
+    window.Resized += OnResized;
+
+    // Set Window properties
+    window.SetVerticalSyncEnabled(true);
+
+    mainView = window.GetView();
   }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-  protected override void OnExiting(object sender, EventArgs args) {
+  void OnClosed(object? sender, EventArgs args) {
     Console.WriteLine("Goodbye!");
     screenManager.DetachScreen();
 
     SettingsStore.Save();
+
+    window.Close();
   }
 
-  protected override void Initialize() {
-    Window.Title = $"{ResourceManager.AppInfo.Name} v{ResourceManager.AppInfo.Version}";
-#if DEBUG
-    Window.Title += " {Debug}";
-#endif
+  void OnResized(object? sender, SizeEventArgs args) {
+    mainView.Reset(new FloatRect(0, 0, args.Width, args.Height));
+    window.SetView(mainView);
+  }
 
-    Window.AllowUserResizing = true;
-    Window.TextInput += OnWindowTextInput;
+  public void Run() {
+    Initialize();
 
-    // Creates the sprite batch
-    if (Graphics == null) {
-      throw new NullReferenceException("Could not create SpriteBatch, GraphicsDeviceManager is null");
+    Clock deltaClock = new();
+
+    while (window.IsOpen) {
+      double deltaTime = deltaClock.Restart().AsSeconds();
+
+      // Handle OS Stuff
+      window.DispatchEvents();
+
+      // First update, then draw
+      Update(deltaTime);
+      Draw(deltaTime);
     }
-    spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
+  }
 
+  void Initialize() {
     // Load base resources
     ResourceManager.LoadBaseResources();
 
     // Attach MainScreen to ScreenManager
     screenManager.AttachScreen(new StartupScreen(screenManager));
-
   }
 
-  void OnWindowTextInput(object? sender, TextInputEventArgs args) {
-    UIRoot.UpdateWindowTextInput(args);
-  }
 
-  protected override void Update(GameTime gameTime) {
-    UIRoot.WindowFocused = IsActive;
-
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  void Update(double delta) {
     // Update Microphone
-    CaptureDeviceDriverStore.Update(gameTime.GetElapsedSeconds());
-
-    // Update UIRoot
-    UIRoot.Update(gameTime.GetElapsedSeconds());
+    CaptureDeviceDriverStore.Update(delta);
 
     // Update Screen
-    screenManager.Update(gameTime.GetElapsedSeconds());
+    screenManager.Update(delta);
   }
 
+  void Draw(double delta) {
+    window.Clear(Color.Transparent);
 
-  protected override void Draw(GameTime gameTime) {
-    screenManager.Draw(spriteBatch, gameTime.GetElapsedSeconds());
+    window.Draw(screenManager);
+
+    window.Display();
   }
 
+  public void Dispose() {
+    window.Dispose();
+  }
 }

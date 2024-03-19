@@ -1,8 +1,8 @@
 ﻿using LiVerse.SerializeableModels;
 using Newtonsoft.Json;
-using Color = Microsoft.Xna.Framework.Color;
+using SFML.Graphics;
 
-namespace LiVerse.Stores; 
+namespace LiVerse.Stores;
 public static class SettingsStore {
   private struct SerializeableSettingsStore {
     public SerializeableColor WindowTransparencyColor { get; set; }
