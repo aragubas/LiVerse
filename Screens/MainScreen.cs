@@ -25,8 +25,10 @@ public class MainScreen : ScreenBase {
     button = new("Bwah!");
     Button button2 = new("Abawa");
 
-    FlexibleContainer flex = new();
-    flex.Gap = 50f;
+    FlexibleContainer flex = new() {
+      Gap = 50f,
+      Padding = new SFML.System.Vector2f(50, 50)
+    };
     flex.Controls.Add(button);
     flex.Controls.Add(button2);
 

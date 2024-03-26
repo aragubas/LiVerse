@@ -11,19 +11,23 @@ public class Button : Control {
     buttonBackground = new(new Vector2f(24, 16));
     buttonBackground.FillColor = Color.Blue;
 
+    //Font font = new("./ApplicationData/Fonts/NotoSans.ttf");
     this.text = new(text, ResourceManager.GetFont("NotoSans.ttf"), 18);
 
     this.text.FillColor = Color.Red;
+
+    Padding = new Vector2f(24, 18);
   }
 
   public override void Update(double deltaTime) {
     buttonBackground.Size = ContentArea;
-    text.Position = ContentArea / 2;
+    //text.Position = ContentArea / 2;
 
     FloatRect textLocalBounds = text.GetLocalBounds();
-    text.Origin = new Vector2f(textLocalBounds.Width / 2, textLocalBounds.Height / 2);
+    //text.Origin = new Vector2f(textLocalBounds.Width / 2, textLocalBounds.Height / 2);
 
-    MinimumSize = new Vector2f(textLocalBounds.Width, textLocalBounds.Height);
+    MinimumSize = new Vector2f(textLocalBounds.Width + textLocalBounds.Left,
+      textLocalBounds.Height + textLocalBounds.Top);
   }
 
   protected override void DoDraw(RenderTarget target, RenderStates states) {

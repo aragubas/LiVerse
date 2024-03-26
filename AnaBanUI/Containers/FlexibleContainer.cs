@@ -28,7 +28,7 @@ public class FlexibleContainer : Control {
 
     foreach (Control control in Controls) {
       control.RelativePosition = new Vector2f(lastX, control.RelativePosition.Y);
-      control.Size = control.MinimumSize;
+      control.Size = control.MinimumSize + (control.Padding * 2);
 
       lastX += control.Size.X + Gap;
     }

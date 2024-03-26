@@ -5,6 +5,11 @@ namespace LiVerse.AnaBanUI;
 
 public abstract class Control : Drawable {
   /// <summary>
+  /// Parent control of this control (null if control is the root or haven't been set)
+  /// </summary>
+  public Control? ParentControl;
+
+  /// <summary>
   /// Total size, including padding. Don not change this manually, this value should be set by the container
   /// </summary>
   public Vector2f Size { get; set; } = new Vector2f(0, 0);
@@ -43,14 +48,36 @@ public abstract class Control : Drawable {
   public Vector2f AbsolutePosition { get; set; }
 
   public abstract void Update(double deltaTime);
-  public void Draw(RenderTarget target, RenderStates states) {
 
+  public void Draw(RenderTarget target, RenderStates states) {
     states.Transform.Translate(RelativePosition);
+
+    // Draw size boundaries
+    RectangleShape shape = new(Size) {
+      OutlineThickness = -1,
+      FillColor = Color.Transparent,
+      OutlineColor = Color.Red
+    };
+    target.Draw(shape, states);
+
+
+    // Correct padding
+    states.Transform.Translate(Padding);
 
     DoDraw(target, states);
 
+    // Draw content area boundaries
+    RectangleShape shape2 = new(ContentArea) {
+      OutlineThickness = -1,
+      FillColor = Color.Transparent,
+      OutlineColor = Color.Green
+    };
+    target.Draw(shape2, states);
+
+
     // Restore transform
-    states.Transform.Translate(-RelativePosition);
+    //states.Transform.Translate(-RelativePosition);
   }
+
   protected abstract void DoDraw(RenderTarget target, RenderStates states);
 }
