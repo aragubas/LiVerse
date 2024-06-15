@@ -11,9 +11,9 @@ Creating PR's in this early stage of the project won't be that much helpful, I'l
 The current branch is not guaranteed to be buildable
 
 ### Features:
- - Lightweight and Scupted from Scratch
+ - Lightweight and Scupted from scratch without
  - Libre! Free and Open Source, licensed under the Apache 2.0 License
  - Extensible via plugins (not yet)
  - Built-in documentation (not yet)
 
-2023 by Taiyou
+2024 by Taiyou
