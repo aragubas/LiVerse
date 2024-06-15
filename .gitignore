@@ -5,3 +5,4 @@ omnisharp.json
 build/
 release/
 .idea/
+.DS_Store
