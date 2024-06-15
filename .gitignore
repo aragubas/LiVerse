@@ -6,3 +6,4 @@ build/
 release/
 .idea/
 *.DS_Store
+LiVerse.csproj.user
