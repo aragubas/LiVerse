@@ -30,23 +30,32 @@ public class ComboBoxControl : ControlBase {
   }
 
   private void ToggleOptionsContainer() {
+    // Do not open combox if it has no items
+    if (Options.Count() == 0)
+      return;
+
     if (OptionsUILayer != null && UIRoot.UILayers.Contains(OptionsUILayer)) {
       UIRoot.UILayers.Remove(OptionsUILayer);
       return;
     }
 
     OptionsUILayer = new();
-    boxOverlayContainer = new(Options, (ComboBoxOption option) => {
-      SelectedOption = option;
-      SelectedOptionChanged?.Invoke(option);
-      ToggleOptionsContainer();
-    });
-    boxOverlayContainer.ComboBoxRectangle = new(AbsolutePosition, ContentArea);
+    boxOverlayContainer = new(Options, ComboBoxOverlayCallback)
+    {
+      ComboBoxRectangle = new(AbsolutePosition, ContentArea)
+    };
 
     OptionsUILayer.RootElement = boxOverlayContainer;
     OptionsUILayer.PointerInputUpdateEvent += OptionsUILayer_PointerInputUpdateEvent;
 
     UIRoot.UILayers.Add(OptionsUILayer);
+  }
+
+  void ComboBoxOverlayCallback(ComboBoxOption option)
+  {
+    SelectedOption = option;
+    SelectedOptionChanged?.Invoke(option);
+    ToggleOptionsContainer();
   }
 
   private void OptionsUILayer_PointerInputUpdateEvent(PointerEvent obj) {
