@@ -17,7 +17,7 @@ public class ScrollableList : ContainerBase {
   public float Gap { get; set; }
   public ScrollableListDirection ListDirection { get; set; } = ScrollableListDirection.Vertical;
 
-  public ScrollableList() {
+  public ScrollableList(ControlBase? parent) : base(parent) {
 
   }
 

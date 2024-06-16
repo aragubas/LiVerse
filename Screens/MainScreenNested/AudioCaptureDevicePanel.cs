@@ -25,8 +25,8 @@ public class AudioCaptureDevicePanel : ControlBase {
     micLevelTrigger = new() { ShowPeaks = true, MaximumValue = 84 };
     levelDelayTrigger = new() { MaximumValue = 1 };
 
-    SideBySideContainer sideBySide = new() { Gap = 8f };
-    sideFillContainer = new() { DockDirection = DockDirection.Bottom, Margin = new(8), Gap = 8, FillElement = sideBySide };
+    SideBySideContainer sideBySide = new(this) { Gap = 8f };
+    sideFillContainer = new(this) { DockDirection = DockDirection.Bottom, Margin = new(8), Gap = 8, FillElement = sideBySide };
 
     sideBySide.Elements.Add(micLevelTrigger);
     sideBySide.Elements.Add(levelDelayTrigger);

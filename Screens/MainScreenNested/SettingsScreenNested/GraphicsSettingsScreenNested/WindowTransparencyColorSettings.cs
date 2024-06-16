@@ -23,12 +23,12 @@ public class WindowTransparencyColorSettings : ControlBase {
   Slider bSlider;
 
   public WindowTransparencyColorSettings() {
-    optionsList = new() { 
+    optionsList = new(this) { 
       ParentControl = this, 
       Gap = 8 
     };
 
-    DockFillContainer DockFillTransparencyType = new() { 
+    DockFillContainer DockFillTransparencyType = new(this) { 
       ParentControl = this, 
       DockDirection = DockDirection.Left, 
       Gap = 8
@@ -72,13 +72,13 @@ public class WindowTransparencyColorSettings : ControlBase {
 
     optionsList.Elements.Add(DockFillTransparencyType);
 
-    dockFillCustomColor = new() { 
+    dockFillCustomColor = new(optionsList) { 
       Gap = 8f, 
       DockDirection = DockDirection.Right 
     };
-    ScrollableList rgbSlidersList = new() { Gap = 8f };
+    ScrollableList rgbSlidersList = new(dockFillCustomColor) { Gap = 8f };
 
-    DockFillContainer rSliderDockFill = new() { DockDirection = DockDirection.Left, Gap = 8 };
+    DockFillContainer rSliderDockFill = new(rgbSlidersList) { DockDirection = DockDirection.Left, Gap = 8 };
     rSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     rSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
     rSliderDockFill.DockElement = new Label("R:");
@@ -86,7 +86,7 @@ public class WindowTransparencyColorSettings : ControlBase {
 
     rgbSlidersList.Elements.Add(rSliderDockFill);
 
-    DockFillContainer gSliderDockFill = new() { DockDirection = DockDirection.Left, Gap = 8 };
+    DockFillContainer gSliderDockFill = new(rgbSlidersList) { DockDirection = DockDirection.Left, Gap = 8 };
     gSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     gSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
     gSliderDockFill.DockElement = new Label("G:");
@@ -94,7 +94,7 @@ public class WindowTransparencyColorSettings : ControlBase {
 
     rgbSlidersList.Elements.Add(gSliderDockFill);
 
-    DockFillContainer bSliderDockFill = new() { DockDirection = DockDirection.Left, Gap = 8 };
+    DockFillContainer bSliderDockFill = new(rgbSlidersList) { DockDirection = DockDirection.Left, Gap = 8 };
     bSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     bSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
     bSliderDockFill.DockElement = new Label("B:");
@@ -102,7 +102,7 @@ public class WindowTransparencyColorSettings : ControlBase {
 
     rgbSlidersList.Elements.Add(bSliderDockFill);
 
-    DockFillContainer colorPreviewDockFill = new() { Gap = 8f };
+    // DockFillContainer colorPreviewDockFill = new() { Gap = 8f };
 
     colorPreview = new(
       new Label("Preview", 24) { 

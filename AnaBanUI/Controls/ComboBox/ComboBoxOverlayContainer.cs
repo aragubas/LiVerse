@@ -15,7 +15,7 @@ public class ComboBoxOverlayContainer : ControlBase {
 
   public ComboBoxOverlayContainer(List<ComboBoxOption> options, Action<ComboBoxOption> callback) {
     Options = options;
-    ScrollableList = new() { ParentControl = this, BackgroundRectDrawable = new() { Color = Color.Magenta } };
+    ScrollableList = new(this) { BackgroundRectDrawable = new() { Color = Color.Magenta } };
     Callback += callback;
 
     foreach (var option in Options) {

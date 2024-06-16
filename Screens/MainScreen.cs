@@ -14,7 +14,7 @@ public class MainScreen : ScreenBase {
   UILayer WindowRoot;
 
   // MainUI Members
-  DockFillContainer mainFillContainer = new();
+  DockFillContainer mainFillContainer = new(null);
   DockFillContainer HeaderBar;
   DockFillContainer centerSplit;
   DockFillContainer centerCharacterSplit;
@@ -41,14 +41,14 @@ public class MainScreen : ScreenBase {
 
     WindowRoot = new();
 
-    HeaderBar = new() { DockDirection = DockDirection.Left };
-    centerSplit = new() { DockDirection = DockDirection.Left };
+    HeaderBar = new(null) { DockDirection = DockDirection.Left };
+    centerSplit = new(null) { DockDirection = DockDirection.Left };
 
     characterNameLabel = new("character name goes here", 20);
     Button settingsButton = new("Settings");
     Button charactersButton = new("Characters");
 
-    DockFillContainer characterNameCharacterDock = new();
+    DockFillContainer characterNameCharacterDock = new(HeaderBar);
     characterNameCharacterDock.DockDirection = DockDirection.Right;
     characterNameCharacterDock.FillElement = characterNameLabel;
     characterNameCharacterDock.DockElement = charactersButton;
@@ -64,7 +64,7 @@ public class MainScreen : ScreenBase {
     characterRenderer = new();
 
     // Create CenterCharacterSplit
-    centerCharacterSplit = new() { DockDirection = DockDirection.Bottom, Margin = new(8) };
+    centerCharacterSplit = new(centerSplit) { DockDirection = DockDirection.Bottom, Margin = new(8) };
     centerCharacterSplit.FillElement = characterRenderer;
 
     // Create CharacterExpressionsPanel

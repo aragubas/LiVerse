@@ -15,12 +15,12 @@ public class AudioSettingsScreen : ControlBase {
   DockFillContainer DockFill { get; }
 
   public AudioSettingsScreen() {
-    ScrollableList = new() {
+    ScrollableList = new(this) {
       ParentControl = this,
       Gap = 8
     };
 
-    DockFill = new() {
+    DockFill = new(this) {
       ParentControl = this,
       DockDirection = DockDirection.Left,
       Gap = 8

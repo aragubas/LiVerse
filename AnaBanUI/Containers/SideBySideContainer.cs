@@ -20,6 +20,11 @@ public class SideBySideContainer : ContainerBase {
   public List<ControlBase> Elements { get; set; } = new();
   public SideBySideCointainerLayoutFlow LayoutFlow { get; set; } = SideBySideCointainerLayoutFlow.Left;
 
+  public SideBySideContainer(ControlBase? parent) : base(parent)
+  {
+    
+  }
+
   void RecalculateUI() {
     // Nothing to calculate
     if (Elements.Count == 0) { return; }
@@ -58,10 +63,7 @@ public class SideBySideContainer : ContainerBase {
             weightedMinimumHeight = element.MinimumSize.Y;
           }
         }
-
       }
-
-
     }
     
   }

@@ -10,13 +10,13 @@ public class NewCharacterExpressionScreen: NestedScreen {
     // Sets Dark Background
     RootLayer.BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) };
 
-    DockFillContainer mainDockFillContainer = new() { 
+    DockFillContainer mainDockFillContainer = new(null) { 
       Margin = new Vector2(40),
       BackgroundRectDrawable = new() { 
         Color = ColorScheme.ForegroundLevel0
       } 
     };
-    DockFillContainer titleDockFill = new() {
+    DockFillContainer titleDockFill = new(null) {
       DockDirection = DockDirection.Right
     };
 

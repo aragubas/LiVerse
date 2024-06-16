@@ -13,7 +13,7 @@ public class GraphicsSettingsScreen : ControlBase {
   ScrollableList ScrollableList { get; }
 
   public GraphicsSettingsScreen() {
-    ScrollableList = new() { 
+    ScrollableList = new(this) { 
       ParentControl = this, 
       Gap = 8 
     };

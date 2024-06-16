@@ -23,7 +23,7 @@ public class DockFillContainer : ContainerBase {
   /// </summary>
   public DockDirection DockDirection { get; set; }
 
-  public DockFillContainer(ControlBase? dockElement = null, ControlBase? fillElement = null) {
+  public DockFillContainer(ControlBase? parent, ControlBase? dockElement = null, ControlBase? fillElement = null) : base(parent) {
     DockDirection = DockDirection.Top;
 
     DockElement = dockElement;

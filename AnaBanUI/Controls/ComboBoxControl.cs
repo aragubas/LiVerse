@@ -2,7 +2,6 @@
 using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using MonoGame.Extended.Sprites;
 
 namespace LiVerse.AnaBanUI.Controls; 
 

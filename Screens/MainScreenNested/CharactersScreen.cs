@@ -24,7 +24,7 @@ public class CharactersScreen : NestedScreen {
     //    
     //
 
-    DockFillContainer mainFillContainer = new() {
+    DockFillContainer mainFillContainer = new(null) {
       Margin = new Vector2(40),
       BackgroundRectDrawable = new() {
         Color = ColorScheme.ForegroundLevel0
@@ -34,7 +34,7 @@ public class CharactersScreen : NestedScreen {
 
     #region Titlebar
     
-    DockFillContainer titlebarFillContainer = new() { DockDirection = DockDirection.Right };
+    DockFillContainer titlebarFillContainer = new(mainFillContainer) { DockDirection = DockDirection.Right };
     Button closeButton = new(" X ");
     Label titleLabel = new("Characters");
 
@@ -47,14 +47,14 @@ public class CharactersScreen : NestedScreen {
     mainFillContainer.DockElement = titlebarFillContainer;
 
     // MainSplit container
-    DockFillContainer mainSplitContainer = new() {
+    DockFillContainer mainSplitContainer = new(mainFillContainer) {
       DockDirection = DockDirection.Left
     };
 
     
     #region Left Panel
-    DockFillContainer leftPanel = new() { DockDirection = DockDirection.Top };
-    ScrollableList charactersList = new();
+    DockFillContainer leftPanel = new(mainSplitContainer) { DockDirection = DockDirection.Top }; 
+    ScrollableList charactersList = new(leftPanel);
     Button newCharacterButton = new("New Character");
 
     leftPanel.DockElement = newCharacterButton;

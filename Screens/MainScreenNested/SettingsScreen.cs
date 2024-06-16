@@ -32,19 +32,19 @@ public class SettingsScreen : NestedScreen {
     // Sets Dark Background
     RootLayer.BackgroundRectDrawable = new() { Color = Color.FromNonPremultiplied(0, 0, 0, 127) };
 
-    DockFillContainer dockFill = new() {
+    DockFillContainer dockFill = new(null) {
       Margin = new Vector2(48),
       DockDirection = DockDirection.Left
     };
-    DockFillContainer titleDockFill = new() {
+    DockFillContainer titleDockFill = new(dockFill) {
       DockDirection = DockDirection.Right
     };
 
     Button exitButton = new(" X ");
     exitButton.Click += ToggleUILayer;
 
-    categoriesSelectList = new() { Gap = 2 };
-    settingViewDockFill = new();
+    categoriesSelectList = new(dockFill) { Gap = 2 };
+    settingViewDockFill = new(dockFill);
     currentPageTitle = new Label("No page selected", 28, "Ubuntu") {
       Color = ColorScheme.TextNormal
     };
