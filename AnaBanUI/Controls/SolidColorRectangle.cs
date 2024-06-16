@@ -10,11 +10,11 @@ public class SolidColorRectangle : ControlBase {
   public Color BackgroundColor { get; set; } = Color.Transparent;
   //public float Padding { get; set; } = 4;
 
-  public SolidColorRectangle(ControlBase element) {
+  public SolidColorRectangle(ControlBase? parent, ControlBase element) : base(parent) {
     Element = element;
   }
 
-  public SolidColorRectangle() {
+  public SolidColorRectangle(ControlBase? parent) : base(parent) {
     Element = null;
   }
 

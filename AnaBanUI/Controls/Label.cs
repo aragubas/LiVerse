@@ -66,7 +66,7 @@ public class Label : ControlBase {
   bool reMeasureText = true;
   Vector2 textPosition = Vector2.Zero;
 
-  public Label(string text, int fontSize = 18, string fontName = "Inter") {
+  public Label(ControlBase? parent, string text, int fontSize = 18, string fontName = "Inter") : base(parent) {
     Text = text;
     FontSize = fontSize;
     FontName = fontName;

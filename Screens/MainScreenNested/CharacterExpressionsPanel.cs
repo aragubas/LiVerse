@@ -12,13 +12,13 @@ public class CharacterExpressionsPanel : ControlBase {
   DockFillContainer optionsDockFill;
 
 
-  public CharacterExpressionsPanel() {
+  public CharacterExpressionsPanel(ControlBase? parent) : base(parent) {
     optionsDockFill = new(this) { DockDirection = DockDirection.Left, Gap = 8 };
     expressionsList = new(this) { StretchElements = false, ListDirection = ScrollableListDirection.Horizontal, Gap = 8f };
 
     optionsDockFill.FillElement = expressionsList;
 
-    Button newButton = new Button("+");
+    Button newButton = new Button(optionsDockFill, "+");
     newButton.Click += new Action(() => OnNewExpressionButtonPressed?.Invoke() );
     optionsDockFill.DockElement = newButton;
 
@@ -40,7 +40,7 @@ public class CharacterExpressionsPanel : ControlBase {
     if (CharacterStore.CurrentCharacter == null) { return; }
 
     foreach(var expression in CharacterStore.CurrentCharacter.LoadedSpriteCollections.Values) {
-      Button expressionButton = new(expression.Name == "default" ? "Default" : expression.Name) { };
+      Button expressionButton = new(expressionsList, expression.Name == "default" ? "Default" : expression.Name) { };
 
       expressionButton.Click += new Action(() => setExpression(expression.Name));
 

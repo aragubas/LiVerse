@@ -14,7 +14,7 @@ public class AudioSettingsScreen : ControlBase {
   ScrollableList ScrollableList { get; }
   DockFillContainer DockFill { get; }
 
-  public AudioSettingsScreen() {
+  public AudioSettingsScreen(ControlBase? parent) : base(parent) {
     ScrollableList = new(this) {
       ParentControl = this,
       Gap = 8
@@ -25,7 +25,7 @@ public class AudioSettingsScreen : ControlBase {
       DockDirection = DockDirection.Left,
       Gap = 8
     };
-    Label audioInputDeviceToggleTitle = new("Input Device: ");
+    Label audioInputDeviceToggleTitle = new(DockFill, "Input Device: ");
     List<ComboBoxOption> options = new();
 
     if (CaptureDeviceDriverStore.CaptureDeviceDriver != null) {
@@ -40,13 +40,13 @@ public class AudioSettingsScreen : ControlBase {
       defaultOption.ExtraData = CaptureDeviceDriverStore.CaptureDeviceDriver.CurrentCaptureDevice.DeviceId;
     }
 
-    ComboBoxControl audioDevicesComboBox = new(defaultOption, options);
+    ComboBoxControl audioDevicesComboBox = new(DockFill, defaultOption, options);
     audioDevicesComboBox.SelectedOptionChanged += ChangeAudioDevice;
 
     DockFill.DockElement = audioInputDeviceToggleTitle;
     DockFill.FillElement = audioDevicesComboBox;
 
-    Label audioDriverNameLabel = new($"Audio Driver: " +
+    Label audioDriverNameLabel = new(ScrollableList, $"Audio Driver: " +
       $"{(CaptureDeviceDriverStore.CaptureDeviceDriver == null ? "None" : CaptureDeviceDriverStore.CaptureDeviceDriver.DriverName)}") {
       HorizontalAlignment = LabelHorizontalAlignment.Left,
     };

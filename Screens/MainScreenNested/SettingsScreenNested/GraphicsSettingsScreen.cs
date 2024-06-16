@@ -12,13 +12,13 @@ namespace LiVerse.Screens.MainScreenNested.SettingsScreenNested;
 public class GraphicsSettingsScreen : ControlBase {
   ScrollableList ScrollableList { get; }
 
-  public GraphicsSettingsScreen() {
+  public GraphicsSettingsScreen(ControlBase? parent) : base(parent) {
     ScrollableList = new(this) { 
       ParentControl = this, 
       Gap = 8 
     };
 
-    ScrollableList.Elements.Add(new WindowTransparencyColorSettings());
+    ScrollableList.Elements.Add(new WindowTransparencyColorSettings(ScrollableList));
   }
 
   public override void UpdateUI(double deltaTime) {

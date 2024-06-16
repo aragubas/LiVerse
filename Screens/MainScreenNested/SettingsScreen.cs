@@ -40,12 +40,12 @@ public class SettingsScreen : NestedScreen {
       DockDirection = DockDirection.Right
     };
 
-    Button exitButton = new(" X ");
+    Button exitButton = new(titleDockFill, " X ");
     exitButton.Click += ToggleUILayer;
 
     categoriesSelectList = new(dockFill) { Gap = 2 };
     settingViewDockFill = new(dockFill);
-    currentPageTitle = new Label("No page selected", 28, "Ubuntu") {
+    currentPageTitle = new Label(titleDockFill, "No page selected", 28, "Ubuntu") {
       Color = ColorScheme.TextNormal
     };
 
@@ -74,8 +74,8 @@ public class SettingsScreen : NestedScreen {
 
     SettingsCategory generalCategory = new();
     List<SettingsPage> generalCategoryPages = new();
-    SettingsPage audioSettingsPage = new() { Title = "Audio", SettingScreen = new AudioSettingsScreen() };
-    SettingsPage graphicsSettingsPage = new() { Title = "Graphics", SettingScreen = new GraphicsSettingsScreen() };
+    SettingsPage audioSettingsPage = new() { Title = "Audio", SettingScreen = new AudioSettingsScreen(null) };
+    SettingsPage graphicsSettingsPage = new() { Title = "Graphics", SettingScreen = new GraphicsSettingsScreen(null) };
 
     generalCategoryPages.Add(audioSettingsPage);
     generalCategoryPages.Add(graphicsSettingsPage);
@@ -92,14 +92,14 @@ public class SettingsScreen : NestedScreen {
     categoriesSelectList.Elements.Clear();
 
     foreach (var category in settingsCategories) {
-      Label categoryTitle = new(category.Title, 26, "Ubuntu") {
+      Label categoryTitle = new(categoriesSelectList, category.Title, 26, "Ubuntu") {
         Margin = new(8)
       };
 
       categoriesSelectList.Elements.Add(categoryTitle);
 
       foreach (var page in category.Pages) {
-        Button settingsPageButton = new(page.Title, buttonStyle: ButtonStyle.Selectable);
+        Button settingsPageButton = new(categoriesSelectList, page.Title, buttonStyle: ButtonStyle.Selectable);
         settingsPageButton.Label.HorizontalAlignment = LabelHorizontalAlignment.Left;
         settingsPageButton.Click += new Action(() => { SelectCategory(settingsPageButton, page); });
 

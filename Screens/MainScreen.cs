@@ -44,9 +44,9 @@ public class MainScreen : ScreenBase {
     HeaderBar = new(null) { DockDirection = DockDirection.Left };
     centerSplit = new(null) { DockDirection = DockDirection.Left };
 
-    characterNameLabel = new("character name goes here", 20);
-    Button settingsButton = new("Settings");
-    Button charactersButton = new("Characters");
+    characterNameLabel = new(HeaderBar, "character name goes here", 20);
+    Button settingsButton = new(HeaderBar, "Settings");
+    Button charactersButton = new(HeaderBar, "Characters");
 
     DockFillContainer characterNameCharacterDock = new(HeaderBar);
     characterNameCharacterDock.DockDirection = DockDirection.Right;
@@ -61,14 +61,14 @@ public class MainScreen : ScreenBase {
     HeaderBar.FillElement = characterNameCharacterDock;
 
     // Create CharacterRenderer
-    characterRenderer = new();
+    characterRenderer = new(null);
 
     // Create CenterCharacterSplit
     centerCharacterSplit = new(centerSplit) { DockDirection = DockDirection.Bottom, Margin = new(8) };
     centerCharacterSplit.FillElement = characterRenderer;
 
     // Create CharacterExpressionsPanel
-    characterExpressionsPanel = new();
+    characterExpressionsPanel = new(centerCharacterSplit);
     characterExpressionsPanel.OnNewExpressionButtonPressed += () => {
       newCharacterExpressionScreen?.ToggleUILayer();
     };
@@ -76,7 +76,7 @@ public class MainScreen : ScreenBase {
     centerCharacterSplit.DockElement = characterExpressionsPanel;
 
     // Create AudioCaptureDevice Panel
-    audioCaptureDevicePanel = new();
+    audioCaptureDevicePanel = new(centerSplit);
 
     // Assign panels to CenterSplit
     centerSplit.DockElement = audioCaptureDevicePanel;

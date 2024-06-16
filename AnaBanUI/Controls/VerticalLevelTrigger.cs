@@ -32,7 +32,7 @@ public class VerticalLevelTrigger : ControlBase {
   bool triggerGrabbed = false;
   bool triggerActive = false;
 
-  public VerticalLevelTrigger() {
+  public VerticalLevelTrigger(ControlBase? parent) : base(parent) {
     MinimumSize = new Vector2(24, 64);
   }
 

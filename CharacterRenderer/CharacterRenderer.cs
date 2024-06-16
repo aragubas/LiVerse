@@ -12,7 +12,7 @@ public class CharacterRenderer : ControlBase {
   double blinkingPeriod = 0;
   Rectangle spriteDestinationRect = Rectangle.Empty;
 
-  public CharacterRenderer() {
+  public CharacterRenderer(ControlBase? parent) : base(parent) {
     Animators.Add(new MovingAroundAnimator());
     Animators.Add(new SpeakingJumpAnimator());
   }

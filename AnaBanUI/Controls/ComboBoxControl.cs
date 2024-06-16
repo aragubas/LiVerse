@@ -21,8 +21,8 @@ public class ComboBoxControl : ControlBase {
   public event Action<ComboBoxOption>? SelectedOptionChanged;
   ComboBoxOverlayContainer? boxOverlayContainer;
 
-  public ComboBoxControl(ComboBoxOption selectedOption, List<ComboBoxOption> options) {
-    ToggleButton = new(selectedOption.OptionText);
+  public ComboBoxControl(ControlBase parent, ComboBoxOption selectedOption, List<ComboBoxOption> options) : base(parent) {
+    ToggleButton = new(this, selectedOption.OptionText);
     ToggleButton.Click += ToggleOptionsContainer;
 
     Options = options;
@@ -39,7 +39,7 @@ public class ComboBoxControl : ControlBase {
     }
 
     OptionsUILayer = new();
-    boxOverlayContainer = new(Options, ComboBoxOverlayCallback)
+    boxOverlayContainer = new(this, Options, ComboBoxOverlayCallback)
     {
       ComboBoxRectangle = new(AbsolutePosition, ContentArea)
     };

@@ -13,13 +13,17 @@ public class ComboBoxOverlayContainer : ControlBase {
   public event Action<ComboBoxOption>? Callback;
   public bool OptionSelected = false;
 
-  public ComboBoxOverlayContainer(List<ComboBoxOption> options, Action<ComboBoxOption> callback) {
+  public ComboBoxOverlayContainer(ControlBase? parent, List<ComboBoxOption> options, Action<ComboBoxOption> callback) : base(parent) {
     Options = options;
     ScrollableList = new(this) { BackgroundRectDrawable = new() { Color = Color.Magenta } };
     Callback += callback;
 
     foreach (var option in Options) {
-      Button optionButton = new(option.OptionText) { ButtonStyle = ButtonStyle.Flat, BlinkWhenPressed = true };
+      Button optionButton = new(this, option.OptionText) { 
+        ButtonStyle = ButtonStyle.Flat, 
+        BlinkWhenPressed = true 
+      };
+      
       optionButton.Click += () => {
         Callback?.Invoke(option);
       };

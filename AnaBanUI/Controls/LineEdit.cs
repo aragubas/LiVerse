@@ -51,13 +51,13 @@ public class LineEdit : ControlBase {
   //  ColorDestinationBlend = Blend.InverseDestinationColor
   //};
 
-  public LineEdit(string text = "") {
+  public LineEdit(ControlBase? parent, string text = "") : base(parent) {
     background = new() {
       FillCenter = true,
       Color = s_BackgroundNormalColor
     };
     Text = text;
-    textLabel = new(text) {
+    textLabel = new(this, text) {
       HorizontalAlignment = LabelHorizontalAlignment.Left,
       FontName = "Inter"
     };

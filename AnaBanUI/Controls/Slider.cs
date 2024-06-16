@@ -24,7 +24,7 @@ public class Slider : ControlBase {
   static readonly Color grabberActiveBackgroundColor = Color.FromNonPremultiplied(197, 215, 230, 255);
   static readonly Color grabberActiveBorderColor = Color.FromNonPremultiplied(30, 80, 160, 255);
 
-  public Slider() {
+  public Slider(ControlBase? parent) : base(parent) {
     MinimumSize = new Vector2(20, 18);
   }
 

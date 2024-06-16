@@ -4,8 +4,8 @@ using MonoGame.Extended;
 
 namespace LiVerse.AnaBanUI.Containers; 
 public abstract class ContainerBase : ControlBase {    
-  public ContainerBase(ControlBase? parent)
+  public ContainerBase(ControlBase? parent) : base(parent)
   {
-    ParentControl = parent;
+    
   }
 }

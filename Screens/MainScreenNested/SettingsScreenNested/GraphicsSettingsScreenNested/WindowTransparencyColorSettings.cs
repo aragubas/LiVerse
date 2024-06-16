@@ -22,7 +22,7 @@ public class WindowTransparencyColorSettings : ControlBase {
   Slider gSlider;
   Slider bSlider;
 
-  public WindowTransparencyColorSettings() {
+  public WindowTransparencyColorSettings(ControlBase? parent) : base(parent) {
     optionsList = new(this) { 
       ParentControl = this, 
       Gap = 8 
@@ -33,7 +33,7 @@ public class WindowTransparencyColorSettings : ControlBase {
       DockDirection = DockDirection.Left, 
       Gap = 8
     };
-    Label backgroundTransparencyTypeTitleLabel = new("Background Transparency Type:");
+    Label backgroundTransparencyTypeTitleLabel = new(DockFillTransparencyType, "Background Transparency Type:");
     List<ComboBoxOption> options = new();
     ComboBoxOption defaultOption = new();
     
@@ -64,7 +64,7 @@ public class WindowTransparencyColorSettings : ControlBase {
     options.Add(new ComboBoxOption("Magenta", 3));
     options.Add(new ComboBoxOption("Custom Color", -1));
 
-    ComboBoxControl backgroundTransparencyOptionsComboBox = new(defaultOption, options);
+    ComboBoxControl backgroundTransparencyOptionsComboBox = new(DockFillTransparencyType, defaultOption, options);
     backgroundTransparencyOptionsComboBox.SelectedOptionChanged += BackgroundTransparencyOptionsComboBox_SelectedOptionChanged; ;
 
     DockFillTransparencyType.DockElement = backgroundTransparencyTypeTitleLabel;
@@ -79,25 +79,25 @@ public class WindowTransparencyColorSettings : ControlBase {
     ScrollableList rgbSlidersList = new(dockFillCustomColor) { Gap = 8f };
 
     DockFillContainer rSliderDockFill = new(rgbSlidersList) { DockDirection = DockDirection.Left, Gap = 8 };
-    rSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
+    rSlider = new(rSliderDockFill) { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     rSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
-    rSliderDockFill.DockElement = new Label("R:");
+    rSliderDockFill.DockElement = new Label(rSliderDockFill, "R:");
     rSliderDockFill.FillElement = rSlider;
 
     rgbSlidersList.Elements.Add(rSliderDockFill);
 
     DockFillContainer gSliderDockFill = new(rgbSlidersList) { DockDirection = DockDirection.Left, Gap = 8 };
-    gSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
+    gSlider = new(gSliderDockFill) { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     gSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
-    gSliderDockFill.DockElement = new Label("G:");
+    gSliderDockFill.DockElement = new Label(gSliderDockFill, "G:");
     gSliderDockFill.FillElement = gSlider;
 
     rgbSlidersList.Elements.Add(gSliderDockFill);
 
     DockFillContainer bSliderDockFill = new(rgbSlidersList) { DockDirection = DockDirection.Left, Gap = 8 };
-    bSlider = new() { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
+    bSlider = new(bSliderDockFill) { RaiseOnValueChangedEveryGrabFrame = true, MaximumValue = 255 };
     bSlider.OnValueChanged += new Action<float>((value) => { RGBSlidersChanged(); });
-    bSliderDockFill.DockElement = new Label("B:");
+    bSliderDockFill.DockElement = new Label(bSliderDockFill, "B:");
     bSliderDockFill.FillElement = bSlider;
 
     rgbSlidersList.Elements.Add(bSliderDockFill);
@@ -105,7 +105,8 @@ public class WindowTransparencyColorSettings : ControlBase {
     // DockFillContainer colorPreviewDockFill = new() { Gap = 8f };
 
     colorPreview = new(
-      new Label("Preview", 24) { 
+      this,
+      new Label(colorPreview, "Preview", 24) { 
         Margin = new Vector2(8), 
         Color = Color.White, 
         DrawShadow = true, 
@@ -117,7 +118,7 @@ public class WindowTransparencyColorSettings : ControlBase {
 
     optionsList.Elements.Add(dockFillCustomColor);
 
-    transparentBackgroudWarning = new Label("To use transparent background you will need to capture the window with alpha.\nin OBS you can use GameCapture for that, by enabling the alpha channel") { HorizontalAlignment = LabelHorizontalAlignment.Left };
+    transparentBackgroudWarning = new Label(optionsList, "To use transparent background you will need to capture the window with alpha.\nin OBS you can use GameCapture for that, by enabling the alpha channel") { HorizontalAlignment = LabelHorizontalAlignment.Left };
     optionsList.Elements.Add(transparentBackgroudWarning);
 
     // Load default values for the RGB sliders

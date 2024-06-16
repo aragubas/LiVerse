@@ -49,10 +49,8 @@ public class Button : ControlBase {
   bool wasHolding = false;
   double blinkTimer = 0;
 
-  public Button(string DefaultText, int defaultFontSize = 18, ButtonStyle buttonStyle = ButtonStyle.Default) {
-    Label = new Label(DefaultText, defaultFontSize) { 
-      ParentControl = this
-    };
+  public Button(ControlBase parent, string DefaultText, int defaultFontSize = 18, ButtonStyle buttonStyle = ButtonStyle.Default) : base(parent) {
+    Label = new Label(this, DefaultText, defaultFontSize);
     ButtonStyle = buttonStyle;
   }
 

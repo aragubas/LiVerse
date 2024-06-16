@@ -35,8 +35,8 @@ public class CharactersScreen : NestedScreen {
     #region Titlebar
     
     DockFillContainer titlebarFillContainer = new(mainFillContainer) { DockDirection = DockDirection.Right };
-    Button closeButton = new(" X ");
-    Label titleLabel = new("Characters");
+    Button closeButton = new(titlebarFillContainer, " X ");
+    Label titleLabel = new(titlebarFillContainer, "Characters");
 
     closeButton.Click += ToggleUILayer;
 
@@ -55,7 +55,7 @@ public class CharactersScreen : NestedScreen {
     #region Left Panel
     DockFillContainer leftPanel = new(mainSplitContainer) { DockDirection = DockDirection.Top }; 
     ScrollableList charactersList = new(leftPanel);
-    Button newCharacterButton = new("New Character");
+    Button newCharacterButton = new(leftPanel, "New Character");
 
     leftPanel.DockElement = newCharacterButton;
     leftPanel.FillElement = charactersList;
@@ -64,7 +64,7 @@ public class CharactersScreen : NestedScreen {
     mainSplitContainer.DockElement = leftPanel;
 
 
-    Label test = new("Test");
+    Label test = new(mainSplitContainer, "Test");
     mainSplitContainer.FillElement = test;
 
 

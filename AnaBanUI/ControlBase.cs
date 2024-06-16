@@ -1,3 +1,4 @@
+using LiVerse.AnaBanUI.Containers;
 using LiVerse.AnaBanUI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -83,6 +84,11 @@ public abstract class ControlBase {
   public SamplerState SamplerState { get; set; } = SamplerState.PointWrap;
 
   Viewport oldViewport;
+
+  public ControlBase(ControlBase? parent)
+  {
+    ParentControl = parent;
+  }
 
   protected virtual void ElementSizeChanged() { }
 

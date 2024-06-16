@@ -21,9 +21,9 @@ public class AudioCaptureDevicePanel : ControlBase {
   DockFillContainer sideFillContainer;
   SolidColorRectangle speakingIndicatorSolidColorRect;
 
-  public AudioCaptureDevicePanel() {
-    micLevelTrigger = new() { ShowPeaks = true, MaximumValue = 84 };
-    levelDelayTrigger = new() { MaximumValue = 1 };
+  public AudioCaptureDevicePanel(ControlBase? parent) : base(parent) {
+    micLevelTrigger = new(this) { ShowPeaks = true, MaximumValue = 84 };
+    levelDelayTrigger = new(this) { MaximumValue = 1 };
 
     SideBySideContainer sideBySide = new(this) { Gap = 8f };
     sideFillContainer = new(this) { DockDirection = DockDirection.Bottom, Margin = new(8), Gap = 8, FillElement = sideBySide };
@@ -32,7 +32,7 @@ public class AudioCaptureDevicePanel : ControlBase {
     sideBySide.Elements.Add(levelDelayTrigger);
 
     // HACK: Label alignment set to bottom to fix weird issue with text's base line
-    speakingIndicatorLabel = new("Active", 18) { Color = speakingIndicatorLabelColor, VerticalAlignment = LabelVerticalAlignment.Bottom };
+    speakingIndicatorLabel = new(sideFillContainer, "Active", 18) { Color = speakingIndicatorLabelColor, VerticalAlignment = LabelVerticalAlignment.Bottom };
     speakingIndicatorSolidColorRect = new(speakingIndicatorLabel) { BackgroundColor = speakingIndicatorColor };
 
     sideFillContainer.DockElement = speakingIndicatorSolidColorRect;

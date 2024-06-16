@@ -20,14 +20,14 @@ public class NewCharacterExpressionScreen: NestedScreen {
       DockDirection = DockDirection.Right
     };
 
-    Label titleLabel = new("New Expression", 24, "Ubuntu") { Color = ColorScheme.TextTitle };
-    Button closeButton = new(" X ");
+    Label titleLabel = new(titleDockFill, "New Expression", 24, "Ubuntu") { Color = ColorScheme.TextTitle };
+    Button closeButton = new(titleDockFill, " X ");
     closeButton.Click += ToggleUILayer;
 
     titleDockFill.DockElement = closeButton;
     titleDockFill.FillElement = titleLabel;
 
-    LineEdit lineEdit = new("Each word in this sentance is different so it's easier to track whatever the textbox is advancing the text properly and stuff bwah");
+    LineEdit lineEdit = new(mainDockFillContainer, "Each word in this sentance is different so it's easier to track whatever the textbox is advancing the text properly and stuff bwah");
 
     mainDockFillContainer.DockElement = titleDockFill;
     mainDockFillContainer.FillElement = lineEdit;
