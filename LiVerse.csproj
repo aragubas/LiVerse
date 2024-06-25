@@ -5,6 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<SelfContained>true</SelfContained>
+	<StartupObject>LiVerse.Program</StartupObject>
+
+	<DefineConstants>WINDOWS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,12 +25,5 @@
 	</EmbeddedResource>
 	  
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="AnaBanUI\NewFolder\**" />
-    <EmbeddedResource Remove="AnaBanUI\NewFolder\**" />
-    <None Remove="AnaBanUI\NewFolder\**" />
-  </ItemGroup>
-
 
 </Project>
