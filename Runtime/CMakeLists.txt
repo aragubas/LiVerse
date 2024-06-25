@@ -2,7 +2,6 @@
 find_package(fmt CONFIG REQUIRED)
 find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 
-
 # Add source to this project's executable.
 add_executable (Runtime "Runtime.cpp"  "Application.cpp" "Application.h")
 
@@ -12,4 +11,10 @@ endif()
 
 target_link_libraries(Runtime PRIVATE fmt::fmt)
 target_link_libraries(Runtime PRIVATE sfml-system sfml-graphics sfml-window)
-target_link_libraries(Runtime PRIVATE AnaBanUI)
+target_link_libraries(Runtime PUBLIC AnaBanUI)
+target_include_directories(Runtime PUBLIC ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/AnaBanUI)
+
+#target_include_directories(Tutorial PUBLIC
+#                          "${PROJECT_BINARY_DIR}"
+#                          "${PROJECT_SOURCE_DIR}/MathFunctions"
+#                          )

@@ -1,7 +1,7 @@
 #include "Application.h"
+#include <AnaBanUI/WindowRoot.h>
 
-
-Application::Application() : 
+Application::Application() :
 	m_Window(nullptr)
 {
 }
@@ -16,6 +16,8 @@ int Application::Initialize()
 	m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), "LiVerse v2.0-alpha");
 	m_Window->setVerticalSyncEnabled(true);
 	
+	WindowRoot root;
+
 	return 0;
 }
 
