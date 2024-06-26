@@ -4,8 +4,12 @@
 int main()
 {	
 	std::cout << "LiVerse v2.0-alpha" << std::endl;
-	
-	Application app;
+
+	UIRoot mainRoot;
+
+	Application app("LiVerse v2.0-alpha");
+
+	app.SetUIRoot(mainRoot);
 
 	return app.Start();
 }

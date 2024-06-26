@@ -2,7 +2,7 @@
 find_package(fmt CONFIG REQUIRED)
 find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 
-add_library(AnaBanUI STATIC "AnaBanUI/WindowRoot.h" "AnaBanUI/WindowRoot.cpp")
+add_library(AnaBanUI STATIC "AnaBanUI/UIRoot.h" "AnaBanUI/UIRoot.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET AnaBanUI PROPERTY CXX_STANDARD 20)
