@@ -7,6 +7,7 @@ Application::Application(const char *title) :
 	
 }
 
+
 void Application::SetWindowTitle(const char* windowTitle)
 {
 	if (m_Window == nullptr) return;
@@ -16,14 +17,14 @@ void Application::SetWindowTitle(const char* windowTitle)
 
 int Application::Initialize()
 {
-#ifdef _DEBUG
+#ifndef NDEBUG
 	fmt::printf("[Debug] Current working directory: %s\n", std::filesystem::current_path().string());
 #endif
 
 	m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), m_InitialWindowTitle);
 	m_Window->setVerticalSyncEnabled(true);
 	
-	UIRoot root;
+	m_UIRoot = UIRoot();
 
 	return 0;
 }
@@ -62,12 +63,23 @@ inline void Application::ProcessEvents()
 		{
 			unsigned int width = event.size.width;
 			unsigned int height = event.size.height;
+			bool needsResize = false;
 
-			if (width < 800) width = 800;
-			if (height < 600) height = 600;
+			if (width < 800) 
+			{
+				width = 800;
+				needsResize = true;	
+			}
+			if (height < 600) {
+				height = 600;
+				needsResize = true;
+			}
+			
 
 			m_Window->setView(sf::View(sf::FloatRect(0, 0, (float)width, (float)height)));
-			m_Window->setSize(sf::Vector2u(width, height));
+			
+			// FIXME: Crashes Wayland when resizing the window
+			//if (needsResize) m_Window->setSize(sf::Vector2u(width, height));
 		}
 
 	}

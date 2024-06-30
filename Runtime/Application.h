@@ -3,7 +3,7 @@
 #include <fmt/printf.h>
 #include <string>
 #include <AnaBanUI/UIRoot.h>
-#ifdef _DEBUG
+#ifndef NDEBUG
 #include <filesystem>
 #endif
 
@@ -21,28 +21,20 @@ class Application
 	void OnShutdown();
 
 public:
-	/// <summary>
-	/// Main application class
-	/// </summary>
-	/// <param name="windowTitle"></param>
+	/// @brief Main AnaBanUI Application class
+	/// @param windowTitle Initial Window title
 	Application(const char* windowTitle);
 
-	/// <summary>
-	/// Set window title
-	/// </summary>
-	/// <param name="windowTitle">Window title to set</param>
+	/// @brief Set Window title
+	/// @param windowTitle Window title
 	void SetWindowTitle(const char* windowTitle);
 	
-	/// <summary>
-	/// Set UIRoot 
-	/// </summary>
-	/// <param name="uiRoot"></param>
+	/// @brief Set UIRoot, disabling and deleting the current one
+	/// @param uiRoot new UIRoot
 	void SetUIRoot(UIRoot& uiRoot);
 
-	/// <summary>
-	/// Called by main thread, bootstaps the application
-	/// </summary>
-	/// <returns></returns>
+	/// @brief Bootstaps the application, blocking the calling thread
+	/// @return non-zero if something goes wrong
 	int Start();
 
 };
