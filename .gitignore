@@ -39,3 +39,6 @@ build/
 
 # CMakePresets
 CMakePresets.json
+
+# vcpkg
+vcpkg_installed/
