@@ -6,7 +6,20 @@ To get started, rename CMakePresets.json.example to CMakePresets.json, and repla
 to where VCPKG is installed
 
 ## Build Instructions for Linux Environment
-Todo
+### Ubuntu/Debian:
+Build Dependencies
+- build-essential
+- cmake
+- ninja-build
+- pkg-config
+- autoconf
+- libtool
+- libx11-dev 
+- libxrandr-dev 
+- libxcursor-dev 
+- libxi-dev 
+- libudev-dev 
+- libgl1-mesa-dev
 
 ## Build Instructions for macOS Environment
 Todo
