@@ -1,5 +1,5 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include <SDL2/SDL.h>
 #include <fmt/printf.h>
 #include <string>
 #include <AnaBanUI/UIRoot.h>
@@ -10,15 +10,23 @@
 class Application
 {
 	std::string m_InitialWindowTitle;
-	sf::RenderWindow *m_Window;
+	SDL_Window* m_Window;
+	SDL_Renderer* m_Renderer;
 	UIRoot m_UIRoot;
-	
+	bool m_Running;
+	float xPos = 0;
+
 	int Initialize();
 	int Run();
-	inline void ProcessEvents();
+	void ProcessEvents();
 	void Update(double deltaTime);
 	void Draw(double deltaTime);
 	void OnShutdown();
+
+	// Error handling
+	
+	/// @brief Displays a message box and logs SDL error to the console
+	inline void SDLFatalError(const char* messageHead);
 
 public:
 	/// @brief Main AnaBanUI Application class

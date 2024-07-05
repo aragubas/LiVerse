@@ -14,12 +14,7 @@ Build Dependencies
 - pkg-config
 - autoconf
 - libtool
-- libx11-dev 
-- libxrandr-dev 
-- libxcursor-dev 
-- libxi-dev 
-- libudev-dev 
-- libgl1-mesa-dev
+- libsdl2-dev
 
 ## Build Instructions for macOS Environment
 Todo

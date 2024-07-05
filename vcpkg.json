@@ -1,6 +1,6 @@
 {
   "dependencies": [
     "fmt",
-    "sfml"
+    "sdl2"
   ]
 }

@@ -2,7 +2,8 @@
 
 
 Application::Application(const char *title) :
-	m_Window(nullptr), m_InitialWindowTitle(title), m_UIRoot(UIRoot())
+	m_Window(nullptr), m_InitialWindowTitle(title), m_UIRoot(UIRoot()),
+	m_Running(true)
 {
 	
 }
@@ -10,8 +11,7 @@ Application::Application(const char *title) :
 
 void Application::SetWindowTitle(const char* windowTitle)
 {
-	if (m_Window == nullptr) return;
-	m_Window->setTitle(windowTitle);
+
 }
 
 
@@ -21,74 +21,89 @@ int Application::Initialize()
 	fmt::printf("[Debug] Current working directory: %s\n", std::filesystem::current_path().string());
 #endif
 
-	m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), m_InitialWindowTitle);
-	m_Window->setVerticalSyncEnabled(true);
-	
-	m_UIRoot = UIRoot();
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	{
+		SDLFatalError("Could not initialize SDL2.");		
+		return 1;
+	}
 
-	return 0;
+	m_Window = SDL_CreateWindow("LiVerse", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
+	if (m_Window == NULL)
+	{
+		SDLFatalError("Could not create window.");
+	}
+
+	m_Renderer = SDL_CreateRenderer(m_Window, -1, SDL_RENDERER_ACCELERATED);
+	if (m_Renderer == NULL)
+	{
+		SDLFatalError("Could not create renderer.");
+	}
+
+	// Initialize AnaBanUI
+	m_UIRoot = UIRoot();
+	
+	return Run();
+}
+
+
+inline void Application::SDLFatalError(const char* messageHead)
+{
+	std::string sdlError = std::string(SDL_GetError());
+	std::string errorMessage = fmt::format("{:s} {:s}", messageHead, sdlError);
+
+	fmt::printf("Fatal Error! %s\n", errorMessage);
+	
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "LiVerse - Fatal Error", errorMessage.c_str(), NULL);
 }
 
 
 int Application::Run()
 {
-	sf::Clock deltaClock;
-	
-	while (m_Window->isOpen())
+	Uint64 currentTime = SDL_GetTicks64();
+	Uint64 lastTime = 0;
+	double deltaTime = 0.0001;
+
+	while (m_Window != NULL && m_Running)
 	{
-		double deltaTime = deltaClock.restart().asSeconds();
+		currentTime = SDL_GetTicks64();
+		lastTime = currentTime;
 		
+		std::cout << deltaTime << std::endl;
+		std::cout << (currentTime - lastTime) << std::endl;
+
 		ProcessEvents();
 		Update(deltaTime);
 		Draw(deltaTime);
+		
+		deltaTime = ((currentTime - lastTime) * 1000 / (double)SDL_GetTicks64()) * 0.1;
 	}
-	
+
+	// Application is closing
+	SDL_DestroyRenderer(m_Renderer);
+	SDL_DestroyWindow(m_Window);
+
 	return 0;
 }
 
 
-inline void Application::ProcessEvents()
+void Application::ProcessEvents()
 {
-	sf::Event event;
-	
-	while (m_Window->pollEvent(event))
+	SDL_Event event;
+
+	while (SDL_PollEvent(&event))
 	{
-		if (event.type == sf::Event::Closed)
+		if (event.type == SDL_QUIT)
 		{
 			OnShutdown();
 			return;
 		}
-
-		if (event.type == sf::Event::Resized)
-		{
-			unsigned int width = event.size.width;
-			unsigned int height = event.size.height;
-			bool needsResize = false;
-
-			if (width < 800) 
-			{
-				width = 800;
-				needsResize = true;	
-			}
-			if (height < 600) {
-				height = 600;
-				needsResize = true;
-			}
-			
-
-			m_Window->setView(sf::View(sf::FloatRect(0, 0, (float)width, (float)height)));
-			
-			// FIXME: Crashes Wayland when resizing the window
-			//if (needsResize) m_Window->setSize(sf::Vector2u(width, height));
-		}
-
 	}
 }
 
 
 void Application::OnShutdown()
 {
-	m_Window->close();
+	m_Running = false;
 }
 
 
@@ -100,11 +115,25 @@ void Application::Update(double deltaTime)
 
 void Application::Draw(double deltaTime)
 {
-	m_Window->clear(sf::Color::Transparent);
+	// Clear the screen
+	SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, 0);
+	SDL_RenderClear(m_Renderer);
 
-	m_Window->draw(m_UIRoot);
+	SDL_FRect rectangle;
+	rectangle.x = xPos;
+	rectangle.y = 10;
+	rectangle.w = 200;
+	rectangle.h = 200;
 
-	m_Window->display();
+	xPos += 10 * deltaTime;
+
+	if (xPos > 800 - 200) xPos = 10;
+	
+	SDL_SetRenderDrawColor(m_Renderer, 255, 0, 0, 255);
+	SDL_RenderFillRectF(m_Renderer, &rectangle);
+
+	// Update Window
+	SDL_RenderPresent(m_Renderer);
 }
 
 
@@ -119,7 +148,6 @@ int Application::Start()
 {
 	int initStatus = Initialize();
 	if (initStatus != 0) return initStatus;
-	
-	
+		
 	return Run();
 }
