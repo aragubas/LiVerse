@@ -14,7 +14,6 @@ class Application
 	SDL_Renderer* m_Renderer;
 	UIRoot m_UIRoot;
 	bool m_Running;
-	float xPos = 0;
 
 	int Initialize();
 	int Run();

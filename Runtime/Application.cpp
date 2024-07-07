@@ -39,6 +39,8 @@ int Application::Initialize()
 		SDLFatalError("Could not create renderer.");
 	}
 
+	SDL_RenderSetVSync(m_Renderer, 1);
+
 	// Initialize AnaBanUI
 	m_UIRoot = UIRoot();
 	
@@ -59,23 +61,20 @@ inline void Application::SDLFatalError(const char* messageHead)
 
 int Application::Run()
 {
-	Uint64 currentTime = SDL_GetTicks64();
-	Uint64 lastTime = 0;
+	double currentTime = SDL_GetPerformanceCounter();
+	double lastTime = 0;
 	double deltaTime = 0.0001;
 
 	while (m_Window != NULL && m_Running)
 	{
-		currentTime = SDL_GetTicks64();
 		lastTime = currentTime;
-		
-		std::cout << deltaTime << std::endl;
-		std::cout << (currentTime - lastTime) << std::endl;
+		currentTime = SDL_GetPerformanceCounter();
+
+		deltaTime = ((currentTime - lastTime) * 1000 / (double)SDL_GetPerformanceFrequency()) * 0.001;
 
 		ProcessEvents();
 		Update(deltaTime);
 		Draw(deltaTime);
-		
-		deltaTime = ((currentTime - lastTime) * 1000 / (double)SDL_GetTicks64()) * 0.1;
 	}
 
 	// Application is closing
@@ -118,19 +117,6 @@ void Application::Draw(double deltaTime)
 	// Clear the screen
 	SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, 0);
 	SDL_RenderClear(m_Renderer);
-
-	SDL_FRect rectangle;
-	rectangle.x = xPos;
-	rectangle.y = 10;
-	rectangle.w = 200;
-	rectangle.h = 200;
-
-	xPos += 10 * deltaTime;
-
-	if (xPos > 800 - 200) xPos = 10;
-	
-	SDL_SetRenderDrawColor(m_Renderer, 255, 0, 0, 255);
-	SDL_RenderFillRectF(m_Renderer, &rectangle);
 
 	// Update Window
 	SDL_RenderPresent(m_Renderer);
