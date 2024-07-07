@@ -11,7 +11,6 @@ class UIRoot
 
 public:	
 	UIRoot();
-	~UIRoot();
 	
 	/// @brief Adds the layer into the internal layer stack and returns the Layer index
 	/// @param layer Layer reference
@@ -27,4 +26,5 @@ public:
 	void RemoveLayer(unsigned int index);
 
 	void Update(double deltaTime);
+	void Draw(SDL_Renderer* renderer, double deltaTime);
 };

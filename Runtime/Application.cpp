@@ -1,5 +1,6 @@
 #include "Application.h"
-
+#include <AnaBanUI/Controls/Button.h>
+#include <AnaBanUI/Containers/DockFill.h>
 
 Application::Application(const char *title) :
 	m_Window(nullptr), m_InitialWindowTitle(title), m_UIRoot(UIRoot()),
@@ -38,12 +39,18 @@ int Application::Initialize()
 	{
 		SDLFatalError("Could not create renderer.");
 	}
-
+	// Enable VSync
 	SDL_RenderSetVSync(m_Renderer, 1);
 
 	// Initialize AnaBanUI
 	m_UIRoot = UIRoot();
-	
+	DockFill* dockFill = new DockFill();
+	Button* button = new Button();
+
+	dockFill->AddControl(button);
+
+	uint layerIndex = m_UIRoot.CreateLayer(dockFill);
+
 	return Run();
 }
 
@@ -117,6 +124,8 @@ void Application::Draw(double deltaTime)
 	// Clear the screen
 	SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, 0);
 	SDL_RenderClear(m_Renderer);
+	
+	m_UIRoot.Draw(m_Renderer, deltaTime);
 
 	// Update Window
 	SDL_RenderPresent(m_Renderer);

@@ -4,7 +4,8 @@ find_package(SDL2 COMPONENTS SDL2-static CONFIG REQUIRED)
 
 add_library(AnaBanUI STATIC 
   "AnaBanUI/UIRoot.h" "AnaBanUI/UIRoot.cpp" "AnaBanUI/Control.h" "AnaBanUI/Container.h"
-  "AnaBanUI/Layer.h" "AnaBanUI/Layer.cpp"
+  "AnaBanUI/Layer.h" "AnaBanUI/Layer.cpp" "AnaBanUI/Controls/Button.h" "AnaBanUI/Controls/Button.cpp"
+  "AnaBanUI/Containers/DockFill.cpp" "AnaBanUI/Containers/DockFill.h"
 )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

@@ -1,2 +1,2 @@
 #!/bin/bash
-cmake . ./build
+cmake -DCMAKE_TOOLCHAIN_FILE=/home/aragubas/Development/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Debug -S/home/aragubas/Development/LiVerse -B/home/aragubas/Development/LiVerse/build -G Ninja && cmake --build /home/aragubas/Development/LiVerse/build --parallel 6

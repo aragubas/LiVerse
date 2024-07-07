@@ -3,13 +3,6 @@
 
 UIRoot::UIRoot() : m_Layers(std::vector<Layer>())
 {
-	// Creates Layer 0
-
-}
-
-
-UIRoot::~UIRoot()
-{
 
 }
 
@@ -19,6 +12,8 @@ unsigned int UIRoot::CreateLayer(Container *container)
     Layer layer(index);
 
     layer.RootContainer = container;
+
+    m_Layers.push_back(layer);
 
     return index;
 }
@@ -32,5 +27,17 @@ void UIRoot::RemoveLayer(unsigned int index)
 
 void UIRoot::Update(double deltaTime)
 {
+    for (Layer layer : m_Layers)
+    {
+        layer.RootContainer->Update(deltaTime);
+    }    
+}
 
+
+void UIRoot::Draw(SDL_Renderer *renderer, double deltaTime)
+{
+    for (Layer layer : m_Layers)
+    {
+        layer.RootContainer->Draw(renderer, deltaTime);
+    }    
 }

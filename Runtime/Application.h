@@ -22,7 +22,9 @@ class Application
 	void Draw(double deltaTime);
 	void OnShutdown();
 
+	//
 	// Error handling
+	//
 	
 	/// @brief Displays a message box and logs SDL error to the console
 	inline void SDLFatalError(const char* messageHead);

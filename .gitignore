@@ -42,3 +42,7 @@ CMakePresets.json
 
 # vcpkg
 vcpkg_installed/
+
+# VSCode
+.vscode/
+build-linux.sh
