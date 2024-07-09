@@ -46,3 +46,4 @@ vcpkg_installed/
 # VSCode
 .vscode/
 build-linux.sh
+.DS_Store
