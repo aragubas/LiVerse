@@ -38,4 +38,7 @@ fi
 #
 current_path=$(pwd)
 
+#
+#   Run CMake
+#
 cmake -DCMAKE_TOOLCHAIN_FILE="$vcpkg_path"/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Debug -S"$current_path" -B"$current_path"/build -G Ninja && cmake --build "$current_path"/build --parallel 6
