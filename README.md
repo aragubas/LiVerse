@@ -1,5 +1,5 @@
 # LiVerse++
-A complete re-write of LiVerse and TaiyouUI (aka AnaBanUI) in C++ using SDL2
+A complete re-write of LiVerse and TaiyouUI (aka TaiyouUI) in C++ using SDL2
 
 # Build Instructions
 

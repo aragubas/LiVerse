@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.30)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -8,6 +8,9 @@ endif()
 
 project ("LiVerse++")
 
+# Set properties
+set(CMAKE_CXX_STANDARD 23)
+
 # Include sub-projects.
-add_subdirectory ("AnaBanUI")
+add_subdirectory ("TaiyouUI")
 add_subdirectory ("Runtime")

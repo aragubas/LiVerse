@@ -11,5 +11,5 @@ endif()
 
 target_link_libraries(Runtime PRIVATE fmt::fmt)
 target_link_libraries(Runtime PRIVATE SDL2::SDL2-static)
-target_link_libraries(Runtime PUBLIC AnaBanUI)
-target_include_directories(Runtime PUBLIC ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/AnaBanUI)
+target_link_libraries(Runtime PUBLIC TaiyouUI)
+target_include_directories(Runtime PUBLIC ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/TaiyouUI)

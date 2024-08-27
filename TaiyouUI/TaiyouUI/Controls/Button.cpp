@@ -1,9 +1,13 @@
 #include "Button.h"
 #include <stdio.h>
 
-Button::Button() : backgroundRect(SDL_Rect(2, 2, 32, 5))
+Button::Button()
 {
-    
+    backgroundRect = SDL_Rect();
+    backgroundRect.x = 2;
+    backgroundRect.y = 2;
+    backgroundRect.w = 357;
+    backgroundRect.h = 200;
 }
 
 
