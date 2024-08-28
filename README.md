@@ -34,7 +34,7 @@ Before running ./build_linux.sh, create a file called '.vcpkg_path' in the root 
 
 
 # License
-This project is licensed under the Apache 2.0 License. 
+This project is licensed under the AGPL 3.0 license
 
 Check [License](./LICENSE) for more details
 
