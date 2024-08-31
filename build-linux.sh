@@ -7,8 +7,8 @@ vcpkg_path=undefined
 if [ -f .vcpkg_path ]; then
     vcpkg_path="$(cat .vcpkg_path | tr -d '\n')"
 else
-    echo E: Could not find .vcpkg_path
-    echo Make sure to create .vcpkg_path with path to your vcpkg installation
+    echo E: Could not find .vcpkg_path file
+    echo Create .vcpkg_path with the path to your vcpkg installation, ending with a slash
     exit 1
 fi
 
