@@ -23,6 +23,14 @@ Build Dependencies
 - cmake
 - ninja-build
 - autoconf
+- automake
+- libtool
+- perl-open
+- perl-FindBin
+- python3-jinja2
+- ibus-devel
+- libXext-devel
+
 
 Before running ./build_linux.sh, create a file '.vcpkg_path' in the root directory of the project.
 .vcpkg_path must contain path to vcpkg, ending with /
