@@ -18,7 +18,13 @@ Build Dependencies
 - libtool
 - libsdl2-dev
 
-Before running ./build_linux.sh, create a file called '.vcpkg_path' in the root of the project.
+### Fedora
+Build Dependencies
+- cmake
+- ninja-build
+- autoconf
+
+Before running ./build_linux.sh, create a file '.vcpkg_path' in the root directory of the project.
 .vcpkg_path must contain path to vcpkg, ending with /
 
 
