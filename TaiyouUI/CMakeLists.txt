@@ -3,9 +3,8 @@ find_package(fmt CONFIG REQUIRED)
 find_package(SDL2 COMPONENTS SDL2-static CONFIG REQUIRED)
 
 add_library(TaiyouUI STATIC 
-  "TaiyouUI/UIRoot.h" "TaiyouUI/UIRoot.cpp" "TaiyouUI/Control.h" "TaiyouUI/Container.h"
+  "TaiyouUI/UIRoot.h" "TaiyouUI/UIRoot.cpp" "TaiyouUI/Control.h" "TaiyouUI/Container.h" "TaiyouUI/Container.cpp"
   "TaiyouUI/Layer.h" "TaiyouUI/Layer.cpp" "TaiyouUI/Controls/Button.h" "TaiyouUI/Controls/Button.cpp"
-  "TaiyouUI/Containers/DockFill.cpp" "TaiyouUI/Containers/DockFill.h"
 )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

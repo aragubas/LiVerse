@@ -1,15 +1,25 @@
 #pragma once
+#include <vector>
 #include "Control.h"
+
+enum ContainerType {
+    Center, DockFill, List
+};
 
 class Container : public Control
 {
     /// @brief Called when the UI needs to be re-built. Usually after resizing/adding component
-    virtual void BuildUI() = 0;
+    void BuildUI();
+    void BuildCenter();
+    void BuildDockFill();
+    void BuildList();
 
 public:    
-    virtual void Update(double deltaTime) = 0;
-    virtual void Draw(SDL_Renderer* renderer, double deltaTime) = 0;
+    std::vector<Control*> Controls;
+    ContainerType Type;
 
-    virtual uint AddControl(Control* control) = 0;
-    virtual void RemoveControl() = 0;
+    Container();
+
+    void Update(double deltaTime);
+    void Draw(SDL_Renderer* renderer, double deltaTime);
 };

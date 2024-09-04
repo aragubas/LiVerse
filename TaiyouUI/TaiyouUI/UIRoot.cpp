@@ -5,7 +5,7 @@ UIRoot::UIRoot() : m_Layers(std::vector<Layer *>())
 {
 }
 
-Layer *UIRoot::CreateLayer(Container *container)
+Layer* UIRoot::CreateLayer(Container *container)
 {
     unsigned int index = m_Layers.size() + 1;
     Layer *layer = new Layer(index);
@@ -15,7 +15,7 @@ Layer *UIRoot::CreateLayer(Container *container)
     m_Layers.push_back(layer);
 
     return layer;
-}
+}   
 
 void UIRoot::RemoveLayer(unsigned int index)
 {

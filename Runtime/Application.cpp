@@ -1,10 +1,12 @@
 #include "Application.h"
 #include <TaiyouUI/Controls/Button.h>
-#include <TaiyouUI/Containers/DockFill.h>
 
-Application::Application(const char *title, UIRoot *uiRoot) : m_Window(nullptr), m_InitialWindowTitle(title), m_UIRoot(uiRoot),
-															  m_Running(true)
+Application::Application(const char *title, UIRoot *uiRoot)
 {
+	m_Window = nullptr;
+	m_InitialWindowTitle = title;
+	m_UIRoot = uiRoot;
+	m_Running = true;
 }
 
 void Application::SetWindowTitle(const char *windowTitle)
@@ -15,8 +17,12 @@ int Application::Initialize()
 {
 #ifndef NDEBUG
 	fmt::printf("[Debug] Current working directory: %s\n", std::filesystem::current_path().string());
-#endif
+#endif	
 
+	// Prefer wayland over X11
+	SDL_SetHint(SDL_HINT_VIDEODRIVER, "wayland,x11");
+
+	// Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		SDLFatalError("Could not initialize SDL2.");
@@ -27,15 +33,30 @@ int Application::Initialize()
 	if (m_Window == NULL)
 	{
 		SDLFatalError("Could not create window.");
+		return 1;
 	}
+	// Set window properties
+	SDL_SetWindowMinimumSize(m_Window, 640, 480);
 
-	m_Renderer = SDL_CreateRenderer(m_Window, -1, SDL_RENDERER_ACCELERATED);
+	m_Renderer = SDL_CreateRenderer(m_Window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (m_Renderer == NULL)
 	{
 		SDLFatalError("Could not create renderer.");
+		return 1;
 	}
 	// Enable VSync
 	SDL_RenderSetVSync(m_Renderer, 1);
+
+	// Check if renderer supports Render Targets
+	if (!SDL_RenderTargetSupported(m_Renderer))
+	{
+		SDLFatalError("Renderer does not support render targets,\nwhich is required by this application.\n\nThe application will close");
+		return 1;
+	}
+
+#ifndef NDEBUG
+	fmt::printf("Using video driver: %s\n", SDL_GetCurrentVideoDriver());
+#endif
 
 	return Run();
 }
@@ -69,8 +90,7 @@ int Application::Run()
 	}
 
 	// Application is closing
-	SDL_DestroyRenderer(m_Renderer);
-	SDL_DestroyWindow(m_Window);
+	OnShutdown();
 
 	return 0;
 }
@@ -84,7 +104,7 @@ void Application::ProcessEvents()
 		// Not processed by UIRoot
 		if (event.type == SDL_QUIT)
 		{
-			OnShutdown();
+			m_Running = false;
 			return;
 		}
 
@@ -94,7 +114,11 @@ void Application::ProcessEvents()
 
 void Application::OnShutdown()
 {
-	m_Running = false;
+#ifndef NDEBUG
+	std::cout << "Shutting down application!" << std::endl;
+#endif
+	SDL_DestroyRenderer(m_Renderer);
+	SDL_DestroyWindow(m_Window);
 }
 
 void Application::Update(double deltaTime)
@@ -116,6 +140,9 @@ void Application::Draw(double deltaTime)
 
 void Application::SetUIRoot(UIRoot *uiRoot)
 {
+	// Avoids use after free when m_UIRoot is uiRoot
+	if (m_UIRoot == uiRoot) { return; }
+
 	if (m_UIRoot != nullptr)
 	{
 		delete m_UIRoot;
