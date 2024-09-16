@@ -17,10 +17,10 @@ int Application::Initialize()
 {
 #ifndef NDEBUG
 	fmt::printf("[Debug] Current working directory: %s\n", std::filesystem::current_path().string());
-#endif	
+#endif
 
 	// Prefer wayland over X11
-	SDL_SetHint(SDL_HINT_VIDEODRIVER, "wayland,x11");
+	// SDL_SetHint(SDL_HINT_VIDEODRIVER, "wayland,x11");
 
 	// Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -141,7 +141,10 @@ void Application::Draw(double deltaTime)
 void Application::SetUIRoot(UIRoot *uiRoot)
 {
 	// Avoids use after free when m_UIRoot is uiRoot
-	if (m_UIRoot == uiRoot) { return; }
+	if (m_UIRoot == uiRoot)
+	{
+		return;
+	}
 
 	if (m_UIRoot != nullptr)
 	{
