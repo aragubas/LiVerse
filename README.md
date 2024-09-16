@@ -1,13 +1,18 @@
 # LiVerse++
 A complete re-write of LiVerse and TaiyouUI in C++ using SDL2
 
+LIVerse is a Hackable and Extensible PNGTuber app for Linux, macOS and Windows
+
+
+Powered by TaiyouUI and SDL2 
+
 # Build Instructions
 
-## Build Instructions for Visual Studio + Windows Environment
+## Build Instructions for Visual Studio on Windows
 To get started, rename CMakePresets.json.example to CMakePresets.json, and replace <VCPKG_PATH>
 to where VCPKG is installed
 
-## Build Instructions for Linux Environment
+## Build Instructions for Linux
 ### Ubuntu/Debian:
 Build Dependencies
 - build-essential
