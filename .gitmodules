@@ -1,0 +1,3 @@
+[submodule "TaiyouUI"]
+	path = TaiyouUI
+	url = https://github.com/aragubas/TaiyouUI
