@@ -115,7 +115,7 @@ void Application::ProcessEvents()
 void Application::OnShutdown()
 {
 #ifndef NDEBUG
-	std::cout << "Shutting down application!" << std::endl;
+	std::cout << "Application::OnShutdown(); Bye bye!" << std::endl;
 #endif
 	SDL_DestroyRenderer(m_Renderer);
 	SDL_DestroyWindow(m_Window);
