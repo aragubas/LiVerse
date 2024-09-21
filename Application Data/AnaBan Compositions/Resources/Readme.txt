@@ -1,1 +1,0 @@
-﻿This folder would contain resource files for UI, and would be loaded in runtime
