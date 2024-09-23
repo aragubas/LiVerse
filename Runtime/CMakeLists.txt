@@ -10,7 +10,7 @@ find_package(SDL2 COMPONENTS SDL2-static CONFIG REQUIRED)
 
 # Add source to this project's executable.
 add_executable(Runtime
-  "Runtime.cpp" "Application.cpp" "Application.h"
+  "main.cpp" "Application.cpp" "Application.h"
 )
 
 # Set C++ standard to C++20
