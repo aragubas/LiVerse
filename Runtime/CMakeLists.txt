@@ -6,6 +6,7 @@ project("Runtime")
 # Find required packages
 find_package(fmt CONFIG REQUIRED)
 find_package(SDL2 COMPONENTS SDL2-static CONFIG REQUIRED)
+find_package(SDL2_ttf CONFIG REQUIRED)
 
 
 # Add source to this project's executable.
@@ -19,4 +20,5 @@ set_property(TARGET Runtime PROPERTY CXX_STANDARD 20)
 # Link and include libraries
 target_link_libraries(Runtime PRIVATE fmt::fmt)
 target_link_libraries(Runtime PRIVATE SDL2::SDL2-static)
+target_link_libraries(Runtime PUBLIC SDL2_ttf::SDL2_ttf-static)
 target_link_libraries(Runtime PRIVATE TaiyouUI)
