@@ -12,6 +12,7 @@ endif()
 
 # Set properties
 set(CMAKE_CXX_STANDARD 23)
+# TODO: Make -Wreturn-type an error
 
 # Include sub-projects.
 add_subdirectory("TaiyouUI")
