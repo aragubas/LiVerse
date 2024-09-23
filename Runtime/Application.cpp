@@ -11,6 +11,9 @@ Application::Application(const char *title, UIRoot *uiRoot)
 
 void Application::SetWindowTitle(const char *windowTitle)
 {
+	if (!m_Window)
+		return;
+	SDL_SetWindowTitle(m_Window, windowTitle);
 }
 
 int Application::Initialize()
@@ -56,9 +59,10 @@ int Application::Initialize()
 
 #ifndef NDEBUG
 	fmt::printf("Using video driver: %s\n", SDL_GetCurrentVideoDriver());
+	fmt::printf("Using audio driver: %s\n", SDL_GetCurrentAudioDriver());
 #endif
 
-	return Run();
+	return 0;
 }
 
 inline void Application::SDLFatalError(const char *messageHead)
@@ -75,13 +79,14 @@ int Application::Run()
 {
 	double currentTime = SDL_GetPerformanceCounter();
 	double lastTime = 0;
-	double deltaTime = 0.0001;
+	double deltaTime = 0.000000001;
 
 	while (m_Window != NULL && m_Running)
 	{
 		lastTime = currentTime;
 		currentTime = SDL_GetPerformanceCounter();
 
+		// Calculate delta time
 		deltaTime = ((currentTime - lastTime) * 1000 / (double)SDL_GetPerformanceFrequency()) * 0.001;
 
 		ProcessEvents();
