@@ -25,10 +25,17 @@ int Application::Initialize()
 	// Prefer wayland over X11
 	// SDL_SetHint(SDL_HINT_VIDEODRIVER, "wayland,x11");
 
-	// Initialize SDL
+	// Initialize SDL Video
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		SDLFatalError("Could not initialize SDL2.");
+		return 1;
+	}
+
+	// Initialize SDL TTF
+	if (TTF_Init() == -1)
+	{
+		SDLFatalError("Could not initialize SDL2 TTF");
 		return 1;
 	}
 
