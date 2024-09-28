@@ -1,19 +1,10 @@
 # LiVerse
-<img src="Assets/logo.svg" width="200px" />
+<img src="Assets/logo.svg" width="127px" />
 
-LiVerse is a extensible, hackeable PNG Tuber app for streamers/content creators
+LiVerse is a extensible and hackeable PNGTuber App for streamers
 
-LiVerse is still in active development.
+## Legacy Version
+LiVerse is being re-written in C++ (check cpp-rewrite) branch for better performance, efficiency and plugin stability!
 
-
-## Under Active Development
-Creating PR's in this early stage of the project won't be that much helpful, I'll still try to read/accept them, but don't expect every PR to be accepted.
-The current branch is not guaranteed to be buildable
-
-### Features:
- - Lightweight and Scupted from scratch without
- - Libre! Free and Open Source, licensed under the Apache 2.0 License
- - Extensible via plugins (not yet)
- - Built-in documentation (not yet)
 
 2024 by Taiyou
