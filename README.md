@@ -37,7 +37,7 @@ Build Dependencies
 - libXext-devel
 
 
-Before running ./build_linux.sh, create a file '.vcpkg_path' in the root directory of the project.
+Before running ./build.sh, create a file '.vcpkg_path' in the root directory of the project.
 .vcpkg_path must contain path to vcpkg, ending with /
 
 
@@ -48,7 +48,7 @@ Build Dependencies (install via homebrew)
 - pkg-config
 - gdb (Optional, for Debugging, will require code signing)
 
-Before running ./build_linux.sh, create a file called '.vcpkg_path' in the root of the project.
+Before running ./build.sh, create a file called '.vcpkg_path' in the root of the project.
 .vcpkg_path must contain path to vcpkg, ending with /
 
 
