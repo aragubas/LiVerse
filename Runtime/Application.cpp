@@ -135,6 +135,12 @@ void Application::OnShutdown()
 
 void Application::Update(double deltaTime)
 {
+	// Set UIRoot size to window size
+	int size_w, size_h = 0;
+	SDL_GetRendererOutputSize(m_Renderer, &size_w, &size_h);
+	m_UIRoot->Size.x = size_w;
+	m_UIRoot->Size.y = size_h;
+
 	m_UIRoot->Update(deltaTime);
 }
 
