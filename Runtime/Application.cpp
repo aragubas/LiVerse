@@ -1,12 +1,17 @@
 #include "Application.h"
 #include <TaiyouUI/Controls/Button.h>
 
-Application::Application(const char *title, UIRoot *uiRoot)
+Application::Application(const char *title)
 {
 	m_Window = nullptr;
 	m_InitialWindowTitle = title;
-	m_UIRoot = uiRoot;
+	m_UIRoot = nullptr;
 	m_Running = true;
+}
+
+UIRoot *Application::GetUIRoot()
+{
+	return m_UIRoot;
 }
 
 void Application::SetWindowTitle(const char *windowTitle)
@@ -67,6 +72,17 @@ int Application::Initialize()
 #ifndef NDEBUG
 	fmt::printf("Using video driver: %s\n", SDL_GetCurrentVideoDriver());
 	fmt::printf("Using audio driver: %s\n", SDL_GetCurrentAudioDriver());
+#endif
+
+	// Create UIRoot
+	m_UIRoot = new UIRoot(m_Renderer, m_Window);
+
+	// TODO: Raise an error message if callback is null
+
+	OnUIRootInitialized(m_UIRoot);
+
+#ifndef NDEBUG
+	std::cout << "[Debug] Initialization Done" << std::endl;
 #endif
 
 	return 0;
@@ -154,22 +170,6 @@ void Application::Draw(double deltaTime)
 
 	// Update Window
 	SDL_RenderPresent(m_Renderer);
-}
-
-void Application::SetUIRoot(UIRoot *uiRoot)
-{
-	// Avoids use after free when m_UIRoot is uiRoot
-	if (m_UIRoot == uiRoot)
-	{
-		return;
-	}
-
-	if (m_UIRoot != nullptr)
-	{
-		delete m_UIRoot;
-	}
-
-	m_UIRoot = uiRoot;
 }
 
 //

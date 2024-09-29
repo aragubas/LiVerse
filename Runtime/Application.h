@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include <fmt/printf.h>
 #include <string>
+#include <functional>
 #include <TaiyouUI/UIRoot.h>
 #ifndef NDEBUG
 #include <filesystem>
@@ -30,17 +31,17 @@ class Application
 	inline void SDLFatalError(const char *messageHead);
 
 public:
+	void (*OnUIRootInitialized)(UIRoot *uiRoot);
+
 	/// @brief Main TaiyouUI Application class
 	/// @param windowTitle Initial Window title
-	Application(const char *windowTitle, UIRoot *uiRoot = nullptr);
+	Application(const char *windowTitle);
+
+	UIRoot *GetUIRoot();
 
 	/// @brief Set Window title
 	/// @param windowTitle Window title
 	void SetWindowTitle(const char *windowTitle);
-
-	/// @brief Set UIRoot, disabling and deleting the current one
-	/// @param uiRoot new UIRoot
-	void SetUIRoot(UIRoot *uiRoot);
 
 	/// @brief Bootstraps the application, blocking the calling thread
 	/// @return non-zero if something goes wrong
