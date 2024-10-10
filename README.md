@@ -15,26 +15,15 @@ to where VCPKG is installed
 ## Build Instructions for Linux
 ### Ubuntu/Debian:
 Build Dependencies
-- build-essential
-- cmake
-- ninja-build
-- pkg-config
-- autoconf
-- libtool
-- libsdl2-dev
+```
+build-essential cmake ninja-build pkg-config autoconf libtool libsdl2-dev
+```
 
 ### Fedora
 Build Dependencies
-- cmake
-- ninja-build
-- autoconf
-- automake
-- libtool
-- perl-open
-- perl-FindBin
-- python3-jinja2
-- ibus-devel
-- libXext-devel
+```
+cmake ninja-build autoconf automake libtool perl-open perl-FindBin python3-jinja2 ibus-devel libXext-devel
+```
 
 
 Before running ./build.sh, create a file '.vcpkg_path' in the root directory of the project.
@@ -43,10 +32,9 @@ Before running ./build.sh, create a file '.vcpkg_path' in the root directory of 
 
 ## Build Instructions for macOS Environment
 Build Dependencies (install via homebrew)
-- cmake
-- ninja
-- pkg-config
-- gdb (Optional, for Debugging, will require code signing)
+```
+cmake ninja pkg-config
+```
 
 Before running ./build.sh, create a file called '.vcpkg_path' in the root of the project.
 .vcpkg_path must contain path to vcpkg, ending with /
