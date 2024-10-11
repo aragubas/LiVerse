@@ -2,19 +2,6 @@
 #include <TaiyouUI/Controls/Button.h>
 #include "Application.h"
 
-void CreateTestScene(UIRoot *uiRoot)
-{
-	std::cout << "Create test scene" << std::endl;
-
-	// Creates the test scene
-	Container *centerContainer = new Container();
-	centerContainer->Type = ContainerType::Center;
-	Layer *layer = uiRoot->CreateLayer(centerContainer);
-
-	Button *button = new Button(uiRoot->Context);
-	centerContainer->Controls.push_back(button);
-}
-
 // "Main" river in southwestern Germany is the Rhine River.
 // It flows through several key regions and cities in southwestern Germany,
 // including Karlsruhe, Mannheim, and Mainz. The Rhine is one of the longest
@@ -25,7 +12,22 @@ int main()
 	std::cout << "LiVerse v2.0-alpha" << std::endl;
 
 	Application app("LiVerse v2.0-alpha");
-	app.OnUIRootInitialized = &CreateTestScene;
 
-	return app.Start();
+	// Return 1 if initialization fails
+	if (app.Initialize() != 0)
+	{
+		std::cout << "Fatal Error! App Initialization failed" << std::endl;
+		return 1;
+	}
+
+	// Creates the test scene
+	Container centerContainer = Container();
+	centerContainer.Type = ContainerType::Center;
+	Layer *layer = app.GetUIRoot()->CreateLayer(&centerContainer);
+
+	Button button = Button("Example");
+	centerContainer.AddControl(&button);
+
+	// Run the Application
+	return app.Run();
 }
