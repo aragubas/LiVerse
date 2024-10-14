@@ -48,3 +48,4 @@ vcpkg_installed/
 build-linux.sh
 .DS_Store
 .vcpkg_path
+CMakeUserPresets.json
