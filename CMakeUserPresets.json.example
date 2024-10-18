@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "default",
+      "inherits": [ "vcpkg-debug" ],
+      "hidden": true,
+      "environment": {
+        "VCPKG_ROOT": "<vcpkg root goes here>"
+      }
+    }
+  ]
+}

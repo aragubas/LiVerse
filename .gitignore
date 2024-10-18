@@ -37,8 +37,8 @@
 # Build
 build/
 
-# CMakePresets
-CMakePresets.json
+# CMakeUserPresets
+CMakeUserPresets.json
 
 # vcpkg
 vcpkg_installed/
