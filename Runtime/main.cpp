@@ -1,4 +1,5 @@
-﻿#include <iostream>
+﻿#define SDL_MAIN_HANDLED
+#include <iostream>
 #include <TaiyouUI/Controls/Button.h>
 #include "Application.h"
 
@@ -25,7 +26,7 @@ int main()
 	centerContainer.Type = ContainerType::Center;
 	Layer *layer = app.GetUIRoot()->CreateLayer(&centerContainer);
 
-	Button button = Button("Example");
+	Button button = Button(&app.GetUIRoot()->Context);
 	centerContainer.AddControl(&button);
 
 	// Run the Application
