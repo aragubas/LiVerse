@@ -2,6 +2,8 @@
 #include <iostream>
 #include <TaiyouUI/Controls/Button.h>
 #include "Application.h"
+using namespace TaiyouUI;
+
 
 // "Main" river in southwestern Germany is the Rhine River.
 // It flows through several key regions and cities in southwestern Germany,
@@ -11,7 +13,7 @@
 int main()
 {
 	std::cout << "LiVerse v2.0-alpha" << std::endl;
-
+	
 	Application app("LiVerse v2.0-alpha");
 
 	// Return 1 if initialization fails
@@ -26,7 +28,7 @@ int main()
 	centerContainer.Type = ContainerType::Center;
 	Layer *layer = app.GetUIRoot()->CreateLayer(&centerContainer);
 
-	Button button = Button(&app.GetUIRoot()->Context);
+	Controls::Button button = Controls::Button(&app.GetUIRoot()->Context);
 	centerContainer.AddControl(&button);
 
 	// Run the Application

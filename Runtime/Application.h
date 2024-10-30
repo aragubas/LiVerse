@@ -4,16 +4,18 @@
 #include <string>
 #include <functional>
 #include <TaiyouUI/UIRoot.h>
+#include <TaiyouUI/Turk/Turk.h>
 #ifndef NDEBUG
 #include <filesystem>
 #endif
+
 
 class Application
 {
 	const char *m_InitialWindowTitle;
 	SDL_Window *m_Window;
 	SDL_Renderer *m_Renderer;
-	UIRoot *m_UIRoot;
+	TaiyouUI::UIRoot *m_UIRoot;
 	bool m_Running;
 
 	void ProcessEvents();
@@ -38,12 +40,12 @@ public:
 	int Initialize();
 
 	/// @brief Returns a pointer to the UIRoot instance
-	UIRoot *GetUIRoot();
+	TaiyouUI::UIRoot *GetUIRoot();
 
 	/// @brief Set Window title
 	/// @param windowTitle Window title
 	void SetWindowTitle(const char *windowTitle);
 
-	/// @brief Starts the main loop, blocking the thread
+	/// @brief Starts the application loop, blocking the calling thread
 	int Run();
 };

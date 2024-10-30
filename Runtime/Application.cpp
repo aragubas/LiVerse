@@ -1,12 +1,13 @@
 #include "Application.h"
 #include <TaiyouUI/Controls/Button.h>
+using namespace TaiyouUI;
 
-Application::Application(const char *title)
+
+Application::Application(const char *title) :
+	m_InitialWindowTitle(title), m_Window(nullptr),
+	m_Renderer(nullptr), m_UIRoot(nullptr),
+	m_Running(true)
 {
-	m_Window = nullptr;
-	m_InitialWindowTitle = title;
-	m_UIRoot = nullptr;
-	m_Running = true;
 }
 
 inline void Application::SDLFatalError(const char *messageHead)
@@ -45,6 +46,8 @@ void Application::OnShutdown()
 #ifndef NDEBUG
 	std::cout << "Application::OnShutdown(); Bye bye!" << std::endl;
 #endif
+
+	delete m_UIRoot;
 	SDL_DestroyRenderer(m_Renderer);
 	SDL_DestroyWindow(m_Window);
 }
