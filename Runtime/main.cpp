@@ -29,6 +29,7 @@ int main()
 	Layer *layer = app.GetUIRoot()->CreateLayer(&centerContainer);
 
 	Controls::Button button = Controls::Button(&app.GetUIRoot()->Context);
+	button.SetText("Sample Text");
 	centerContainer.AddControl(&button);
 
 	// Run the Application
