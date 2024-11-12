@@ -16,6 +16,8 @@ add_executable(Runtime
 
 # Set C++ standard to C++20
 set_property(TARGET Runtime PROPERTY CXX_STANDARD 20)
+# Treat warnings as errors
+set_property(TARGET TaiyouUI PROPERTY COMPILE_WARNING_AS_ERROR ON)
 
 # Link and include libraries
 target_link_libraries(Runtime PRIVATE fmt::fmt)
