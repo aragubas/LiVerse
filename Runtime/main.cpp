@@ -1,4 +1,4 @@
-﻿#define SDL_MAIN_HANDLED
+#define SDL_MAIN_HANDLED
 #include <iostream>
 #include <TaiyouUI/Controls/Button.h>
 #include "Application.h"
@@ -13,7 +13,7 @@ using namespace TaiyouUI;
 int main()
 {
 	std::cout << "LiVerse v2.0-alpha" << std::endl;
-	
+
 	Application app("LiVerse v2.0-alpha");
 
 	// Return 1 if initialization fails
@@ -26,7 +26,7 @@ int main()
 	// Creates the test scene
 	Container centerContainer = Container();
 	centerContainer.Type = ContainerType::Center;
-	Layer *layer = app.GetUIRoot()->CreateLayer(&centerContainer);
+	Layer* layer = app.GetUIRoot()->CreateLayer(&centerContainer);
 
 	Controls::Button button = Controls::Button(&app.GetUIRoot()->Context);
 	button.SetText("Sample Text");

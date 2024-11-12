@@ -3,14 +3,14 @@
 using namespace TaiyouUI;
 
 
-Application::Application(const char *title) :
+Application::Application(const char* title) :
 	m_InitialWindowTitle(title), m_Window(nullptr),
 	m_Renderer(nullptr), m_UIRoot(nullptr),
 	m_Running(true)
 {
 }
 
-inline void Application::SDLFatalError(const char *messageHead)
+inline void Application::SDLFatalError(const char* messageHead)
 {
 	std::string sdlError = std::string(SDL_GetError());
 	std::string errorMessage = fmt::format("{:s} {:s}", messageHead, sdlError);
@@ -141,12 +141,12 @@ int Application::Initialize()
 	return 0;
 }
 
-UIRoot *Application::GetUIRoot()
+UIRoot* Application::GetUIRoot()
 {
 	return m_UIRoot;
 }
 
-void Application::SetWindowTitle(const char *windowTitle)
+void Application::SetWindowTitle(const char* windowTitle)
 {
 	if (!m_Window)
 		return;
