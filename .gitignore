@@ -49,3 +49,6 @@ build-linux.sh
 .DS_Store
 .vcpkg_path
 CMakeUserPresets.json
+
+# Idea
+.idea/
