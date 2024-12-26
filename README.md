@@ -38,16 +38,15 @@ Before running ./build.sh, create a file '.vcpkg_path' in the root directory of 
 ---
 First, make sure you have ``VCPKG_ROOT`` set in your path to the root of your vcpkg installation
 
-
-``cd`` into the project and run
 ```
+# Configuration
 cmake --preset vcpkg-debug -DCMAKE_BUILD_TYPE=Debug -B ./build/
-```
-to configure, and then
-```
+
+# Building
 cmake --build ./build
 ```
-to build
+
+You can also include ``-DCMAKE_EXPORT_COMPILE_COMMANDS=1`` definition for optional clangd IDE support
 
 # License
 This project is licensed under the AGPL 3.0 license
