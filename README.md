@@ -24,29 +24,30 @@ build-essential cmake ninja-build pkg-config autoconf libtool libsdl2-dev
 cmake ninja-build autoconf automake libtool perl-open perl-FindBin python3-jinja2 ibus-devel libXext-devel
 ```
 
+### Dependencies for Arch Linux/endeavourOS
+```
+cmake ninja python-jinja
+```
+
 #### Building using the build script 
 ---
 Before running ./build.sh, create a file '.vcpkg_path' in the root directory of the project.
 .vcpkg_path must contain path to vcpkg, ending with /
 
-#### Compiling manually through CMake
+#### Using CMake directly
+---
+First, make sure you have ``VCPKG_ROOT`` set in your path to the root of your vcpkg installation
+
+
 ``cd`` into the project and run
 ```
-cmake -DCMAKE_BUILD_TYPE=Debug -B ./build/
+cmake --preset vcpkg-debug -DCMAKE_BUILD_TYPE=Debug -B ./build/
 ```
 to configure, and then
 ```
-cmake --preset vcpkg-debug -DCMAKE_OUTPUT_TYPE=Debug -B ./build
+cmake --build ./build
 ```
 to build
-
-## Build Instructions for macOS
-Build Dependencies (install via homebrew)
-```
-cmake ninja pkg-config
-```
-
-You can use the same build script as the one for Linux, the instructions are the same as above
 
 # License
 This project is licensed under the AGPL 3.0 license
