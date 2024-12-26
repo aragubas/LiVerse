@@ -52,3 +52,7 @@ CMakeUserPresets.json
 
 # Idea
 .idea/
+
+# Ignore files created by KDevelop
+LiVerse.kdev4
+/.cache
