@@ -12,14 +12,14 @@ using namespace TaiyouUI;
 // https://en.wikipedia.org/wiki/Main_%28river%29
 int main()
 {
-	std::cout << "LiVerse v2.0-alpha" << std::endl;
+	std::cout << "LiVerse v2.0-alpha by Aragubas" << std::endl;
 
 	Application app("LiVerse v2.0-alpha");
 
 	// Return 1 if initialization fails
 	if (app.Initialize() != 0)
 	{
-		std::cout << "Fatal Error! App Initialization failed" << std::endl;
+		std::cout << "App Initialization failed. Check log above for more information" << std::endl;
 		return 1;
 	}
 
