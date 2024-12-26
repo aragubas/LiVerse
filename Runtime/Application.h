@@ -27,8 +27,11 @@ class Application
 	// Error handling //
 	////////////////////
 
-	/// @brief Displays a message box and logs SDL error to the console
-	inline void SDLFatalError(const char *messageHead);
+	/// @brief Displays a message box for SDL2 errors and logs the error to stdout
+	inline void FatalError(const std::string &messageBody);
+
+	/// @brief Displays a message box for SDL2 errors and logs the error to stdout
+	inline void SDLFatalError(const std::string &messageHead);
 
 public:
 	/// @brief Main TaiyouUI Application class

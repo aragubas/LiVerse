@@ -10,18 +10,23 @@ Application::Application(const char* title) :
 {
 }
 
-inline void Application::SDLFatalError(const char* messageHead)
+inline void Application::FatalError(const std::string& messageBody)
 {
-	std::string sdlError = std::string(SDL_GetError());
-	std::string errorMessage = fmt::format("{:s} {:s}", messageHead, sdlError);
+	fmt::printf("Fatal Error! %s\n", messageBody);
 
-	fmt::printf("Fatal Error! %s\n", errorMessage);
-
-	int returnCode = SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "LiVerse - Fatal Error", errorMessage.c_str(), NULL);
+	int returnCode = SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "LiVerse - Fatal Error", messageBody.c_str(), NULL);
 	if (returnCode != 0)
 	{
 		std::cout << "Could not display message box. " << SDL_GetError() << std::endl;
 	}
+}
+
+inline void Application::SDLFatalError(const std::string& messageHead)
+{
+	std::string sdlError = std::string(SDL_GetError());
+	std::string errorMessage = fmt::format("{:s} {:s}", messageHead, sdlError);
+
+	FatalError(errorMessage);
 }
 
 void Application::ProcessEvents()
@@ -83,6 +88,15 @@ int Application::Initialize()
 #ifndef NDEBUG
 	fmt::printf("[Debug] Current working directory: %s\n", std::filesystem::current_path().string());
 #endif
+
+	// Check if Application Data folder exists
+	std::filesystem::path path = std::filesystem::path("Application Data");
+	if (!std::filesystem::exists(path))
+	{
+		FatalError("Could not find Application Data directory.");
+		return 1;
+	}
+
 
 	// Prefer wayland over X11
 	SDL_SetHint(SDL_HINT_VIDEODRIVER, "wayland,x11");
