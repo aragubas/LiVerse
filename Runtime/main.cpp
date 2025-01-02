@@ -1,3 +1,5 @@
+#include "TaiyouUI/UIRoot.h"
+#include "TaiyouUI/UIRootContext.h"
 #define SDL_MAIN_HANDLED
 #include <iostream>
 #include <TaiyouUI/Controls/Button.h>
@@ -24,12 +26,13 @@ int main()
 	}
 
 	// Creates the test scene
-	Container centerContainer = Container();
+	UIRootContext context = app.GetUIRoot()->Context;
+
+	Container centerContainer = Container(context);
 	centerContainer.Type = ContainerType::Center;
 	Layer* layer = app.GetUIRoot()->CreateLayer(&centerContainer);
 
-	Controls::Button button = Controls::Button(&app.GetUIRoot()->Context);
-	button.SetText("Sample Text");
+	Controls::Button button = Controls::Button(context, "Lorem Ipsum");
 	centerContainer.AddControl(&button);
 
 	// Run the Application
