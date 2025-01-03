@@ -60,6 +60,7 @@ void Application::OnShutdown()
 		m_CurrentScene->OnShutdown();
 	
 	delete m_UIRoot;
+	delete m_CurrentScene;
 	SDL_DestroyRenderer(m_Renderer);
 	SDL_DestroyWindow(m_Window);
 }
