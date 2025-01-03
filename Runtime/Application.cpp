@@ -1,13 +1,14 @@
 #include "Application.h"
 #include <TaiyouUI/Controls/Button.h>
 #include <filesystem>
+#include <iostream>
 using namespace TaiyouUI;
-
+using namespace LiVerse;
 
 Application::Application(const char* title) :
 	m_InitialWindowTitle(title), m_Window(nullptr),
 	m_Renderer(nullptr), m_UIRoot(nullptr),
-	m_Running(true)
+	m_Running(true), m_CurrentScene(nullptr)
 {
 }
 
@@ -53,6 +54,9 @@ void Application::OnShutdown()
 	std::cout << "Application::OnShutdown(); Bye bye!" << std::endl;
 #endif
 
+	if (m_CurrentScene != nullptr)
+		m_CurrentScene->OnShutdown();
+
 	delete m_UIRoot;
 	SDL_DestroyRenderer(m_Renderer);
 	SDL_DestroyWindow(m_Window);
@@ -67,6 +71,9 @@ void Application::Update(double deltaTime)
 	m_UIRoot->Size.y = size_h;
 
 	m_UIRoot->Update(deltaTime);
+
+	if (m_CurrentScene != nullptr)
+		m_CurrentScene->Update(deltaTime);
 }
 
 void Application::Draw(double deltaTime)

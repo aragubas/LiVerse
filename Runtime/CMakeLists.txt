@@ -12,6 +12,8 @@ find_package(SDL2_ttf CONFIG REQUIRED)
 # Add source to this project's executable.
 add_executable(Runtime
   "main.cpp" "Application.cpp" "Application.h"
+  "Scenes/Scene.cpp" "Scenes/Scene.h" "Scenes/Startup.cpp"
+  "Scenes/Startup.h"
 )
 
 # Set C++ standard to C++20

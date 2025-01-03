@@ -1,3 +1,4 @@
+#include "Scenes/Startup.h"
 #include "TaiyouUI/UIRoot.h"
 #include "TaiyouUI/UIRootContext.h"
 #define SDL_MAIN_HANDLED
@@ -16,7 +17,7 @@ int main()
 {
 	std::cout << "LiVerse v2.0-alpha by Aragubas" << std::endl;
 
-	Application app("LiVerse v2.0-alpha");
+	LiVerse::Application app("LiVerse v2.0-alpha");
 
 	// Return 1 if initialization fails
 	if (app.Initialize() != 0)
@@ -25,14 +26,14 @@ int main()
 		return 1;
 	}
 
-	// Creates the test scene
+	// Creates the startup scene
 	UIRootContext context = app.GetUIRoot()->Context;
 
 	Container centerContainer = Container(context);
 	centerContainer.Type = ContainerType::Center;
-	Layer* layer = app.GetUIRoot()->CreateLayer(&centerContainer);
+	uint Layer = app.GetUIRoot()->CreateLayer(&centerContainer);
 
-	Controls::Button button = Controls::Button(context, "Lorem Ipsum");
+	Controls::Button button = Controls::Button(context, "Click Me");
 	centerContainer.AddControl(&button);
 
 	// Run the Application
