@@ -31,7 +31,7 @@ namespace LiVerse
 		/// @brief Displays a message box for SDL2 errors and logs the error to stdout
 		inline void FatalError(const std::string &messageBody);
 
-		/// @brief Displays a message box for SDL2 errors and logs the error to stdout
+		/// @brief Wrapper for FatalError for showing SDL2 errors
 		inline void SDLFatalError(const std::string &messageHead);
 
 	public:
