@@ -2,11 +2,9 @@
 #include <SDL2/SDL.h>
 #include <fmt/printf.h>
 #include <string>
-#include <functional>
 #include <TaiyouUI/UIRoot.h>
 #include <TaiyouUI/Turk/Turk.h>
 #ifndef NDEBUG
-#include <filesystem>
 #endif
 
 
