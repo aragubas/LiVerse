@@ -6,6 +6,7 @@
 #include <TaiyouUI/Controls/Button.h>
 #include "Application.h"
 using namespace TaiyouUI;
+using namespace LiVerse;
 
 
 // "Main" river in southwestern Germany is the Rhine River.
@@ -28,13 +29,9 @@ int main()
 
 	// Creates the startup scene
 	UIRootContext context = app.GetUIRoot()->Context;
+	Scenes::Startup* startupScene = new Scenes::Startup(app.GetUIRoot());
 
-	Container centerContainer = Container(context);
-	centerContainer.Type = ContainerType::Center;
-	uint Layer = app.GetUIRoot()->CreateLayer(&centerContainer);
-
-	Controls::Button button = Controls::Button(context, "Click Me");
-	centerContainer.AddControl(&button);
+	app.AssignScene(startupScene);
 
 	// Run the Application
 	return app.Run();

@@ -1,4 +1,6 @@
 #include "Application.h"
+#include "Scenes/Scene.h"
+#include "TaiyouUI/UIRoot.h"
 #include <TaiyouUI/Controls/Button.h>
 #include <filesystem>
 #include <iostream>
@@ -56,7 +58,7 @@ void Application::OnShutdown()
 
 	if (m_CurrentScene != nullptr)
 		m_CurrentScene->OnShutdown();
-
+	
 	delete m_UIRoot;
 	SDL_DestroyRenderer(m_Renderer);
 	SDL_DestroyWindow(m_Window);
@@ -166,6 +168,26 @@ int Application::Initialize()
 UIRoot* Application::GetUIRoot()
 {
 	return m_UIRoot;
+}
+
+void Application::AssignScene(Scenes::Scene* scene)
+{
+	// Un-instantiate current scene
+	if (m_CurrentScene != nullptr)
+	{		
+		m_CurrentScene->OnShutdown();
+		delete m_CurrentScene;
+
+		m_UIRoot->ClearLayers();
+	}	
+
+	m_CurrentScene = scene;
+	m_CurrentScene->ChangeSceneRequest = [this](Scenes::Scene* arg) { OnChangeSceneRequest(arg); };
+}
+
+void Application::OnChangeSceneRequest(Scenes::Scene* newScene)
+{
+	AssignScene(newScene);
 }
 
 void Application::SetWindowTitle(const char* windowTitle)
