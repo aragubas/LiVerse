@@ -40,7 +40,6 @@ int main()
 	}
 
 	// Creates the startup scene
-	UIRootContext context = app.GetUIRoot()->Context;
 	Scenes::Startup* startupScene = new Scenes::Startup(app.GetUIRoot());
 
 	app.AssignScene(startupScene);
