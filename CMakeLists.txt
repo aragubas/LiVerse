@@ -12,7 +12,15 @@ endif()
 
 # Set properties
 set(CMAKE_CXX_STANDARD 23)
-# TODO: Make -Wreturn-type an error
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Treat all warnings as errors, except for unused parameters
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    add_compile_options(-Wall -Wextra -Wuninitialized -Werror -Wno-unused-parameter)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_compile_options(/W4 /WX /wd4100)
+endif()
+
 
 # Include sub-projects.
 add_subdirectory("TaiyouUI")
