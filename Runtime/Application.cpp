@@ -12,7 +12,7 @@ using namespace LiVerse;
 Application::Application(const char* title) :
 	m_InitialWindowTitle(title), m_Window(nullptr),
 	m_Renderer(nullptr), m_UIRoot(nullptr),
-	m_Running(true), m_CurrentScene(nullptr)
+	m_CurrentScene(nullptr), m_Running(true)
 {
 }
 
@@ -114,6 +114,7 @@ int Application::Initialize()
 
 	// Prefer wayland over X11
 	SDL_SetHint(SDL_HINT_VIDEODRIVER, "wayland,x11");
+
 
 	// Initialize SDL Video
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
