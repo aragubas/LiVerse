@@ -1,6 +1,8 @@
 #include "Application.h"
 #include "Scenes/Scene.h"
 #include "TaiyouUI/UIRoot.h"
+#include <SDL_blendmode.h>
+#include <SDL_render.h>
 #include <TaiyouUI/Controls/Button.h>
 #include <filesystem>
 #include <iostream>
@@ -81,6 +83,7 @@ void Application::Update(double deltaTime)
 
 void Application::Draw(double deltaTime)
 {
+	SDL_SetRenderDrawBlendMode(m_Renderer, SDL_BLENDMODE_BLEND);
 	// Clear the screen
 	SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, 0);
 	SDL_RenderClear(m_Renderer);
@@ -209,12 +212,12 @@ int Application::Run()
 		lastTime = currentTime;
 		currentTime = SDL_GetPerformanceCounter();
 
-		// Calculate delta time
-		deltaTime = ((currentTime - lastTime) * 1000 / (double)SDL_GetPerformanceFrequency()) * 0.001;
-
 		ProcessEvents();
 		Update(deltaTime);
 		Draw(deltaTime);
+
+		// Calculate delta time
+		deltaTime = ((currentTime - lastTime) * 1000 / (double)SDL_GetPerformanceFrequency()) * 0.001;
 	}
 
 	// Application is closing
