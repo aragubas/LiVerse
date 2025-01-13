@@ -46,6 +46,11 @@ cmake --preset vcpkg-debug -B ./build/
 cmake --build ./build
 ```
 
+The following presets are available:
+```
+vcpkg-debug, vcpkg-release, vcpkg-release-with-debug
+```
+
 # License
 This project is licensed under the AGPL 3.0 license
 
