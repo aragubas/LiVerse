@@ -26,7 +26,7 @@ cmake --build ./build
 
 The following build presets are available:
 ```
-vcpkg-debug, vcpkg-release, vcpkg-release-with-debug
+vcpkg-debug, vcpkg-debug-asan, vcpkg-release, vcpkg-release-with-debug
 ```
 
 ## Build Dependencies

@@ -18,6 +18,15 @@
       }
     },
     {
+      "name": "vcpkg-debug-asan",
+      "displayName": "Debug (with AddressSanitizer)",
+      "inherits": "vcpkg-debug",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-fsanitize=address -fno-omit-frame-pointer",
+        "CMAKE_LINKER_FLAGS": "-fsanitize=address"
+      }
+    },
+    {
       "name": "vcpkg-release",
       "displayName": "Release",
       "inherits": "vcpkg-debug",
