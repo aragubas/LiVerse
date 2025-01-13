@@ -57,3 +57,6 @@ CMakeUserPresets.json
 LiVerse.kdev4
 /.cache
 compile_commands.json
+
+# Ignore release dir
+release/
