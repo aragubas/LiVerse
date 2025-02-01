@@ -46,6 +46,11 @@ cmake ninja-build autoconf automake libtool perl-open perl-FindBin python3-jinja
 cmake ninja python-jinja
 ```
 
+### macOS (Homebrew)
+```
+cmake ninja pkg-config
+```
+
 # License
 This project is licensed under the AGPL 3.0 license
 
