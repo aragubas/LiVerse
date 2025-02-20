@@ -113,7 +113,7 @@ int Application::Initialize()
 
 
 	// Prefer wayland over X11
-	SDL_SetHint(SDL_HINT_VIDEODRIVER, "wayland,x11");
+	//SDL_SetHint(SDL_HINT_VIDEODRIVER, "wayland,x11");
 
 
 	// Initialize SDL Video
