@@ -1,18 +1,20 @@
 #include "Application.h"
 #include "Scenes/Scene.h"
 #include "TaiyouUI/UIRoot.h"
-#include <SDL_blendmode.h>
-#include <SDL_render.h>
+#include <SDL3/SDL_blendmode.h>
+#include <SDL3/SDL_render.h>
 #include <TaiyouUI/Controls/Button.h>
 #include <filesystem>
 #include <iostream>
 using namespace TaiyouUI;
 using namespace LiVerse;
 
-Application::Application(const char* title) :
-	m_InitialWindowTitle(title), m_Window(nullptr),
-	m_Renderer(nullptr), m_UIRoot(nullptr),
-	m_CurrentScene(nullptr), m_Running(true)
+Application::Application() : 
+	m_Window(std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)>(nullptr, &SDL_DestroyWindow)),
+	m_Renderer(std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)>(nullptr, &SDL_DestroyRenderer)), 
+	m_UIRoot(std::unique_ptr<UIRoot>(nullptr)),
+	m_CurrentScene(nullptr), 
+	m_Running(true)
 {
 }
 
@@ -42,7 +44,7 @@ void Application::ProcessEvents()
 	while (SDL_PollEvent(&event))
 	{
 		// Event not processed by UIRoot
-		if (event.type == SDL_QUIT)
+		if (event.type == SDL_EVENT_QUIT)
 		{
 			m_Running = false;
 			return;
@@ -54,24 +56,14 @@ void Application::ProcessEvents()
 
 void Application::OnShutdown()
 {
-#ifndef NDEBUG
 	std::cout << "Application::OnShutdown(); Bye bye!" << std::endl;
-#endif
-
-	if (m_CurrentScene != nullptr)
-		m_CurrentScene->OnShutdown();
-	
-	delete m_UIRoot;
-	delete m_CurrentScene;
-	SDL_DestroyRenderer(m_Renderer);
-	SDL_DestroyWindow(m_Window);
 }
 
 void Application::Update(double deltaTime)
 {
 	// Set UIRoot size to window size
 	int size_w, size_h = 0;
-	SDL_GetRendererOutputSize(m_Renderer, &size_w, &size_h);
+	SDL_GetRenderOutputSize(m_Renderer.get(), &size_w, &size_h);
 	m_UIRoot->Size.x = size_w;
 	m_UIRoot->Size.y = size_h;
 
@@ -83,15 +75,15 @@ void Application::Update(double deltaTime)
 
 void Application::Draw(double deltaTime)
 {
-	SDL_SetRenderDrawBlendMode(m_Renderer, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawBlendMode(m_Renderer.get(), SDL_BLENDMODE_BLEND);
 	// Clear the screen
-	SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, 0);
-	SDL_RenderClear(m_Renderer);
+	SDL_SetRenderDrawColor(m_Renderer.get(), 0, 0, 0, 0);
+	SDL_RenderClear(m_Renderer.get());
 
-	m_UIRoot->Draw(m_Renderer, deltaTime);
+	m_UIRoot->Draw(m_Renderer.get(), deltaTime);
 
 	// Update Window
-	SDL_RenderPresent(m_Renderer);
+	SDL_RenderPresent(m_Renderer.get());
 }
 
 //
@@ -113,47 +105,47 @@ int Application::Initialize()
 
 
 	// Prefer wayland over X11
-	SDL_SetHint(SDL_HINT_VIDEODRIVER, "wayland,x11");
+	SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "wayland,x11");
 
 
 	// Initialize SDL Video
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (!SDL_Init(SDL_INIT_VIDEO))
 	{
 		SDLFatalError("Could not initialize SDL2.");
 		return 1;
 	}
 
 	// Initialize SDL TTF
-	if (TTF_Init() == -1)
+	if (!TTF_Init())
 	{
 		SDLFatalError("Could not initialize SDL2 TTF.");
 		return 1;
 	}
 
-	m_Window = SDL_CreateWindow(m_InitialWindowTitle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+	m_Window.reset(SDL_CreateWindow("LiVerse alpha-2.0.0", 800, 600, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_RESIZABLE), SDL_DestroyWindow);
 	if (m_Window == NULL)
 	{
 		SDLFatalError("Could not create window.");
 		return 1;
 	}
 	// Set window properties
-	SDL_SetWindowMinimumSize(m_Window, 640, 480);
+	SDL_SetWindowMinimumSize(m_Window.get(), 640, 480);
 
-	m_Renderer = SDL_CreateRenderer(m_Window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	m_Renderer.reset(SDL_CreateRenderer(m_Window.get(), NULL), SDL_DestroyRenderer);
 	if (m_Renderer == NULL)
 	{
 		SDLFatalError("Could not create renderer.");
 		return 1;
 	}
 	// Enable VSync
-	SDL_RenderSetVSync(m_Renderer, 1);
+	SDL_SetRenderVSync(m_Renderer.get(), 1);
 
-	// Check if renderer supports Render Targets
-	if (!SDL_RenderTargetSupported(m_Renderer))
-	{
-		SDLFatalError("Renderer does not support render targets,\nwhich is required by this application.\n\nThe application will close.");
-		return 1;
-	}
+	// TODO: Check if renderer supports Render Targets
+	//if (!SDL_RenderTargetSupported(m_Renderer.get()))
+	// {
+	// 	SDLFatalError("Renderer does not support render targets,\nwhich is required by this application.\n\nThe application will close.");
+	// 	return 1;
+	// }
 
 #ifndef NDEBUG
 	fmt::printf("[Debug] Using video driver: %s\n", SDL_GetCurrentVideoDriver());
@@ -161,7 +153,7 @@ int Application::Initialize()
 #endif
 
 	// Create UIRoot
-	m_UIRoot = new UIRoot(m_Renderer, m_Window);
+	m_UIRoot = std::make_shared<UIRoot>(UIRoot(m_Renderer, m_Window));
 
 #ifndef NDEBUG
 	std::cout << "[Debug] Initialization Done" << std::endl;
@@ -170,7 +162,7 @@ int Application::Initialize()
 	return 0;
 }
 
-UIRoot* Application::GetUIRoot()
+std::shared_ptr<TaiyouUI::UIRoot> Application::GetUIRoot()
 {
 	return m_UIRoot;
 }
@@ -179,13 +171,14 @@ void Application::AssignScene(Scenes::Scene* scene)
 {
 	// Un-instantiate current scene
 	if (m_CurrentScene != nullptr)
-	{		
+	{				
 		m_CurrentScene->OnShutdown();
+
 		delete m_CurrentScene;
 
 		m_UIRoot->ClearLayers();
 	}	
-
+	
 	m_CurrentScene = scene;
 	m_CurrentScene->ChangeSceneRequest = [this](Scenes::Scene* arg) { OnChangeSceneRequest(arg); };
 }
@@ -199,7 +192,7 @@ void Application::SetWindowTitle(const char* windowTitle)
 {
 	if (!m_Window)
 		return;
-	SDL_SetWindowTitle(m_Window, windowTitle);
+	SDL_SetWindowTitle(m_Window.get(), windowTitle);
 }
 
 int Application::Run()

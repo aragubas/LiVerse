@@ -1,21 +1,19 @@
 #pragma once
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <fmt/printf.h>
 #include <string>
 #include <TaiyouUI/UIRoot.h>
 #include <TaiyouUI/Turk/Turk.h>
 #include "Scenes/Scene.h"
-#ifndef NDEBUG
-#endif
+#include <memory>
 
 namespace LiVerse
 {
 	class Application
 	{
-		const char* m_InitialWindowTitle;
-		SDL_Window* m_Window;
-		SDL_Renderer* m_Renderer;
-		TaiyouUI::UIRoot* m_UIRoot;
+		std::shared_ptr<SDL_Window> m_Window;
+		std::shared_ptr<SDL_Renderer> m_Renderer;
+		std::shared_ptr<TaiyouUI::UIRoot> m_UIRoot;
 		Scenes::Scene* m_CurrentScene;
 		bool m_Running;
 
@@ -37,14 +35,14 @@ namespace LiVerse
 	public:
 		/// @brief Main TaiyouUI Application class
 		/// @param windowTitle Initial Window title
-		Application(const char *windowTitle);
+		Application();
 
 		/// @brief Initializes SDL2, creates the Window and Renderer and creates the UIRoot
 		/// @returns 0 if successful, 1 if otherwise
 		int Initialize();
 
 		/// @brief Returns a pointer to the UIRoot instance
-		TaiyouUI::UIRoot *GetUIRoot();
+		std::shared_ptr<TaiyouUI::UIRoot> GetUIRoot();
 
 		/// @brief Set Window title
 		/// @param windowTitle Window title

@@ -2,9 +2,11 @@
   "dependencies": [
     "fmt",
     {
-      "name": "sdl2",
-      "features": [ "wayland" ]
+      "name": "sdl3",
+      "features": [
+        "wayland"
+      ]
     },
-    "sdl2-ttf"
+    "sdl3-ttf"
   ]
 }

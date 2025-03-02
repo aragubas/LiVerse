@@ -5,8 +5,8 @@ project("Runtime")
 
 # Find required packages
 find_package(fmt CONFIG REQUIRED)
-find_package(SDL2 CONFIG REQUIRED)
-find_package(SDL2_ttf CONFIG REQUIRED)
+find_package(SDL3 CONFIG REQUIRED)
+find_package(SDL3_ttf CONFIG REQUIRED)
 
 
 # Add source to this project's executable.
@@ -23,7 +23,7 @@ set_property(TARGET TaiyouUI PROPERTY COMPILE_WARNING_AS_ERROR ON)
 
 # Link and include libraries
 target_link_libraries(Runtime PRIVATE fmt::fmt)
-target_link_libraries(Runtime PRIVATE SDL2::SDL2)
+target_link_libraries(Runtime PRIVATE SDL3::SDL3)
 # idk how the $<IF: part works, vcpkg told me this would work so I trust it :)
-target_link_libraries(TaiyouUI PRIVATE $<IF:$<TARGET_EXISTS:SDL2_ttf::SDL2_ttf>,SDL2_ttf::SDL2_ttf,SDL2_ttf::SDL2_ttf-static>)
+target_link_libraries(TaiyouUI PRIVATE $<IF:$<TARGET_EXISTS:SDL3_ttf::SDL3_ttf>,SDL3_ttf::SDL3_ttf,SDL3_ttf::SDL3_ttf-static>)
 target_link_libraries(Runtime PRIVATE TaiyouUI)

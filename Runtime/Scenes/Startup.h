@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include "Scene.h"
 #include "TaiyouUI/Controls/Button.h"
 
@@ -12,7 +13,7 @@ namespace LiVerse::Scenes
         Container m_CenterContainer;
 
     public:
-        Startup(UIRoot* uiRoot);
+        Startup(std::shared_ptr<UIRoot> uiRoot);
         virtual ~Startup();
 
         void Update(double deltaTime) override;

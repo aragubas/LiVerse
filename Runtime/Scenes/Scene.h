@@ -1,6 +1,7 @@
 #pragma once
 #include <TaiyouUI/UIRoot.h>
 #include <functional>
+#include <memory>
 using namespace TaiyouUI;
 
 namespace LiVerse::Scenes
@@ -8,10 +9,10 @@ namespace LiVerse::Scenes
     class Scene
     {
     protected:
-        UIRoot* m_UIRoot;
+        std::shared_ptr<UIRoot> m_UIRoot;
     
     public:
-        Scene(UIRoot* uiRoot);
+        Scene(std::shared_ptr<UIRoot> uiRoot);
         virtual ~Scene() = default;
 
         virtual void Update(double deltaTime) = 0;

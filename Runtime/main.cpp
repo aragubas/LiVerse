@@ -1,7 +1,7 @@
 #include "Scenes/Startup.h"
 #include <TaiyouUI/UIRoot.h>
 #include <TaiyouUI/UIRootContext.h>
-#include <SDL_version.h>
+#include <SDL3/SDL_version.h>
 #include <string>
 #define SDL_MAIN_HANDLED
 #include <iostream>
@@ -18,19 +18,14 @@ using namespace LiVerse;
 // https://en.wikipedia.org/wiki/Main_%28river%29
 int main()
 {
-	std::cout << "LiVerse v2.0-alpha by Aragubas" << std::endl;
+	std::cout << "LiVerse alpha-2.0.0 by Aragubas" << std::endl;
 	
-	SDL_version version;
-	SDL_GetVersion(&version);
+	int version = SDL_GetVersion();
 	std::string versionString;
-	versionString += std::to_string(version.major);
-	versionString += ".";
-	versionString += std::to_string(version.minor);
-	versionString += ".";
-	versionString += std::to_string(version.patch);
+	versionString += std::to_string(version);
 	std::cout << "using SDL2 version: " << versionString << std::endl;
 
-	LiVerse::Application app("LiVerse v2.0-alpha");
+	LiVerse::Application app;
 
 	// Return 1 if initialization fails
 	if (app.Initialize() != 0)
@@ -40,9 +35,7 @@ int main()
 	}
 
 	// Creates the startup scene
-	Scenes::Startup* startupScene = new Scenes::Startup(app.GetUIRoot());
-
-	app.AssignScene(startupScene);
+	app.AssignScene(new Scenes::Startup(app.GetUIRoot()));
 
 	// Run the Application
 	return app.Run();
