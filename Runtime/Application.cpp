@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "Scenes/Scene.h"
+#include "Views/View.h"
 #include "TaiyouUI/UIRoot.h"
 #include <SDL3/SDL_blendmode.h>
 #include <SDL3/SDL_render.h>
@@ -167,7 +167,7 @@ std::shared_ptr<TaiyouUI::UIRoot> Application::GetUIRoot()
 	return m_UIRoot;
 }
 
-void Application::AssignScene(Scenes::Scene* scene)
+void Application::AssignScene(Views::View* scene)
 {
 	// Un-instantiate current scene
 	if (m_CurrentScene != nullptr)
@@ -180,10 +180,10 @@ void Application::AssignScene(Scenes::Scene* scene)
 	}	
 	
 	m_CurrentScene = scene;
-	m_CurrentScene->ChangeSceneRequest = [this](Scenes::Scene* arg) { OnChangeSceneRequest(arg); };
+	m_CurrentScene->ChangeSceneRequest = [this](Views::View* arg) { OnChangeSceneRequest(arg); };
 }
 
-void Application::OnChangeSceneRequest(Scenes::Scene* newScene)
+void Application::OnChangeSceneRequest(Views::View* newScene)
 {
 	AssignScene(newScene);
 }

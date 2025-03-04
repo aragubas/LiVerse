@@ -1,11 +1,11 @@
-#include "Startup.h"
-#include "Scene.h"
+#include "CharacterView.h"
+#include "View.h"
 #include <iostream>
-using namespace LiVerse::Scenes;
+using namespace LiVerse::Views;
 
 
-Startup::Startup(std::shared_ptr<UIRoot> uiRoot) : 
-    Scene::Scene(uiRoot), m_PrimaryButton(uiRoot->Context, "Click Me"),
+CharacterView::CharacterView(std::shared_ptr<UIRoot> uiRoot) : 
+    Views::View(uiRoot), m_PrimaryButton(uiRoot->Context, "Click Me"),
     m_CenterContainer(uiRoot->Context)
 {
 	m_CenterContainer.Type = ContainerType::Center;
@@ -18,17 +18,17 @@ Startup::Startup(std::shared_ptr<UIRoot> uiRoot) :
     m_PrimaryButton.OnClick = []() { std::cout << "Pingas" << std::endl; };
 }
 
-Startup::~Startup()
+CharacterView::~CharacterView()
 {
 
 }
 
-void Startup::Update(double deltaTime) 
+void CharacterView::Update(double deltaTime) 
 {
 
 }
 
-void Startup::OnShutdown() 
+void CharacterView::OnShutdown() 
 {
 
 }

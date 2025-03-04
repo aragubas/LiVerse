@@ -1,4 +1,4 @@
-#include "Scenes/Startup.h"
+#include "Views/CharacterView.h"
 #include <TaiyouUI/UIRoot.h>
 #include <TaiyouUI/UIRootContext.h>
 #include <SDL3/SDL_version.h>
@@ -34,8 +34,8 @@ int main()
 		return 1;
 	}
 
-	// Creates the startup scene
-	app.AssignScene(new Scenes::Startup(app.GetUIRoot()));
+	// Creates the main character scene
+	app.AssignScene(new Views::CharacterView(app.GetUIRoot()));
 
 	// Run the Application
 	return app.Run();

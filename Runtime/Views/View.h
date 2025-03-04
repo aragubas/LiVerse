@@ -4,21 +4,21 @@
 #include <memory>
 using namespace TaiyouUI;
 
-namespace LiVerse::Scenes
+namespace LiVerse::Views
 {
-    class Scene
+    class View 
     {
     protected:
         std::shared_ptr<UIRoot> m_UIRoot;
     
     public:
-        Scene(std::shared_ptr<UIRoot> uiRoot);
-        virtual ~Scene() = default;
+        View(std::shared_ptr<UIRoot> uiRoot);
+        virtual ~View() = default;
 
         virtual void Update(double deltaTime) = 0;
         virtual void OnShutdown() = 0;
         
-        std::function<void(Scene*)> ChangeSceneRequest;
+        std::function<void(View*)> ChangeSceneRequest;
     };
 
 }

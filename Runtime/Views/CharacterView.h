@@ -1,20 +1,20 @@
 #pragma once
 #include <memory>
-#include "Scene.h"
+#include "View.h"
 #include "TaiyouUI/Controls/Button.h"
 
 
-namespace LiVerse::Scenes
+namespace LiVerse::Views
 {
-    class Startup : public Scene
+    class CharacterView : public View 
     {
         uint m_PrimaryUILayer;
         Controls::Button m_PrimaryButton;
         Container m_CenterContainer;
 
     public:
-        Startup(std::shared_ptr<UIRoot> uiRoot);
-        virtual ~Startup();
+        CharacterView(std::shared_ptr<UIRoot> uiRoot);
+        virtual ~CharacterView();
 
         void Update(double deltaTime) override;
         void OnShutdown() override;

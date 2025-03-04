@@ -4,7 +4,7 @@
 #include <string>
 #include <TaiyouUI/UIRoot.h>
 #include <TaiyouUI/Turk/Turk.h>
-#include "Scenes/Scene.h"
+#include "Views/View.h"
 #include <memory>
 
 namespace LiVerse
@@ -14,7 +14,7 @@ namespace LiVerse
 		std::shared_ptr<SDL_Window> m_Window;
 		std::shared_ptr<SDL_Renderer> m_Renderer;
 		std::shared_ptr<TaiyouUI::UIRoot> m_UIRoot;
-		Scenes::Scene* m_CurrentScene;
+		Views::View* m_CurrentScene;
 		bool m_Running;
 
 		void ProcessEvents();
@@ -49,11 +49,11 @@ namespace LiVerse
 		void SetWindowTitle(const char *windowTitle);
 
 		/// @brief Called from scene when it wants to change the scene
-		void OnChangeSceneRequest(Scenes::Scene* newScene);
+		void OnChangeSceneRequest(Views::View* newScene);
 
 		/// @brief Discards one scene (if any) and assigns new scene
 		/// @param windowTitle Window title
-		void AssignScene(Scenes::Scene* scene);
+		void AssignScene(Views::View* scene);
 
 		/// @brief Starts the application loop, blocking the calling thread
 		int Run();
