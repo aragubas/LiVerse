@@ -104,9 +104,10 @@ int Application::Initialize()
 	}
 
 
-	// Prefer wayland over X11
+	// Prefer wayland over X11 on Linux
+#if __linux__
 	SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "wayland,x11");
-
+#endif
 
 	// Initialize SDL Video
 	if (!SDL_Init(SDL_INIT_VIDEO))
