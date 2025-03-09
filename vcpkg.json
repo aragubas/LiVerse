@@ -4,7 +4,10 @@
     {
       "name": "sdl3",
       "features": [
-        "wayland"
+        {
+          "name": "wayland",
+          "platform": "linux"
+        }
       ]
     },
     "sdl3-ttf"
