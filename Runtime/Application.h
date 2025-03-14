@@ -49,11 +49,11 @@ namespace LiVerse
 		void SetWindowTitle(const char *windowTitle);
 
 		/// @brief Called from scene when it wants to change the scene
-		void OnChangeSceneRequest(Views::View* newScene);
+		void OnChangeViewRequest(Views::View* newScene);
 
 		/// @brief Discards one scene (if any) and assigns new scene
 		/// @param windowTitle Window title
-		void AssignScene(Views::View* scene);
+		void AssignView(Views::View* scene);
 
 		/// @brief Starts the application loop, blocking the calling thread
 		int Run();

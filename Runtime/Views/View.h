@@ -18,7 +18,7 @@ namespace LiVerse::Views
         virtual void Update(double deltaTime) = 0;
         virtual void OnShutdown() = 0;
         
-        std::function<void(View*)> ChangeSceneRequest;
+        std::function<void(View*)> ChangeViewRequest;
     };
 
 }

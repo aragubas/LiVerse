@@ -168,7 +168,7 @@ std::shared_ptr<TaiyouUI::UIRoot> Application::GetUIRoot()
 	return m_UIRoot;
 }
 
-void Application::AssignScene(Views::View* scene)
+void Application::AssignView(Views::View* scene)
 {
 	// Un-instantiate current scene
 	if (m_CurrentScene != nullptr)
@@ -181,12 +181,12 @@ void Application::AssignScene(Views::View* scene)
 	}	
 	
 	m_CurrentScene = scene;
-	m_CurrentScene->ChangeSceneRequest = [this](Views::View* arg) { OnChangeSceneRequest(arg); };
+	m_CurrentScene->ChangeViewRequest = [this](Views::View* arg) { OnChangeViewRequest(arg); };
 }
 
-void Application::OnChangeSceneRequest(Views::View* newScene)
+void Application::OnChangeViewRequest(Views::View* newView)
 {
-	AssignScene(newScene);
+	AssignView(newView);
 }
 
 void Application::SetWindowTitle(const char* windowTitle)

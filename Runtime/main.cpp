@@ -35,7 +35,7 @@ int main()
 	}
 
 	// Creates the main character scene
-	app.AssignScene(new Views::CharacterView(app.GetUIRoot()));
+	app.AssignView(new Views::CharacterView(app.GetUIRoot()));
 
 	// Run the Application
 	return app.Run();
