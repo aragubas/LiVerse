@@ -75,11 +75,14 @@ void Application::Update(double deltaTime)
 
 void Application::Draw(double deltaTime)
 {
+	// Enable transparency
 	SDL_SetRenderDrawBlendMode(m_Renderer.get(), SDL_BLENDMODE_BLEND);
-	// Clear the screen
+
+	// Clear the screen with transparent color
 	SDL_SetRenderDrawColor(m_Renderer.get(), 0, 0, 0, 0);
 	SDL_RenderClear(m_Renderer.get());
 
+	// Draw the UI
 	m_UIRoot->Draw(m_Renderer.get(), deltaTime);
 
 	// Update Window
