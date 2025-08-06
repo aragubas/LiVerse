@@ -1,6 +1,11 @@
 # LiVerse++
 A complete re-write of LiVerse and TaiyouUI in C++ using SDL2
 
+> [!IMPORTANT]
+> This project has been moved to Gitlab. 
+> It is now under this URL: https://gitlab.com/aragubas1/LiVerse
+
+
 LIVerse is a Hackable and Extensible PNGTuber app for Linux, macOS and Windows. Made by Aragubas
 
 
